@@ -406,8 +406,9 @@ body{display:block;height:auto;overflow:visible}
 .lid{font-family:var(--serif)}
 .razdel-zag{margin:0 0 var(--o3)}
 .ekran{--kegl:calc(20px * var(--k,1));--intl:calc(30px * var(--k,1))}
-/* two sizes only: the common one, and one step up (×1.4) for the sparse «Когда и где» screen */
+/* two sizes only: the common one, and one step up (×1.4) for the sparse «Когда и где» screen; «Кто проводит» ×1.2 (owner 13.11) */
 #kogda{--kegl:calc(28px * var(--k,1));--intl:calc(40px * var(--k,1))}
+#kto-provodit{--kegl:calc(24px * var(--k,1));--intl:calc(35px * var(--k,1))}
 .ekran .tekst,.ekran .lid{margin:0;font-size:var(--kegl);line-height:var(--intl)}
 .ekran .razdel-zag{margin-bottom:var(--o4)}
 .rasp dt{font-size:calc(var(--kegl) * .8);line-height:var(--intl)}
@@ -433,7 +434,7 @@ body{display:block;height:auto;overflow:visible}
   .rel a::after{display:none}
   .ekran{min-height:0;padding:var(--o6) var(--pole) var(--o6)}
   .ekran:last-of-type{padding-bottom:calc(52px + var(--o6))}
-  #kogda{--kegl:20px;--intl:30px}
+  #kogda,#kto-provodit{--kegl:20px;--intl:30px}
   .kolonki,#kogda-gde-kto .tekst{grid-template-columns:1fr}
   .ryady .niz{border-top:0;padding-top:0}
   .rasp{grid-column:1;grid-row:auto}
@@ -818,6 +819,7 @@ body{display:block;height:auto;overflow:visible}
 .ekran{--kegl:calc(calc(20px * var(--m)) * var(--k,1));--intl:calc(calc(30px * var(--m)) * var(--k,1))}
 
 #kogda{--kegl:calc(calc(28px * var(--m)) * var(--k,1));--intl:calc(calc(40px * var(--m)) * var(--k,1))}
+#kto-provodit{--kegl:calc(calc(24px * var(--m)) * var(--k,1));--intl:calc(calc(35px * var(--m)) * var(--k,1))}
 .ekran .tekst,.ekran .lid{margin:0;font-size:var(--kegl);line-height:var(--intl)}
 .ekran .razdel-zag{margin-bottom:var(--o4)}
 .rasp dt{font-size:calc(var(--kegl) * .8);line-height:var(--intl)}
@@ -843,7 +845,7 @@ body{display:block;height:auto;overflow:visible}
   .rel a::after{display:none}
   .ekran{min-height:0;padding:var(--o6) var(--pole) var(--o6)}
   .ekran:last-of-type{padding-bottom:calc(calc(52px * var(--m)) + var(--o6))}
-  #kogda{--kegl:calc(20px * var(--m));--intl:calc(30px * var(--m))}
+  #kogda,#kto-provodit{--kegl:calc(20px * var(--m));--intl:calc(30px * var(--m))}
   .kolonki,#kogda-gde-kto .tekst{grid-template-columns:1fr}
   .ryady .niz{border-top:0;padding-top:0}
   .rasp{grid-column:1;grid-row:auto}
