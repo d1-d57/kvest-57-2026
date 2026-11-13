@@ -923,7 +923,7 @@ body{display:block;height:auto;overflow:visible}
   function dovesti(cel,v0){
     var nach=pageYOffset,raz=cel-nach,moj=++hod,t0=null;
     if(Math.abs(raz)<1)return;
-    var T=Math.min(1100,Math.max(600,500+Math.abs(raz)/innerHeight*700));
+    var T=Math.min(1500,Math.max(900,800+Math.abs(raz)/innerHeight*900));  // owner 13.11: «ещё чуть плавнее»
     var v=v0*T;                                       // px per whole glide
     if(v*raz<0)v=0;                                   // never start against the target
     if(Math.abs(v)>Math.abs(raz)*1.5)v=raz*1.5;       // no overshoot
@@ -973,7 +973,7 @@ body{display:block;height:auto;overflow:visible}
       if(i+1<zony.length&&y>zony[i][1]&&y<zony[i+1][0]){
         var ot=zony[i][1],k=zony[i+1][0],porog=Math.min(vh*.15,(k-ot)/2);
         var cel=napr>0?(y-ot>porog?k:ot):(k-y>porog?ot:k);
-        dovesti(cel,skor*Math.max(0,1-(performance.now()-poslT)/150));return;  // speed fades while the page stood still
+        dovesti(cel,skor*Math.max(0,1-(performance.now()-poslT)/250));return;  // speed fades while the page stood still
       }
     }
   }
