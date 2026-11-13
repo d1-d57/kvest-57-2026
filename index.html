@@ -380,8 +380,7 @@ details.raskr>summary,.proekt>details.raskr>summary{font-size:24px;line-height:3
 
 
 /* Screens + icon rail (owner 13.11). Only tokens and type scale of stil.css. */
-html{scroll-behavior:smooth}
-@media(min-width:900px){html{scroll-snap-type:y proximity}.ekran{scroll-snap-align:start}}
+html{scroll-behavior:auto}
 body{display:block;height:auto;overflow:visible}
 .rel{position:fixed;left:0;top:0;bottom:0;z-index:40;width:56px;display:flex;flex-direction:column;
   justify-content:center;gap:var(--o2);align-items:center}
@@ -791,8 +790,7 @@ details.raskr>summary,.proekt>details.raskr>summary{font-size:calc(24px * var(--
 
 
 
-html{scroll-behavior:smooth}
-@media(min-width:900px){html{scroll-snap-type:y proximity}.ekran{scroll-snap-align:start}}
+html{scroll-behavior:auto}
 body{display:block;height:auto;overflow:visible}
 .rel{position:fixed;left:0;top:0;bottom:0;z-index:40;width:calc(56px * var(--m));display:flex;flex-direction:column;
   justify-content:center;gap:var(--o2);align-items:center}
@@ -890,6 +888,40 @@ body{display:block;height:auto;overflow:visible}
     koren.style.setProperty('--k',lo.toFixed(3));
   }
   podognat();
+
+  // Screen-to-screen moves — the mode of matema-fest.ru («Фрактальная Одиссея», owner 13.11): the
+  // wheel stays native; ↓/↑ go to the next/previous screen (down 1.4 s ease-out-quart, up 0.8 s
+  // ease-out-quad), a click in the rail 1.8 s ease-out-quart. There it is Lenis.scrollTo; here the
+  // same durations and curves by requestAnimationFrame, so the page stays one file with no CDN.
+  var vniz=function(t){return 1-Math.pow(1-t,4);}, vverh=function(t){return 1-Math.pow(1-t,2);}, hod=0;
+  function plavno(cel,dlit,krivaya){
+    var nach=pageYOffset,raz=cel-nach,t0=performance.now(),moj=++hod;
+    if(Math.abs(raz)<1)return;
+    (function kadr(sejchas){
+      if(moj!==hod)return;
+      var t=Math.min(1,(sejchas-t0)/(dlit*1000));
+      scrollTo({top:nach+raz*krivaya(t),behavior:'instant'});
+      if(t<1)requestAnimationFrame(kadr);
+    })(t0);
+  }
+  ['wheel','touchstart'].forEach(function(s){addEventListener(s,function(){hod++;},{passive:true});});
+  function tochki(){return ekrany.map(function(e){return e.offsetTop;});}
+  function navigateBy(napr){
+    var y=pageYOffset,p=tochki(),cel=null,i;
+    if(napr>0){for(i=0;i<p.length;i++)if(p[i]>y+50){cel=p[i];break;}}
+    else{for(i=p.length-1;i>=0;i--)if(p[i]<y-50){cel=p[i];break;}}
+    if(cel==null)return;
+    plavno(cel,napr>0?1.4:.8,napr>0?vniz:vverh);
+  }
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();navigateBy(e.key==='ArrowDown'?1:-1);}
+  });
+  [].forEach.call(document.querySelectorAll('.rel a,.dalshe'),function(a){
+    a.addEventListener('click',function(e){
+      var cel=document.getElementById(a.getAttribute('href').slice(1));if(!cel)return;
+      e.preventDefault();plavno(cel.offsetTop,1.8,vniz);history.replaceState(null,'',a.getAttribute('href'));
+    });
+  });
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(podognat);
   var t;addEventListener('resize',function(){clearTimeout(t);t=setTimeout(podognat,80);});
 })();
