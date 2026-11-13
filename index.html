@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1">
 <title>Новогодняя математическая квест-игра</title>
+<meta name="description" content="13 или 20 декабря — новогодний математический праздник ВМШ: 12+ станций, выступления, головоломки, лекции для родителей. Основная аудитория — 6 класс, зовём 5 и 7 классы">
+<meta name="theme-color" content="#2E5A54">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%232E5A54'/%3E%3Cpath fill='%23E4CE93' d='M12 3.6l2.5 5.1 5.6.8-4 4 .9 5.6-5-2.6-5 2.6.9-5.6-4-4 5.6-.8z'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://d1-d57.github.io/matigra-57-26-27/">
+<meta property="og:title" content="Новогодняя математическая квест-игра">
+<meta property="og:description" content="13 или 20 декабря — новогодний математический праздник ВМШ: 12+ станций, выступления, головоломки, лекции для родителей. Основная аудитория — 6 класс, зовём 5 и 7 классы">
+<meta property="og:locale" content="ru_RU">
 <style>
 /* Site style of «Математические проекты · школа 179». Law: stranica/DIZAJN-MANIFEST.md.
    Fonts, scale and spacing are copied from spetsmat-bot «Ключики» (veb/obshchee/karkas.py,
@@ -889,29 +897,39 @@ body{display:block;height:auto;overflow:visible}
   }
   podognat();
 
-  // Screen-to-screen moves — the mode of matema-fest.ru («Фрактальная Одиссея», owner 13.11): the
-  // wheel stays native; ↓/↑ go to the next/previous screen (down 1.4 s ease-out-quart, up 0.8 s
-  // ease-out-quad), a click in the rail 1.8 s ease-out-quart. There it is Lenis.scrollTo; here the
-  // same durations and curves by requestAnimationFrame, so the page stays one file with no CDN.
-  var vniz=function(t){return 1-Math.pow(1-t,4);}, vverh=function(t){return 1-Math.pow(1-t,2);}, hod=0;
+  // Screen-to-screen moves — the mode of matema-fest.ru («Фрактальная Одиссея», owner 13.11):
+  // ↓/↑ go to the next/previous screen (down 1.4 s ease-out-quart, up 0.8 s ease-out-quad), a click in
+  // the rail 1.8 s. There it is Lenis.scrollTo; here the same durations and curves by
+  // requestAnimationFrame, so the page stays one file with no CDN. window.scrollTo(0,y) only:
+  // Safari does not take {behavior:'instant'}.
+  var vniz=function(t){return 1-Math.pow(1-t,4);}, vverh=function(t){return 1-Math.pow(1-t,2);},
+      hod=0, idet=false, palec=false, tajmer=null, poslY=pageYOffset, napr=1;
   function plavno(cel,dlit,krivaya){
-    var nach=pageYOffset,raz=cel-nach,t0=performance.now(),moj=++hod;
+    var nach=pageYOffset,raz=cel-nach,t0=null,moj=++hod;
     if(Math.abs(raz)<1)return;
-    (function kadr(sejchas){
+    idet=true;
+    function kadr(sejchas){
       if(moj!==hod)return;
+      if(t0===null)t0=sejchas;
       var t=Math.min(1,(sejchas-t0)/(dlit*1000));
-      scrollTo({top:nach+raz*krivaya(t),behavior:'instant'});
+      window.scrollTo(0,Math.round(nach+raz*krivaya(t)));
       if(t<1)requestAnimationFrame(kadr);
-    })(t0);
+      else{idet=false;poslY=pageYOffset;}
+    }
+    requestAnimationFrame(kadr);
   }
-  ['wheel','touchstart'].forEach(function(s){addEventListener(s,function(){hod++;},{passive:true});});
+  function ostanovit(){hod++;idet=false;}
+  addEventListener('wheel',ostanovit,{passive:true});
+  addEventListener('touchstart',function(){ostanovit();palec=true;clearTimeout(tajmer);},{passive:true});
+  addEventListener('touchend',function(){palec=false;zhdat();},{passive:true});
+  addEventListener('touchcancel',function(){palec=false;zhdat();},{passive:true});
   function tochki(){return ekrany.map(function(e){return e.offsetTop;});}
-  function navigateBy(napr){
+  function navigateBy(n){
     var y=pageYOffset,p=tochki(),cel=null,i;
-    if(napr>0){for(i=0;i<p.length;i++)if(p[i]>y+50){cel=p[i];break;}}
+    if(n>0){for(i=0;i<p.length;i++)if(p[i]>y+50){cel=p[i];break;}}
     else{for(i=p.length-1;i>=0;i--)if(p[i]<y-50){cel=p[i];break;}}
     if(cel==null)return;
-    plavno(cel,napr>0?1.4:.8,napr>0?vniz:vverh);
+    plavno(cel,n>0?1.4:.8,n>0?vniz:vverh);
   }
   document.addEventListener('keydown',function(e){
     if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();navigateBy(e.key==='ArrowDown'?1:-1);}
@@ -922,6 +940,28 @@ body{display:block;height:auto;overflow:visible}
       e.preventDefault();plavno(cel.offsetTop,1.8,vniz);history.replaceState(null,'',a.getAttribute('href'));
     });
   });
+  // Pull to a screen (owner 13.11, every device): when wheel, trackpad or finger stop between two
+  // screens, the page glides to the start of the next one or back to the end of the current one,
+  // whichever way the reader was going. Inside a screen taller than the window (phone) — no pull.
+  function prityanut(){
+    if(idet||palec)return;
+    var y=pageYOffset,vh=innerHeight,max=document.documentElement.scrollHeight-vh,zony=[];
+    ekrany.forEach(function(e){var a=e.offsetTop;zony.push([a,Math.min(max,Math.max(a,a+e.offsetHeight-vh))]);});
+    for(var i=0;i<zony.length;i++){
+      if(y>=zony[i][0]-2&&y<=zony[i][1]+2)return;               // reading inside a screen
+      if(i+1<zony.length&&y>zony[i][1]&&y<zony[i+1][0]){
+        var ot=zony[i][1],k=zony[i+1][0],porog=Math.min(vh*.15,(k-ot)/2);
+        var cel=napr>0?(y-ot>porog?k:ot):(k-y>porog?ot:k);
+        plavno(cel,.6,vniz);return;
+      }
+    }
+  }
+  function zhdat(){clearTimeout(tajmer);tajmer=setTimeout(prityanut,160);}
+  addEventListener('scroll',function(){
+    if(idet)return;
+    var y=pageYOffset;if(y!==poslY)napr=y>poslY?1:-1;poslY=y;
+    if(!palec)zhdat();
+  },{passive:true});
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(podognat);
   var t;addEventListener('resize',function(){clearTimeout(t);t=setTimeout(podognat,80);});
 })();
