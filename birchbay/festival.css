@@ -1061,3 +1061,42 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 #cc #festival-stations .venue-column{gap:7px}
 #cc .catalog-note button{padding:2px 0}
 }
+/* The border uses the whole tab box, including the longest title. */
+#cc .festival-nav a{flex:0 0 auto;border-bottom:2px solid transparent}
+#cc .festival-nav a[aria-current="page"]{border-bottom-color:var(--festival-gold)}
+#cc .festival-nav a[aria-current="page"]::after{content:none}
+@media screen {
+  #cc .festival-panel[data-fit]{max-width:none;margin:0;box-sizing:border-box}
+}
+@media screen and (min-width:741px) and (max-width:900px){
+  #cc .festival-panel[data-fit]{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-content:center;align-items:center;padding:12px 20px;gap:16px}
+  #cc #format[data-fit]{align-items:stretch}
+  #cc #format[data-fit] .festival-copy{display:flex;flex-direction:column;justify-content:space-between}
+  #cc #format[data-fit] .festival-copy p{font-size:17px;line-height:1.26;max-width:none;margin:.3em 0}
+  #cc #format[data-fit] .festival-timetable ol{display:flex;flex-direction:column;height:100%}
+  #cc #format[data-fit] .festival-timetable li{flex:1}
+  #cc #fabula[data-fit] .festival-copy p{font-size:17px;line-height:1.26;max-width:none;margin:.45em 0}
+  #cc #fabula[data-fit] .story-views{width:100%;max-width:68vh}
+  #cc #school[data-fit] .school-views{width:min(100%,calc(88vh - 105px))}
+  #cc #school[data-fit] .school-views .zoom-img img{aspect-ratio:1.84;object-fit:cover}
+  #cc #festival-stations[data-fit]{grid-template-columns:1fr;gap:4px}
+  #cc #festival-stations[data-fit] .venue-guide{grid-template-columns:1.13fr 1fr 1.04fr;gap:16px}
+  #cc #festival-stations[data-fit] .venue-column{gap:7px}
+  #cc #festival-stations[data-fit] .school-place{font-size:15px;line-height:1.19}
+  #cc #example[data-fit]{grid-template-columns:1fr}
+  #cc #example[data-fit] .day-route{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 20px}
+  #cc #example[data-fit] .day-lead{font-size:20px;margin-bottom:0}
+  #cc #example[data-fit] .day-list li{font-size:15px;line-height:1.21;padding:.28em 0}
+}
+@media screen and (max-width:740px){
+  #cc .festival-header-inner{display:block}
+  #cc .festival-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 6px}
+  #cc .festival-nav a{justify-self:stretch;min-width:0}
+}
+@media print{
+  #cc .festival-panel[data-fit]{zoom:1!important;width:100%!important;min-height:0!important}
+  #cc #guide[hidden]{display:none!important}
+}
+@media screen {
+  #cc #games[data-fit] .scene-gallery .zoom-img img{max-height:50vh;object-fit:contain}
+}
