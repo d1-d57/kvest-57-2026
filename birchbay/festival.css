@@ -1100,3 +1100,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 @media screen {
   #cc #games[data-fit] .scene-gallery .zoom-img img{max-height:50vh;object-fit:contain}
 }
+
+#cc .festival-brand{display:inline-flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;padding-block:6px;width:max-content}
+#cc .festival-brand strong{font:600 clamp(17px,1.3vw,23px)/1.15 var(--festival-sans);color:var(--festival-ink)}
+#cc .festival-brand small{font:400 13px/1.18 var(--festival-sans);color:#dceae4}
+@media screen and (min-width:741px) and (max-width:960px){
+  #cc .festival-header-inner{padding-inline:14px;gap:10px}
+  #cc .festival-nav{gap:8px}
+  #cc .festival-brand small{font-size:12px}
+}
