@@ -909,7 +909,6 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 #cc .day-list p{margin:0;max-width:none;font:inherit}
 #cc .day-list time{color:var(--festival-gold);font:600 1em/1.15 var(--festival-sans);font-variant-numeric:tabular-nums}
 #cc .day-address{font-weight:600;color:var(--festival-green)}
-#cc .return-label{color:var(--festival-ink);font-weight:600}
 @media screen and (min-width:901px){
 #cc #games{grid-template-columns:1.28fr 1fr;align-content:center;row-gap:clamp(8px,1.0vh,16px)}
 #cc #games .festival-copy{align-self:center}
@@ -1108,4 +1107,230 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   #cc .festival-header-inner{padding-inline:14px;gap:10px}
   #cc .festival-nav{gap:8px}
   #cc .festival-brand small{font-size:12px}
+}
+
+@media screen and (min-width:901px){
+  #cc #format[data-fit] .festival-copy {
+    justify-content:center;
+    gap:clamp(9px,1.4vh,22px);
+  }
+  #cc #format[data-fit] .festival-copy p,#cc #fabula[data-fit] .festival-copy p {
+    font-size:clamp(18px,min(1.72vw,3.02vh),32px);
+    line-height:1.32;
+    margin:0;
+  }
+  #cc #fabula[data-fit] .festival-copy {gap:clamp(10px,1.75vh,24px)}
+}
+#cc .zone-list {list-style:none; margin:0; padding:0}
+#cc .zone-list li {margin:0; border-top:1px solid var(--festival-rule); padding:.56em 0; font:400 clamp(16px,min(1.48vw,2.45vh),25px)/1.31 var(--festival-serif)}
+#cc .zone-list li:first-child {border-top:0}
+#cc .zone-list a {font:600 1.04em/1.25 var(--festival-sans); color:var(--festival-green); text-decoration:underline; text-underline-offset:.16em; text-decoration-thickness:1px}
+#cc .zone-list a.zone-inline {font:inherit;color:inherit;text-decoration:underline dotted;text-underline-offset:.17em}
+#cc .zone-list a span {font-size:.8em}
+#cc .zone-list small {display:inline-block;margin-left:.7em;color:#a4ada9;font:400 max(12px,.68em)/1.2 var(--festival-sans)}
+#cc .zone-list p {margin:.22em 0 0; font:inherit}
+#cc .catalog-key {display:flex; align-items:center; flex-wrap:wrap; column-gap:1.2em; grid-column:1/-1; font:500 clamp(14px,1.08vw,20px)/1.4 var(--festival-sans); color:var(--festival-muted)}
+#cc .catalog-key .catalog-note {margin-left:auto;width:auto}
+#cc .catalog-key .catalog-note .note-text {left:auto;right:0}
+#cc .catalog-key .sample-station,#cc .school-place strong {color:var(--festival-green)}
+#cc .catalog-key .sample-place,#cc .school-place .service strong {color:var(--festival-gold)}
+#cc .school-place:target,#cc .school-place[data-selected] {outline:2px solid var(--festival-gold);outline-offset:4px}
+#cc .school-place:focus {outline-offset:4px}
+#cc .school-place ul {list-style:none;padding-left:0}
+#cc .school-place .station-action {display:block}
+#cc .school-place .service {line-height:1.19}
+
+#cc .school-place li strong::before,
+#cc .sample-place::before,#cc .sample-station::before {
+  content:"";display:inline-block;box-sizing:border-box;
+  width:.26em;height:.26em;margin-inline-end:.38em;vertical-align:.2em;
+  background:currentColor;border-radius:50%;opacity:.55;
+}
+#cc .school-place li.service strong::before,#cc .sample-place::before {
+  width:.33em;height:.33em;border:1px solid currentColor;
+  border-radius:0;background:transparent;transform:rotate(45deg);
+}
+#cc #festival-stations .venue-column .school-place li {padding-block:.17em}
+#cc .stage-list details {display:inline; font:inherit}
+#cc .stage-list details[open] {display:block}
+#cc .stage-list summary {display:inline;cursor:pointer;color:var(--festival-green);font:500 .83em/1.3 var(--festival-sans);text-decoration:underline dotted;text-underline-offset:.22em}
+#cc .stage-list details p {margin:.3em 0 0;font:inherit}
+@media(max-width:740px){
+ #cc #school,#cc #games,#cc #festival-stations .venue-guide {grid-template-columns:1fr}
+ #cc .zone-list li {font-size:18px;padding:.7em 0}
+ #cc .zone-list small {margin-inline-start:.55em}
+ #cc #festival-stations .venue-guide {gap:22px}
+ #cc #festival-stations .venue-column {gap:22px}
+ #cc #festival-stations .school-place li {padding:.32em 0}
+ #cc #festival-stations .school-place {scroll-margin-top:8em}
+ #cc .catalog-key {gap:.4em 1em}
+ #cc .catalog-key .catalog-note {margin-left:0;width:100%}
+ #cc .catalog-key .catalog-note .note-text {left:0;right:auto}
+}
+
+#cc .route-ref{color:var(--festival-green);font:500 .82em var(--festival-sans);text-underline-offset:.17em}
+
+#cc .brief-guide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,3vw,45px);margin:0 0 1.35rem}
+#cc .brief-guide p,#cc .guide-archive p{margin:0;font:400 clamp(16px,1.25vw,22px)/1.45 var(--festival-serif)}
+#cc .brief-guide strong{display:block;margin:0 0 .35em;font:600 1em/1.3 var(--festival-sans);color:var(--festival-gold)}
+#cc .guide-archive{margin:.85rem 0 0;font:400 clamp(16px,1.2vw,21px)/1.4 var(--festival-sans)}
+#cc .guide-archive summary{width:fit-content;cursor:pointer;color:var(--festival-muted)}
+#cc .guide-archive p{margin:.7rem 0}
+#cc .archive-links{display:flex;flex-wrap:wrap;gap:.45rem 1.4rem}
+#cc .archive-links a{color:var(--festival-green);text-underline-offset:.15em}
+@media(max-width:760px){#cc .brief-guide{grid-template-columns:1fr;gap:1rem}}
+
+/* Every event uses the same five-hour scale and fill. */
+#cc .day-program {
+  --label-width:32%;--column-gap:clamp(12px,1.2vw,24px);
+  box-sizing:border-box;align-self:stretch;min-width:0;
+  display:flex;flex-direction:column;
+  padding:clamp(16px,2.5vh,32px) clamp(16px,1.65vw,34px);
+  background:var(--festival-panel);
+  font-family:var(--festival-sans);
+}
+#cc .program-chart {display:flex;flex-direction:column;flex:1;min-width:0}
+#cc .program-events {flex:1;display:grid;grid-auto-rows:1fr;margin:0;padding:0;list-style:none}
+#cc .program-ruler {
+  margin-left:calc(var(--label-width) + var(--column-gap));position:relative;height:1.9em;flex:none;
+  border-bottom:1px solid #627a72;color:#c5d7cf;
+  font:500 clamp(14px,1.2vw,19px)/1.15 var(--festival-sans);font-variant-numeric:tabular-nums;
+}
+#cc .program-ruler span {position:absolute;bottom:.45em;transform:translateX(-50%);white-space:nowrap}
+#cc .program-ruler span:first-child {transform:none}
+#cc .program-ruler span:last-child {transform:translateX(-100%)}
+#cc .program-ruler small {font:inherit}
+#cc .program-row {display:grid;grid-template-columns:var(--label-width) minmax(0,1fr);gap:var(--column-gap);margin:0;padding:0;border-bottom:1px solid var(--festival-rule)}
+#cc .program-row:last-child {border-bottom:0}
+#cc .program-event {position:relative;display:flex;align-items:center;min-height:40px;padding:.6em 30px .6em 0}
+#cc .program-event strong {font:600 clamp(17px,min(1.54vw,2.8vh),28px)/1.16 var(--festival-sans);color:var(--festival-ink)}
+#cc .program-track {
+  position:relative;min-width:0;
+  background-image:linear-gradient(to right,#78968955 1px,transparent 1px),linear-gradient(to right,#78968922 1px,transparent 1px);
+  background-size:20% 100%,10% 100%;box-shadow:inset -1px 0 #78968955;
+}
+#cc .program-bar {position:absolute;top:50%;transform:translateY(-50%);left:var(--start);width:var(--duration);height:clamp(8px,1.25vh,14px);box-sizing:border-box;background:var(--festival-green);border-radius:2px}
+@media screen and (min-width:901px) {#cc #format[data-fit] .festival-copy {justify-content:space-between}}
+@media screen and (max-width:900px) {#cc .program-ruler small {display:none}}
+@media screen and (max-width:740px),screen and (max-width:960px) and (max-height:500px) {
+  #cc #format {display:flex;flex-direction:column;align-items:stretch}
+  #cc #format[hidden] {display:none}
+  #cc #format .day-program {order:-1;margin:0;--label-width:40%;--column-gap:8px;padding:14px 12px}
+  #cc .program-row {min-height:49px}
+  #cc .program-event {padding:.5em 25px .5em 0}
+  #cc .program-event strong {font-size:16px}
+}
+@media screen and (max-width:374px) {
+  #cc #format .day-program {--label-width:50%}
+}
+@media print {
+  #cc .day-program {break-inside:avoid;background:white;color:black;--column-gap:12px}
+  #cc .program-track,#cc .program-bar {print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  #cc .program-ruler,#cc .program-event strong {color:black}
+}
+
+/* Raised example notes on the Mechanics slide, adapted from the reader's .kl-snb. */
+#cc .mechanic-card {
+  box-sizing:border-box;position:fixed;inset:auto;margin:0;
+  width:min(340px,calc(100vw - 20px));padding:.72em .95em;
+  overflow:auto;border:1px solid var(--festival-rule);border-radius:8px;
+  background:var(--festival-panel);color:var(--festival-ink);
+  box-shadow:0 8px 30px rgb(0 0 0 / .4);font:400 16px/1.43 var(--festival-sans);
+}
+#cc .mechanic-card p {margin:0;font:inherit;color:inherit}
+#cc .mechanic-card a {display:inline-block;margin-top:.4em;font:600 .96em/1.4 var(--festival-sans);color:var(--festival-green)}
+
+
+#cc .zone-list .zone-trigger {
+  display:inline;appearance:none;margin:0;padding:0;border:0;background:transparent;
+  color:var(--festival-green);font:600 1.04em/1.25 var(--festival-sans);
+  text-align:left;text-decoration:none;cursor:pointer;
+}
+#cc .zone-list .zone-inline {font:inherit;color:inherit}
+#cc .zone-list .zone-trigger:is(:hover,:focus-visible,[aria-expanded=true]) {
+  color:var(--festival-gold);text-decoration:underline;text-underline-offset:.18em;
+}
+#cc .zone-card {
+  box-sizing:border-box;position:fixed;inset:auto;margin:0;
+  padding:12px;overflow:hidden;border:1px solid var(--festival-rule);border-radius:8px;
+  background:var(--festival-panel);color:var(--festival-ink);box-shadow:0 8px 30px rgb(0 0 0/.42);
+}
+#cc .zone-card:popover-open {
+  display:grid;grid-template-columns:minmax(0,1fr) 32px;gap:4px;align-items:start;
+}
+#cc .zone-card-inner {min-height:0;max-height:100%;overflow:auto;overscroll-behavior:contain;padding:2px 6px 2px 2px}
+#cc .zone-card-inner article+article {margin-top:1em}
+#cc .zone-card h2 {
+  margin:0 0 .45em;font:600 18px/1.25 var(--festival-sans);color:var(--festival-ink);
+}
+#cc .zone-card h2 small {margin-left:.55em;font:400 13px/1.3 var(--festival-sans);color:var(--festival-muted)}
+#cc .zone-card ul {list-style:none;margin:0;padding:0}
+#cc .zone-card li {padding:.32em 0;margin:0;border-top:1px solid var(--festival-rule);font:400 16px/1.35 var(--festival-sans)}
+#cc .zone-card strong {color:var(--festival-green);font-weight:600}
+#cc .zone-card .service strong {color:var(--festival-gold)}
+#cc .zone-card .station-action {display:block}
+#cc .zone-card .zone-close {
+  display:grid;place-items:center;width:32px;height:32px;padding:0;border:1px solid var(--festival-rule);
+  border-radius:50%;background:transparent;color:var(--festival-ink);font:400 20px/1 var(--festival-sans);cursor:pointer;
+}
+@media(pointer:coarse){
+  #cc .zone-card:popover-open{grid-template-columns:minmax(0,1fr) 42px}
+  #cc .zone-card .zone-close{width:42px;height:42px}
+}
+
+
+/* Keep a common top and bottom edge while preserving complete floor groups. */
+@media screen and (min-width:901px), screen and (min-width:741px) and (orientation:landscape) and (hover:hover) and (pointer:fine) {
+  #cc #festival-stations[data-fit] .venue-guide {
+    grid-template-columns:minmax(0,1.18fr) minmax(0,1fr) minmax(0,1fr);
+    align-items:stretch;
+  }
+  #cc #festival-stations[data-fit] .venue-column > .school-place {
+    display:flex;flex-direction:column;flex:1 0 auto;
+  }
+  #cc #festival-stations[data-fit] .school-place > ul {
+    flex:1;display:flex;flex-direction:column;justify-content:space-between;
+  }
+  #cc #festival-stations[data-fit] .school-place:has(li:last-child:nth-child(-n+2)) {
+    flex-grow:0;
+  }
+}
+
+/* The event and mechanic names are the controls for their details. */
+#cc .mechanic-trigger {
+  display:inline-block;appearance:none;box-sizing:border-box;max-width:100%;
+  margin:0;padding:0;border:0;background:transparent;color:var(--festival-green);
+  text-align:start;text-decoration:none;cursor:pointer;
+}
+#cc .mechanic-trigger:is(:hover,:focus-visible,[aria-expanded=true]) {
+  color:var(--festival-gold);text-decoration:underline;text-underline-offset:.16em;
+}
+#cc .program-event {container-type:inline-size;padding:.35em 0;min-width:0}
+#cc .program-event .mechanic-trigger {
+  font:600 clamp(17px,17.55cqi,39px)/1.08 var(--festival-sans);
+  letter-spacing:-.012em;
+}
+#cc .stage-list .mechanic-trigger {
+  display:block;width:fit-content;
+  font:600 1.19em/1.15 var(--festival-sans);
+  vertical-align:baseline;
+}
+@media(pointer:coarse){
+  #cc .program-event .mechanic-trigger,#cc .stage-list .mechanic-trigger{min-height:44px}
+  #cc .program-event{padding-block:2px}
+  #cc .stage-list .mechanic-trigger{display:block}
+}
+@media print {
+  #cc .program-event {container-type:normal}
+  #cc .program-event .mechanic-trigger {font-size:12pt;min-height:0}
+  #cc .stage-list .mechanic-trigger {display:inline;font-size:11pt;min-height:0}
+  #cc .mechanic-trigger {color:#222;text-decoration:none}
+}
+
+
+/* Time and place introduce each stop; the account follows on the next line. */
+#cc #example .day-address {display:block;font-family:var(--festival-sans)}
+@media screen and (min-width:901px), screen and (min-width:741px) and (orientation:landscape) and (hover:hover) and (pointer:fine) {
+  #cc #example[data-fit] .day-list {display:flex;flex-direction:column;justify-content:space-between}
+  #cc #example[data-fit] .day-list li {padding-block:.22em}
 }

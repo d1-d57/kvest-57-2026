@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Печатная проба · Бюро снежных следов</title>
+<style>
+:root{--ink:#202b29;--green:#244d43;--border:#95a59c;--paper:#fffdf7;--muted:#52625b;font-family:system-ui,sans-serif;color:var(--ink);background:#e8e7df}
+*{box-sizing:border-box}
+body{margin:0}
+nav,main{max-width:53rem;margin:0 auto}
+nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.4rem 1rem}
+a,button{font:inherit;color:var(--green)}
+button{cursor:pointer;border:1px solid var(--green);border-radius:.25em;background:var(--paper);padding:.45rem .8rem}
+.paper{margin:0 0 1.25rem;padding:clamp(1.2rem,4vw,2.5rem);background:var(--paper);box-shadow:0 .2rem .9rem #0001}
+h1,h2,h3,p{margin:0 0 .7em}
+h1,h2{font:500 clamp(1.8rem,5vw,2.7rem)/1.1 Georgia,serif;color:var(--green)}
+h3{font-size:1.04rem;line-height:1.25}
+p,li{font-size:1rem;line-height:1.45}
+.eyebrow{color:var(--muted);font-size:.86rem;letter-spacing:.04em;font-weight:600}
+.card,.tokens{break-inside:avoid}
+.card{border:1.4px dashed var(--border);margin:.65rem 0 0;padding:.85rem 1rem}
+.card p:last-child,.card h3:last-child{margin-bottom:0}
+.tokens{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin:1rem 0}
+.token{border:1px dashed var(--border);display:grid;justify-items:center;align-content:center;gap:.4em;padding:.55em .15em;text-align:center}
+.token span{position:relative;display:block;width:2em;height:2em;border:2px solid currentColor;border-radius:50%;color:var(--green);font:600 1.25rem/1.85 Georgia,serif}
+.token span::before{position:absolute;top:-.32em;left:calc(50% - .22em);width:.44em;height:.3em;border:1px solid currentColor;content:""}
+.token small{font-weight:600}
+.note{border-left:.22em solid var(--border);padding-left:.65em}
+.cut-gift{margin-top:1em;border-top:1.4px dashed var(--border);padding-top:1em;break-inside:avoid}
+.cube-net{display:block;width:min(172mm,100%);height:auto;margin:.7em auto 0}
+.case-key{padding-left:1.35em}
+.case-key li{margin:.4em 0}
+@media(max-width:570px){.tokens{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@page{size:A4;margin:13mm}
+@media print{
+:root,body,.paper{color:#111;background:white}
+nav{display:none}
+main{max-width:none;margin:0}
+.paper{margin:0;padding:0;box-shadow:none;break-before:page}
+.paper:first-child{break-before:auto}
+h1,h2{font-size:22pt;color:#111}h3{font-size:12pt}
+p,li{font-size:11pt;line-height:1.32}
+.card{border:.35mm dashed #555;padding:3.2mm 4mm;margin:2.5mm 0}
+.tokens{grid-template-columns:repeat(4,minmax(0,1fr));margin:3mm 0}
+.token span{color:#111}
+.eyebrow{font-size:9pt;color:#333}
+}
+
+.caption{text-align:center}
+.poster-face{display:flex;justify-content:center}
+.poster-face svg{width:79mm;max-width:70%;height:auto}
+.pair{display:flex;justify-content:center;gap:2rem}
+.pair figure{margin:0;text-align:center}
+.pair svg{display:block;width:min(30vw,32mm);height:auto}
+.parts svg{display:block;width:min(127mm,100%);height:auto;margin:0 auto}
+.sketch{min-height:47mm;background:linear-gradient(transparent 98%,#aaa 98%)}
+.answer-figure{display:flex;align-items:center;gap:1.4rem;margin:1.2rem 0}
+.answer-figure svg{flex:none;width:min(30%,54mm);height:auto}
+.answer-figure p{max-width:26rem}
+@media print{.poster-face svg{width:72mm}.pair svg{width:30mm}.parts svg{width:121mm}.sketch{min-height:43mm}.answer-figure{margin:4mm 0}}
+</style>
+</head>
+<body>
+<nav><a href="index.html#guide">← К памятке организатора</a><button type="button" onclick="window.print()">Распечатать пробу</button></nav>
+<main>
+
+<section class="paper">
+<p class="eyebrow">Бюро снежных следов · комплект на одну команду</p>
+<h1>Заяц для театра теней</h1>
+<p>Разрежьте первые два листа по пунктиру. Положите письмо в Училище. Афишу отдайте кукольнику, клише и заготовки — в Типографию, бланк схемы — в Театр теней. Ключ для ведущего находится на третьем листе.</p>
+<div class="card letter"><h3>Письмо для команды</h3>
+<p>У кукольника на ширме три пятна. А нужен заяц — такой же, как на афише. Загляните в Кукольный театр за афишей. В Типографии по ней подберут детали.</p>
+<p>Когда заяц появится на ширме, зарисуйте, как соединить детали. Я передам кукольнику вашу схему, и он сможет повторять сцену на каждом показе.</p>
+</div>
+<div class="card"><h3>Афиша из Кукольного театра</h3><div class="poster-face"><svg role="img" aria-label="Заяц для афиши: два уха, нос вправо, хвост влево" viewBox="0 0 90 80"><g fill="currentColor"><path d="M19 65 C9 67 6 57 12 54 C15 52 18 53 21 56 C26 40 39 34 52 37 C64 39 65 50 62 61 Q66 63 67 68 L48 69 Q34 74 21 70 Z"></path><path d="M48 40 C47 31 51 23 60 23 Q70 22 74 31 Q78 31 81 35 Q79 41 71 43 Q66 50 57 48 Q49 47 48 40 Z"></path><path d="M54 30 C53 21 44 7 48 4 C53 1 61 16 62 22 C60 12 63 1 67 2 C72 4 70 21 66 29 Z"></path></g></svg></div><p class="caption">Так зрители видят зайца из зала. Возьмите афишу с собой в Типографию.</p></div>
+</section>
+<section class="paper">
+<p class="eyebrow">Типография и Театр теней · материалы команды</p><h2>Оттиск и тень</h2>
+<div class="card"><h3>Типография · проба оттиска</h3><p>С какого клише получится ваша афиша? Наложите кальку, обведите рисунок и переверните лист. Сравните оттиск с афишей кукольника.</p>
+<div class="pair"><figure><svg role="img" aria-label="Клише А: заяц носом вправо" viewBox="0 0 90 80"><g fill="currentColor"><path d="M19 65 C9 67 6 57 12 54 C15 52 18 53 21 56 C26 40 39 34 52 37 C64 39 65 50 62 61 Q66 63 67 68 L48 69 Q34 74 21 70 Z"></path><path d="M48 40 C47 31 51 23 60 23 Q70 22 74 31 Q78 31 81 35 Q79 41 71 43 Q66 50 57 48 Q49 47 48 40 Z"></path><path d="M54 30 C53 21 44 7 48 4 C53 1 61 16 62 22 C60 12 63 1 67 2 C72 4 70 21 66 29 Z"></path></g></svg><figcaption>Клише А</figcaption></figure><figure><svg role="img" aria-label="Клише Б: заяц носом влево" viewBox="0 0 90 80"><g fill="currentColor" transform="translate(90 0) scale(-1 1)"><path d="M19 65 C9 67 6 57 12 54 C15 52 18 53 21 56 C26 40 39 34 52 37 C64 39 65 50 62 61 Q66 63 67 68 L48 69 Q34 74 21 70 Z"></path><path d="M48 40 C47 31 51 23 60 23 Q70 22 74 31 Q78 31 81 35 Q79 41 71 43 Q66 50 57 48 Q49 47 48 40 Z"></path><path d="M54 30 C53 21 44 7 48 4 C53 1 61 16 62 22 C60 12 63 1 67 2 C72 4 70 21 66 29 Z"></path></g></svg><figcaption>Клише Б</figcaption></figure></div></div>
+<div class="card"><h3>Заготовки для ширмы</h3><p>Обведите три контура на плотной непрозрачной бумаге. Вырежьте каждую деталь отдельно.</p><div class="parts"><svg viewBox="0 0 152 70" role="img" aria-label="Три раздельных контура для вырезания. Туловище с хвостом, голова и уши."><path d="M19 65 C9 67 6 57 12 54 C15 52 18 53 21 56 C26 40 39 34 52 37 C64 39 65 50 62 61 Q66 63 67 68 L48 69 Q34 74 21 70 Z" transform="translate(-4,-8)" fill="none" stroke="#202622" stroke-width=".6"/><path d="M48 40 C47 31 51 23 60 23 Q70 22 74 31 Q78 31 81 35 Q79 41 71 43 Q66 50 57 48 Q49 47 48 40 Z" transform="translate(26,1)" fill="none" stroke="#202622" stroke-width=".6"/><path d="M54 30 C53 21 44 7 48 4 C53 1 61 16 62 22 C60 12 63 1 67 2 C72 4 70 21 66 29 Z" transform="translate(73,16)" fill="none" stroke="#202622" stroke-width=".6"/></svg></div></div>
+<div class="card"><h3>Схема для кукольника</h3><p>Зарисуйте зайца со стороны зрителя. Покажите, где стыкуются три детали. Отнесите схему в Бюро снежных следов. Там вас ждёт автор письма.</p><div class="sketch"></div></div>
+</section>
+<section class="paper">
+<p class="eyebrow">Бюро снежных следов · ведущему</p><h2>Как провести пробу</h2>
+<p>На один прогон нужны письмо, афиша, два клише, калька и карандаш, три вырезанные детали и бланк схемы. Для показа приготовьте фонарь, ширму из полупрозрачной бумаги и три держателя или кусочки съёмного скотча.</p>
+<ol class="case-key">
+<li>С 14:30 в Училище предлагайте желающим письмо без подписи. В Кукольном театре дайте команде афишу.</li>
+<li>В Типографии попросите предъявить афишу и сравнить её с двумя пробными оттисками на кальке. На клише Б нос смотрит влево. После переворота кальки он смотрит вправо, как на афише. После проверки выдайте команде три заготовки. Мастерские на III этаже открываются в 15:00. С этого времени ребята поднимаются в Театр теней, когда будут готовы.</li>
+<li>В Театре теней поставьте фонарь за ширмой, а детали держите близко к ней. Отметьте, где стоит зритель. Он должен видеть единый силуэт с двумя различимыми ушами, носом вправо и хвостом влево. У одиночного участника ведущий закрепляет детали в выбранных им местах.</li>
+<li>В Бюро снеговик встречает ребят и признаётся, что это он отправил письмо. Он принимает схему для кукольника, проверяет, можно ли по ней сложить три детали, и награждает команду. Если ребята захотят, снеговик предложит ещё одно поручение.</li>
+</ol>
+<div class="answer-figure"><svg viewBox="0 0 90 80" role="img" aria-label="Схема нахлёста трёх деталей со стороны зрителя"><path d="M19 65 C9 67 6 57 12 54 C15 52 18 53 21 56 C26 40 39 34 52 37 C64 39 65 50 62 61 Q66 63 67 68 L48 69 Q34 74 21 70 Z" fill="#ccc" stroke="#111" stroke-width=".7"/><path d="M48 40 C47 31 51 23 60 23 Q70 22 74 31 Q78 31 81 35 Q79 41 71 43 Q66 50 57 48 Q49 47 48 40 Z" fill="#f4f4f4" stroke="#111" stroke-width=".7"/><path d="M54 30 C53 21 44 7 48 4 C53 1 61 16 62 22 C60 12 63 1 67 2 C72 4 70 21 66 29 Z" fill="#aaa" stroke="#111" stroke-width=".7"/></svg><p>Вид из зала. Голова заходит на туловище, уши — на голову. Цвета здесь показывают границы бумажных деталей. На ширме вся тень будет одноцветной.</p></div>
+<p class="note">До открытия мастерских соберите силуэт на настоящей ширме и посмотрите на него из зала. Подберите расстояние до лампы. Для следующей команды разъедините детали и положите комплект в Типографию.</p>
+</section><section class="paper">
+<p class="eyebrow">Вырезать по пунктиру · для ведущих станций</p><h2>Ёлочные шары</h2>
+<p>За первое выполненное задание или первую законченную партию на станции команда получает один бумажный шар. Ведущий отмечает станцию в маршрутном листе. Шар полагается и тем, кто проиграл партию.</p>
+<div class="tokens" aria-label="Восемь карточек для вырезания">
+<div class="token"><span aria-hidden="true">✳</span><small>Снежинка</small></div>
+<div class="token"><span aria-hidden="true">★</span><small>Звезда</small></div>
+<div class="token"><span aria-hidden="true">☾</span><small>Месяц</small></div>
+<div class="token"><span aria-hidden="true">◇</span><small>Льдинка</small></div>
+<div class="token"><span aria-hidden="true">◇</span><small>Льдинка</small></div>
+<div class="token"><span aria-hidden="true">☾</span><small>Месяц</small></div>
+<div class="token"><span aria-hidden="true">★</span><small>Звезда</small></div>
+<div class="token"><span aria-hidden="true">✳</span><small>Снежинка</small></div>
+</div>
+<p>В холле II этажа команда может прикрепить шар к общей ёлке или обменять его у дежурного на выкройку бумажной игрушки. Участники могут меняться шарами между собой. Все рисунки равноценны.</p>
+<div class="cut-gift"><h3>Бумажный кубик на ёлку</h3>
+<p>Вырежьте развёртку по сплошной линии. Сложите по внутренним линиям в кубик. Закрепите рёбра кусочками скотча, добавьте нитяную петлю. Каждую квадратную грань можно расписать.</p>
+<svg class="cube-net" viewBox="0 0 205 155" role="img" aria-label="Развёртка кубика. Четыре квадрата в ряд, по одному над и под вторым квадратом.">
+<path d="M56 4h46v46h92v46h-92v46H56V96H10V50h46z" fill="none" stroke="#24332c" stroke-width="1.5"/>
+<path d="M56 50h46M56 96h46M56 50v46M102 50v46M148 50v46" fill="none" stroke="#446555" stroke-width="1" stroke-dasharray="2 2"/>
+</svg>
+</div>
+</section>
+
+</main>
+</body>
+</html>

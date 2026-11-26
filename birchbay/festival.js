@@ -7,57 +7,92 @@
   const picture = document.getElementById('picture');
   const fullImage = picture.querySelector('.picture-full');
   const fullControls = picture.querySelector('.picture-controls');
-  let returnFocus = null;
-  let openGallery = null;
+  let opener = null;
+  let pictures = [];
+  let pictureIndex = 0;
 
-  function enlarge(button) {
-    const image = button.querySelector('img');
-    returnFocus = button;
-    openGallery = button.closest('.scene-gallery');
-    fullImage.src = image.currentSrc || image.src;
-    fullImage.alt = image.alt;
-    if (image.dataset.full) {
-      fullSize(image).then(original => {
-        if (original && picture.open && returnFocus === button) fullImage.src = original.src;
-      });
-    }
-    fullControls.hidden = !openGallery;
-    if (openGallery) fullControls.querySelector('output').value = openGallery.querySelector('output').value;
-    if (!picture.open) picture.showModal();
+  function galleryFrames(gallery) {
+    return [...gallery.querySelectorAll(':scope > figure')];
   }
 
-  function turn(gallery, step) {
-    const frames = Array.from(gallery.children).filter(node => node.tagName === 'FIGURE');
-    const current = frames.findIndex(frame => !frame.hidden);
-    const next = (current + step + frames.length) % frames.length;
-    frames[current].hidden = true;
-    frames[next].hidden = false;
-    gallery.querySelector('output').value = (next + 1) + ' / ' + frames.length;
-    if (picture.open && openGallery === gallery) enlarge(frames[next].querySelector('.zoom-img'));
+  function showFrame(gallery, frames, index) {
+    frames.forEach((frame, i) => { frame.hidden = i !== index; });
+    gallery.querySelector('output').value = (index + 1) + ' / ' + frames.length;
+  }
+
+  function showPicture(index) {
+    pictureIndex = index;
+    const button = pictures[index];
+    const image = button.querySelector('img');
+    const gallery = button.closest('.scene-gallery');
+    if (gallery) {
+      const frames = galleryFrames(gallery);
+      showFrame(gallery, frames, frames.indexOf(button.closest('figure')));
+    }
+    fullImage.alt = image.alt;
+    fullImage.src = image.currentSrc || image.src;
+    fullControls.hidden = pictures.length < 2;
+    fullControls.querySelector('output').value = (index + 1) + ' / ' + pictures.length;
+    if (image.dataset.full) {
+      fullSize(image).then(original => {
+        if (original && picture.open && pictures[pictureIndex] === button) fullImage.src = original.src;
+      });
+    }
+  }
+
+  function turnPicture(step) {
+    if (pictures.length > 1) {
+      showPicture((pictureIndex + step + pictures.length) % pictures.length);
+    }
   }
 
   for (const button of presentation.querySelectorAll('.zoom-img')) {
-    button.addEventListener('click', () => enlarge(button));
+    button.addEventListener('click', () => {
+      opener = button;
+      pictures = [...button.closest('.festival-panel').querySelectorAll('.zoom-img')];
+      showPicture(pictures.indexOf(button));
+      picture.showModal();
+    });
   }
   for (const gallery of presentation.querySelectorAll('.scene-gallery')) {
     for (const button of gallery.querySelectorAll('.scene-buttons button')) {
-      button.addEventListener('click', () => turn(gallery, Number(button.dataset.step)));
+      button.addEventListener('click', () => {
+        const frames = galleryFrames(gallery);
+        const current = frames.findIndex(frame => !frame.hidden);
+        showFrame(gallery, frames, (current + Number(button.dataset.step) + frames.length) % frames.length);
+      });
     }
   }
   for (const button of fullControls.querySelectorAll('button')) {
-    button.addEventListener('click', () => turn(openGallery, Number(button.dataset.step)));
+    button.addEventListener('click', () => turnPicture(Number(button.dataset.step)));
   }
   picture.querySelector('.picture-close').addEventListener('click', () => picture.close());
   picture.addEventListener('keydown', event => {
-    if (!openGallery || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
     event.preventDefault();
-    turn(openGallery, event.key === 'ArrowLeft' ? -1 : 1);
+    turnPicture(event.key === 'ArrowLeft' ? -1 : 1);
   });
+  let touchStart = null;
+  fullImage.addEventListener('touchstart', event => {
+    touchStart = event.touches.length === 1 ? event.touches[0] : null;
+  }, {passive:true});
+  fullImage.addEventListener('touchcancel', () => {touchStart = null;});
+  fullImage.addEventListener('touchend', event => {
+    if (!touchStart) return;
+    const end = event.changedTouches[0];
+    const dx = end.clientX - touchStart.clientX;
+    const dy = end.clientY - touchStart.clientY;
+    touchStart = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > 2 * Math.abs(dy)) turnPicture(dx < 0 ? 1 : -1);
+  }, {passive:true});
   picture.addEventListener('close', () => {
+    const target = opener?.getClientRects().length ? opener : pictures[pictureIndex];
+    target?.focus({preventScroll:true});
     fullImage.removeAttribute('src');
-    openGallery = null;
-    if (returnFocus && returnFocus.getClientRects().length) returnFocus.focus({preventScroll:true});
-    returnFocus = null;
+    pictures = [];
+    opener = null;
+    touchStart = null;
   });
 
   const slideHeader = presentation.querySelector('.festival-header');
@@ -68,7 +103,7 @@
     if (presentation.hidden) return;
     const page = pages.find(item => !item.hidden);
     if (!page || page.id === 'guide') return;
-    if (!desktopSlides.matches) {
+    if (!desktopSlides.matches || (page.id === 'format' && window.matchMedia('(max-width:960px) and (max-height:500px)').matches)) {
       delete page.dataset.fit;
       for (const name of ['zoom', 'width', 'min-height']) page.style.removeProperty(name);
       return;
@@ -152,7 +187,12 @@
 
   function showPage(scroll) {
     const id = location.hash.slice(1);
-    const index = pages.findIndex(page => page.id === id);
+    const zone = id.startsWith('stations-') ? document.getElementById(id) : null;
+    const requested = zone?.closest('#festival-stations') ? 'festival-stations' : id;
+    const index = pages.findIndex(page => page.id === requested);
+    for (const place of presentation.querySelectorAll('.school-place')) {
+      place.toggleAttribute('data-selected', place === zone);
+    }
     const active = Math.max(index, 0);
     for (const [i, page] of pages.entries()) {
       page.hidden = i !== active;
@@ -164,8 +204,16 @@
     fitSlide();
     warmGallery(pages[active]);
     upgradeImages(pages[active]);
-    if (scroll) requestAnimationFrame(() => window.scrollTo(0, 0));
+    if (scroll) requestAnimationFrame(() => {
+      if (zone) zone.focus({preventScroll:true});
+      if (zone && !desktopSlides.matches) zone.scrollIntoView({block:'start'});
+      else window.scrollTo(0, 0);
+    });
   }
+
+  presentation.addEventListener('toggle', event => {
+    if (event.target.tagName === 'DETAILS') scheduleFit();
+  }, true);
 
   const statusWrap = document.querySelector('.catalog-note');
   const statusButton = statusWrap.querySelector('button');
@@ -182,16 +230,196 @@
   statusButton.addEventListener('blur', () => {pinned = false; displayStatus(false);});
   statusButton.addEventListener('keydown', e => {if (e.key === 'Escape') {pinned = false; displayStatus(false);}});
   document.addEventListener('pointerdown', e => {if (!statusWrap.contains(e.target)) {pinned = false; displayStatus(false);}});
+  // Measure in viewport pixels. The cards sit outside the scaled slide.
+  let exampleButton = null;
+  let exampleCard = null;
+  function positionExample() {
+    if (!exampleCard || !exampleCard.matches(':popover-open')) return;
+    const anchor = exampleButton.getBoundingClientRect();
+    const width = document.documentElement.clientWidth;
+    const height = document.documentElement.clientHeight;
+    if (anchor.bottom < 0 || anchor.top > height) {
+      exampleCard.hidePopover();
+      return;
+    }
+    const below = height - anchor.bottom - 16;
+    const above = anchor.top - 16;
+    exampleCard.style.maxHeight = '';
+    const openAbove = exampleCard.offsetHeight > below && above > below;
+    exampleCard.style.maxHeight = Math.max(60, openAbove ? above : below) + 'px';
+    const left = Math.min(anchor.right - exampleCard.offsetWidth, width - exampleCard.offsetWidth - 8);
+    const top = openAbove ? anchor.top - exampleCard.offsetHeight - 6 : anchor.bottom + 6;
+    exampleCard.style.left = Math.max(8, left) + 'px';
+    exampleCard.style.top = Math.max(8, Math.min(top, height - exampleCard.offsetHeight - 8)) + 'px';
+  }
+  let hoverExample = null;
+  let closePreviewTimer = 0;
+  function cancelPreviewClose() {
+    clearTimeout(closePreviewTimer);
+  }
+  function leavePreview(card, event) {
+    if (event.pointerType !== 'mouse' || card !== hoverExample) return;
+    cancelPreviewClose();
+    closePreviewTimer = setTimeout(() => {
+      if (card === hoverExample) card.hidePopover();
+    }, 220);
+  }
+  for (const button of document.querySelectorAll('.mechanic-trigger')) {
+    const card = document.getElementById(button.getAttribute('popovertarget'));
+    button.addEventListener('pointerenter', event => {
+      if (event.pointerType !== 'mouse') return;
+      if (exampleCard && exampleCard !== hoverExample) return;
+      cancelPreviewClose();
+      if (exampleCard === card) return;
+      if (hoverExample) hoverExample.hidePopover();
+      hoverExample = card;
+      // A pointer preview must leave the reader's keyboard focus and scroll position alone.
+      const autofocus = card.hasAttribute('autofocus');
+      card.removeAttribute('autofocus');
+      card.showPopover({source:button});
+      if (autofocus) card.setAttribute('autofocus', '');
+      positionExample();
+    });
+    button.addEventListener('pointerleave', event => leavePreview(card, event));
+    card.addEventListener('pointerenter', () => {
+      if (hoverExample === card) cancelPreviewClose();
+    });
+    card.addEventListener('pointerleave', event => leavePreview(card, event));
+    button.addEventListener('click', event => {
+      if (card !== hoverExample) return;
+      // The native toggle would close an already visible mouse preview.
+      event.preventDefault();
+      cancelPreviewClose();
+      hoverExample = null;
+      if (event.detail === 0) card.focus({preventScroll:true});
+      else button.focus({preventScroll:true});
+    });
+    card.addEventListener('keydown', event => {
+      if (event.key === 'Escape') button.focus({preventScroll:true});
+    });
+    card.addEventListener('beforetoggle', event => {
+      const opening = event.newState === 'open';
+      button.setAttribute('aria-expanded', String(opening));
+      if (opening) {
+        exampleButton = button;
+        exampleCard = card;
+        requestAnimationFrame(positionExample);
+      } else {
+        if (card === hoverExample) {
+          cancelPreviewClose();
+          hoverExample = null;
+        }
+        if (card === exampleCard) {
+          exampleButton = null;
+          exampleCard = null;
+        }
+      }
+    });
+  }
+  window.addEventListener('scroll', positionExample, {passive:true});
+  window.addEventListener('resize', positionExample);
+  window.addEventListener('hashchange', () => exampleCard?.hidePopover());
 
-  nav.addEventListener('keydown', event => {
-    const offset = {ArrowLeft: -1, ArrowRight: 1}[event.key];
-    const index = links.indexOf(event.target);
-    if (offset === undefined || index < 0) return;
+  const zoneList = document.querySelector('#school .zone-list');
+  const zoneCard = document.getElementById('zone-directory-note');
+  const zoneBody = zoneCard.querySelector('.zone-card-inner');
+  const zoneClose = zoneCard.querySelector('.zone-close');
+  let zoneButton = null;
+
+  function positionZoneCard() {
+    if (!zoneButton || !zoneCard.matches(':popover-open')) return;
+    const list = zoneList.getBoundingClientRect();
+    const anchor = zoneButton.getBoundingClientRect();
+    const width = document.documentElement.clientWidth;
+    const height = document.documentElement.clientHeight;
+    if (anchor.bottom < 0 || anchor.top > height) { zoneCard.hidePopover(); return; }
+    const below = height - anchor.bottom - 14;
+    const above = anchor.top - 14;
+    const left = Math.max(8,list.left);
+    zoneCard.style.width = Math.min(435,list.width,width-left-8) + 'px';
+    zoneCard.style.left = left + 'px';
+    const style = getComputedStyle(zoneCard);
+    const inset = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom) +
+      parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+    const ideal = Math.min(400,inset + Math.max(zoneBody.scrollHeight,zoneClose.offsetHeight));
+    const flip = below < ideal && above > below;
+    const available = Math.max(100, Math.min(400,flip ? above : below));
+    const total = Math.min(ideal,available);
+    zoneCard.style.height = total + 'px';
+    zoneBody.style.maxHeight = (total - inset) + 'px';
+    const top = flip ? anchor.top - zoneCard.offsetHeight - 5 : anchor.bottom + 5;
+    zoneCard.style.top = Math.max(8,Math.min(top,height-zoneCard.offsetHeight-8)) + 'px';
+  }
+  zoneList.addEventListener('click', event => {
+    const button = event.target.closest('.zone-trigger');
+    if (!button) return;
     event.preventDefault();
-    const next = links[(index + offset + links.length) % links.length];
-    next.focus();
-    if (location.hash !== next.hash) location.hash = next.hash;
+    if (zoneButton === button) {
+      zoneCard.hidePopover();
+      button.focus({preventScroll:true});
+      return;
+    }
+    zoneButton?.setAttribute('aria-expanded','false');
+    zoneButton = button;
+    zoneButton.setAttribute('aria-expanded','true');
+    zoneCard.setAttribute('aria-label',button.textContent.trim());
+    zoneBody.replaceChildren();
+    for (const id of button.dataset.places.split(' ')) {
+      const source = document.getElementById(id);
+      if (!source?.matches('#festival-stations .school-place')) continue;
+      const section = document.createElement('article');
+      for (const item of source.children) section.append(item.cloneNode(true));
+      for (const copy of section.querySelectorAll('[id]')) copy.removeAttribute('id');
+      zoneBody.append(section);
+    }
+    if (!zoneCard.matches(':popover-open')) zoneCard.showPopover({source:button});
+    positionZoneCard();
+    zoneBody.scrollTop = 0;
+    zoneClose.focus({preventScroll:true});
   });
+  function dismissZoneCard() {
+    const button = zoneButton;
+    zoneCard.hidePopover();
+    button?.focus({preventScroll:true});
+  }
+  zoneClose.addEventListener('click',dismissZoneCard);
+  zoneCard.addEventListener('keydown',event => {
+    if (event.key === 'Escape') { event.preventDefault(); dismissZoneCard(); }
+  });
+  zoneCard.addEventListener('beforetoggle',event => {
+    if (event.newState === 'closed') {
+      zoneButton?.setAttribute('aria-expanded','false');
+      zoneButton = null;
+    }
+  });
+  window.addEventListener('resize',positionZoneCard);
+  window.addEventListener('scroll',positionZoneCard,{passive:true});
+  window.addEventListener('hashchange', () => {
+    if (zoneCard.matches(':popover-open')) zoneCard.hidePopover();
+  });
+
+
+  nav.addEventListener('keydown', changeSection);
+  document.addEventListener('keydown', event => {
+    if (!nav.contains(event.target)) changeSection(event);
+  });
+
+  function changeSection(event) {
+    if (zoneCard.matches(':popover-open')) return;
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    if (event.target.isContentEditable || event.target.closest?.('input, textarea, select')) return;
+    if (exampleCard && exampleCard !== hoverExample) return;
+    if (document.querySelector('dialog[open]')) return;
+    const step = {ArrowLeft: -1, ArrowRight: 1}[event.key];
+    if (!step) return;
+    const focused = links.indexOf(event.target);
+    const active = focused >= 0 ? focused : links.findIndex(link => link.hasAttribute('aria-current'));
+    if (active < 0) return;
+    event.preventDefault();
+    const next = links[(active + step + links.length) % links.length];
+    next.focus({preventScroll:true});
+    location.hash = next.hash;
+  }
   window.addEventListener('hashchange', () => {
     if (picture.open) picture.close();
     showPage(true);
