@@ -1,0 +1,1063 @@
+
+    :root {
+      color-scheme: light;
+      --ink: #18343b;
+      --deep: #102f36;
+      --body: #243b40;
+      --soft: #4b6566;
+      --mint: #dcece6;
+      --canvas: #edf3ed;
+      --paper: #fffdf4;
+      --line: #b9ccc4;
+      --rust: #8e392c;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: system-ui, -apple-system, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { background: var(--canvas); }
+    body { margin: 0; color: var(--ink); font-family: var(--sans); }
+    a { color: inherit; text-underline-offset: .22em; }
+    :focus-visible { outline: 3px solid var(--rust); outline-offset: 5px; }
+    .wrap { width: min(calc(100% - 5rem), 74rem); margin-inline: auto; }
+    .masthead {
+      background: var(--deep);
+      color: var(--paper);
+      border-block-end: 4px solid #9fbdb2;
+    }
+    .masthead .wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-block: 1.1rem;
+      gap: 1rem;
+    }
+    .place { font-family: var(--serif); font-size: 1.18rem; }
+    .meta { color: #cbe2dc; font-size: .78rem; }
+    .opening {
+      display: grid;
+      grid-template-columns: minmax(14rem, .82fr) minmax(0, 1.78fr);
+      grid-template-areas: "title world" "guide world";
+      grid-template-rows: min-content 1fr;
+      gap: 1.05rem clamp(2rem, 7vw, 6.65rem);
+      padding-block: clamp(2.5rem, 5.4vw, 4.6rem) clamp(3rem, 6vw, 5rem);
+    }
+    .opening-title {
+      grid-area: title;
+      align-self: start;
+      border-block-start: 1px solid var(--soft);
+      padding-block-start: 1.25rem;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 400; }
+    h1 {
+      font-size: clamp(3.5rem, 6.55vw, 6.2rem);
+      line-height: .94;
+      letter-spacing: -.065em;
+      margin-block: 0 .55rem;
+    }
+    .jump { display: inline-block; color: var(--soft); font-size: .92rem; padding-block: .35rem; }
+    .story {
+      counter-reset: scene;
+      font-family: var(--serif);
+      font-size: clamp(1.2rem, 1.8vw, 1.48rem);
+      line-height: 1.54;
+      color: var(--body);
+      padding-inline-start: 2.1rem;
+    }
+    .story p {
+      position: relative;
+      padding-block: 1rem 1.19rem;
+      border-block-start: 1px solid var(--line);
+    }
+    .story p:first-child { border-block-start-color: var(--soft); }
+    .story p:last-child { padding-block-end: 0; }
+    .story p::before {
+      counter-increment: scene;
+      content: counter(scene, upper-roman);
+      position: absolute;
+      inset-inline-start: -2.1rem;
+      inset-block-start: 1.27rem;
+      font-family: var(--sans);
+      color: var(--rust);
+      font-size: .7rem;
+      font-weight: 700;
+    }
+    .story strong { color: var(--ink); }
+    .facilitators {
+      background: var(--paper);
+      border-block: 1px solid var(--line);
+      padding-block: clamp(2.2rem, 5.5vw, 4.4rem);
+    }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: clamp(1rem, 5vw, 4rem);
+      align-items: end;
+      margin-block-end: 2.4rem;
+    }
+    h2 {
+      max-width: 17ch;
+      font-size: clamp(2.1rem, 4.55vw, 3.9rem);
+      line-height: 1.04;
+      letter-spacing: -.037em;
+    }
+    .section-head p { color: var(--soft); line-height: 1.62; max-width: 43ch; }
+    .evidence {
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      background: var(--line);
+      border: 1px solid var(--line);
+      gap: 1px;
+      list-style: none;
+    }
+    .evidence li {
+      padding: clamp(1.25rem, 3vw, 2rem);
+      background: var(--paper);
+      display: flex;
+      flex-direction: column;
+      gap: .8rem;
+    }
+    .evidence h3 { font-size: 1.56rem; line-height: 1.18; }
+    .evidence p { color: var(--soft); line-height: 1.55; font-size: .94rem; max-width: 47ch; }
+    .prop {
+      margin: 0;
+      padding: .85rem 1rem;
+      border-inline-start: 3px solid #94b8ad;
+      background: var(--mint);
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      line-height: 1.4;
+    }
+    .map {
+      display: grid;
+      grid-template-columns: 1fr 1.55fr;
+      gap: .1rem .85rem;
+      margin: 0;
+      padding: .75rem 0;
+      font-size: .9rem;
+      line-height: 1.5;
+      border-block: 1px dashed var(--line);
+    }
+    .map dt { font-weight: 650; }
+    .map dd { margin: 0; }
+    .invoice {
+      border: 1px dashed #ab9a71;
+      background: #f4edd6;
+      padding: .8rem 1rem;
+      font-family: var(--serif);
+      font-size: 1.12rem;
+      line-height: 1.45;
+    }
+    .invoice small { display: block; font-family: var(--sans); color: #644e38; font-size: .78rem; }
+    .tag {
+      display: inline-block;
+      align-self: start;
+      padding: .65rem 1rem;
+      border: 1px solid #a59874;
+      border-radius: .2rem 1rem 1rem .2rem;
+      background: #f4edd6;
+      font: 1.13rem var(--serif);
+    }
+    .run {
+      max-width: 44rem;
+      margin-block-start: 2.05rem;
+      line-height: 1.6;
+      font-size: .94rem;
+      color: var(--body);
+    }
+    .sources { padding-block: 1.65rem 2.5rem; }
+    .sources details { max-width: 45rem; color: var(--soft); line-height: 1.58; }
+    .sources summary { cursor: pointer; color: var(--ink); font-weight: 650; padding-block: .4rem; }
+    .sources ul { padding-inline-start: 1.25rem; margin-block: .65rem 0; }
+    .sources li + li { margin-block-start: .6rem; }
+    @media (max-width: 44rem) {
+      .wrap { width: calc(100% - 2.2rem); }
+      .opening, .section-head, .evidence { grid-template-columns: minmax(0, 1fr); }
+      .meta { white-space: nowrap; }
+      .meta .status { display: none; }
+      .opening { grid-template-areas: "title" "world" "guide"; grid-template-rows: auto; gap: 1.25rem; }
+      .opening-title { padding-block-start: .8rem; }
+      h1 { margin-block-end: .9rem; }
+      .story { padding-inline-start: 1.5rem; }
+      .story p::before { inset-inline-start: -1.5rem; }
+      .section-head { gap: .75rem; margin-block-end: 1.3rem; }
+    }
+    @media print {
+      html, .facilitators { background: white; }
+      .masthead { color: var(--ink); background: white; border: 0; }
+      .meta { color: var(--soft); }
+      .wrap { width: 100%; }
+      .jump { display: none; }
+      .opening, .facilitators { padding-block: 1rem; }
+      .opening { grid-template-columns: 1fr; grid-template-areas: "title" "world"; gap: .4rem; }
+      .story { font-size: 13pt; }
+      h1 { font-size: 32pt; }
+      .evidence li, .story p { break-inside: avoid; }
+    }
+    .opening-nav { grid-area: guide; align-self: start; display: grid; justify-items: start; }
+    @media print { .opening-nav { display: none; } }
+    .opening-nav a + a { margin-block-start: .1rem; }
+    .locations {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(1rem, 4vw, 3rem);
+    }
+    .locations article {
+      border-block-start: 1px solid var(--line);
+      padding-block-start: .95rem;
+    }
+    .locations article .floor {
+      color: var(--rust);
+      font-size: .8rem;
+      font-weight: 700;
+      margin-block-end: .55rem;
+    }
+    .locations h3 { font-size: clamp(1.45rem, 2.4vw, 2.05rem); }
+    .locations p:not(.floor), .role-list dd, .run-list {
+      line-height: 1.6;
+      color: var(--body);
+      font-size: .96rem;
+    }
+    .locations p:not(.floor) { margin-block-start: .65rem; }
+    .people { margin-block-start: 1.85rem; border-block: 1px solid var(--line); }
+    .people summary { cursor: pointer; padding: .75rem 0; font-weight: 680; }
+    .role-list { margin: 0; padding-block-end: .5rem; }
+    .role-list div {
+      display: grid;
+      grid-template-columns: minmax(8rem, 1fr) minmax(0, 2.8fr);
+      gap: .35rem 1.5rem;
+      padding-block: .65rem;
+      border-block-start: 1px dashed var(--line);
+    }
+    .role-list dt { font-weight: 680; }
+    .role-list dd { margin: 0; max-width: 68ch; }
+    .walkthrough { padding-block: clamp(2.25rem, 6vw, 4.7rem); }
+    .steps {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      counter-reset: step;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .5rem clamp(1.5rem, 5vw, 4rem);
+    }
+    .steps li { position: relative; border-block-start: 1px solid var(--line); padding: 1rem 0 1.2rem 2rem; }
+    .steps li::before {
+      counter-increment: step;
+      content: counter(step, decimal-leading-zero);
+      color: var(--rust);
+      font-weight: 700;
+      font-size: .75rem;
+      position: absolute;
+      inset: 1.2rem auto auto 0;
+    }
+    .steps h3 { font-size: 1.46rem; margin-block-end: .35rem; }
+    .steps p, .common, .case-body { font-size: .96rem; color: var(--body); line-height: 1.65; }
+    .common { padding: .95rem 1.2rem; max-width: 64ch; margin-block-start: .75rem; border-inline-start: 3px solid var(--rust); background: var(--paper); }
+    .case { border-block-start: 1px solid var(--line); }
+    .case:last-child { border-block-end: 1px solid var(--line); }
+    .case summary { cursor: pointer; padding: .8rem .15rem; color: var(--deep); font-size: 1.05rem; }
+    .case[open] summary { background: #f3f4e9; }
+    .case-sign { font-family: var(--sans); display: inline-block; font-size: .79rem; font-weight: 700; color: var(--rust); margin-inline: .5rem .75rem; min-width: 6.4rem; }
+    .case-title { font-family: var(--serif); font-size: 1.34rem; }
+    .case-body { padding: .85rem 1rem 1.1rem; }
+    .case-lead { max-width: 67ch; }
+    .clues { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 1rem 0 .85rem; }
+    .clues > div { border-block-start: 1px dashed var(--line); padding-block-start: .6rem; }
+    .clues dt { color: var(--soft); font-weight: 650; font-size: .85rem; }
+    .clues dd { margin: .35rem 0 0; }
+    .clues dd strong { display: block; margin-block-start: .2rem; }
+    .verdict { color: var(--ink); }
+    .run-list { margin: 0; padding: .15rem 0 .8rem 1.15rem; max-width: 72ch; }
+    .run-list li + li { margin-block-start: .35rem; }
+    @media (max-width: 44rem) {
+      .locations, .steps, .clues, .role-list div { grid-template-columns: minmax(0, 1fr); }
+      .locations { gap: 1rem; }
+      .clues { gap: .7rem; }
+      .case-sign { min-width: auto; margin-inline-end: .55rem; }
+      .case-title { font-size: 1.25rem; }
+    }
+
+    .town-story { max-width: 75ch; line-height: 1.65; color: var(--body); margin: -1.2rem 0 2rem; }
+    .chronology + .common { margin-block-end: 1rem; }
+    .case-action { float: inline-end; margin: .25rem .5rem 0 1rem; color: var(--soft); font-size: .78rem; }
+    .floor-sheet { border-block-start: 1px solid var(--line); }
+    .floor-sheet:last-of-type { border-block-end: 1px solid var(--line); }
+    .floor-sheet > summary { padding: .94rem 0; cursor: pointer; }
+    .floor-sheet > summary span { margin-inline: .5rem .85rem; color: var(--rust); font-size: .8rem; font-weight: 700; }
+    .floor-sheet > summary strong { font: 1.55rem var(--serif); }
+    .floor-subtitle { color: var(--soft); line-height: 1.6; padding: 0 .8rem 1rem; max-width: 71ch; }
+    .place-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); margin: 0 0 1.2rem; }
+    .place-card { padding: clamp(1.15rem, 3vw, 1.8rem); background: var(--paper); color: var(--body); line-height: 1.52; font-size: .94rem; }
+    .place-code { color: var(--rust); font-size: .73rem; font-weight: 700; }
+    .place-card h3 { font-size: 1.52rem; color: var(--ink); line-height: 1.14; margin-block: .3rem; }
+    .place-card p { margin-block-start: .6rem; max-width: 55ch; }
+    .place-card .place-role { color: var(--soft); font-weight: 650; margin-block-start: .2rem; }
+    .place-card .replica { border-inline-start: 2px solid var(--line); padding-inline-start: .65rem; color: var(--soft); }
+    @media (max-width: 44rem) {
+      .place-list { grid-template-columns: minmax(0, 1fr); }
+      .case-action { float: none; display: block; margin-inline-start: 1.25rem; }
+      .town-story { margin-block-start: 0; }
+    }
+
+    .frontmatter { grid-area: world; border-block-start: 1px solid var(--soft); padding-block-start: 1.05rem; }
+    .frontmatter h2 { font-size: clamp(1.75rem, 3vw, 2.65rem); }
+    .frontmatter > p, .hook-copy {
+      color: var(--body);
+      font: clamp(1.16rem, 1.65vw, 1.38rem) / 1.52 var(--serif);
+      max-width: 60ch;
+    }
+    .frontmatter > p { margin-block: .7rem 1.2rem; }
+    .frontmatter h3 { font-size: 1.32rem; }
+    .frontmatter .role-list { margin-block-start: .48rem; }
+    .frontmatter .role-list > div { grid-template-columns: minmax(5.5rem, .95fr) minmax(0, 4fr); }
+    .hook { padding-block: clamp(2rem, 4vw, 3.2rem); }
+    .hook h2 { margin-block-end: .7rem; }
+    .hook .story { max-width: 47rem; margin-block: .25rem 1.1rem; font-size: clamp(1.08rem, 1.6vw, 1.28rem); }
+    @media (max-width: 31rem) {
+      .frontmatter .role-list > div { grid-template-columns: minmax(3.6rem, .85fr) minmax(0, 3.15fr); gap: .65rem; }
+    }
+.leaf{padding-block:clamp(2rem,4vw,3.8rem)}.paper{background:var(--paper);border-block:1px solid var(--line)}
+.overview{display:grid;grid-template-columns:1.2fr 1fr;align-items:end;gap:2rem;margin-bottom:2.3rem}.overview h1{max-width:13ch}.intro{font:1.13rem/1.5 var(--serif);color:var(--soft);margin-top:1rem}.overview nav{display:flex;flex-wrap:wrap;gap:.7rem 1.1rem;max-width:30rem}.overview nav a{font-size:.95rem}
+.leaf h2{max-width:25ch;margin-bottom:1rem}.reading{max-width:76ch}.reading p,.deck{font:1.12rem/1.57 var(--serif);color:var(--body);margin-block:.7rem 1rem}.deck{max-width:85ch}
+.districts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5rem;margin:1.4rem 0}.districts article{border-top:2px solid var(--soft);padding-top:.85rem}.districts h3{font-size:1.45rem}.districts p,.appendix p,.agenda dd,.questions li{font-size:1rem;line-height:1.55;margin:.65rem 0}.small,.station-rows em{color:var(--soft)}.districts .small,.appendix .small{font-size:.91rem}
+.appendix{border-block-start:1px solid var(--line);padding-block:.65rem}.appendix summary{cursor:pointer;color:var(--deep);font-weight:650;line-height:1.5;padding-block:.3rem}.appendix[open] summary{margin-bottom:.55rem}.station-rows{display:grid;grid-template-columns:1fr 1.35fr;gap:1.5rem}.station-rows ul{padding-left:1.15rem}.station-rows li{margin:.52rem 0;line-height:1.47}.station-rows em{display:block;font-size:.83rem;font-style:normal}.agenda{margin:1rem 0}.agenda>div{display:grid;grid-template-columns:minmax(8rem,1fr) 3.8fr;gap:1rem;align-items:baseline;border-top:1px solid var(--line)}.agenda dt{font-weight:650}.questions{padding-left:1.6rem}.questions li{padding-left:.3rem}
+@media(max-width:44rem){.overview,.districts,.station-rows{grid-template-columns:1fr}.overview{gap:1rem}.agenda>div{display:block;padding:.7rem 0}.agenda dd{margin:.2rem 0}.leaf h1{font-size:3.7rem}.wrap{width:calc(100% - 2rem)}}
+@media print{@page{size:A4;margin:14mm 17mm}.masthead,.overview nav,.sources{display:none}.wrap{width:100%}.leaf{padding:4mm 0}.paper{background:white;border:0}.overview{display:block;margin-bottom:5mm}.overview h1{font-size:28pt}.overview h1 br{display:none}.overview h1 br:after{content:" "}.leaf h2{font-size:18pt}.reading{max-width:none}.reading p,.deck,.districts p,.districts .small,.agenda dd,.appendix p,.questions li{font-size:10.2pt;line-height:1.37}.districts{gap:5mm}.districts h3{font-size:12pt}h2,h3,summary{break-after:avoid}.agenda>div,.station-rows li{break-inside:avoid}.station-rows em{font-size:8pt}.appendix summary{font-size:10pt}.station-rows li{font-size:9.5pt}.leaf,.agenda,.districts,.appendix{color:#111}}
+
+@media(max-width:37rem){.masthead .wrap{flex-wrap:wrap;gap:.35rem 1rem}.masthead .meta{white-space:normal;min-width:0}.overview nav a{overflow-wrap:anywhere}}
+  
+.dossier h2{max-width:30ch}.dossier .overview{margin-bottom:1.3rem}.world-table{border-collapse:collapse;width:100%;margin:1.15rem 0 1.6rem;line-height:1.5;table-layout:fixed}.world-table caption{text-align:left;padding:0 0 .6rem;font:1.16rem/1.35 var(--serif);color:var(--soft)}.world-table th,.world-table td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:.66rem .8rem;overflow-wrap:anywhere}.world-table thead th{background:var(--deep);color:var(--paper);font-size:.86rem}.world-table tbody th{font-size:1rem;font-weight:680;color:var(--deep)}.world-table tbody tr:nth-child(odd){background:rgba(197,213,201,.2)}.world-table :is(th,td):first-child{width:16%}#town .world-table :is(th,td):first-child{width:20%}
+@media(max-width:42rem){.world-table,.world-table tbody,.world-table tr,.world-table td,.world-table th[scope=row]{display:block;width:auto!important}.world-table thead{position:absolute;clip-path:inset(50%);height:1px;width:1px;overflow:hidden}.world-table tr{padding:.65rem;border-bottom:1px solid var(--line)}.world-table tbody th,.world-table td{border:0;padding:.2rem .25rem}.world-table td:before{content:attr(data-label);display:block;color:var(--soft);font-size:.76rem;font-weight:650}.world-table tbody th{font-size:1.1rem}#town .world-table td:before{display:none}.world-table caption{display:block}.dossier .overview h1{font-size:2.9rem}.world-table{margin-top:.6rem}}
+@media print{.world-table thead{display:table-header-group}.world-table tr{break-inside:avoid}.world-table :is(td,th){font-size:9pt;padding:4pt}.world-table caption{font-size:11pt}.dossier h2{break-after:avoid}}
+
+.town-view,.map-figure{margin:1.45rem 0}.town-view img{display:block;width:100%;height:auto;border-radius:8px}.town-view figcaption,.map-figure figcaption{font-size:.91rem;line-height:1.48;color:var(--soft);margin-top:.58rem}.art-direction{max-width:78ch;margin:1.4rem 0}.art-direction h3,.local-refs h3{font-size:1.34rem}.art-direction p{margin:.55rem 0;line-height:1.55}.art-direction summary{cursor:pointer;color:var(--soft);padding:.4rem 0}
+.local-refs{margin:1.35rem 0 2.1rem;border-top:2px solid #ba9271;padding:.9rem 0 0}.local-refs ul{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));list-style:none;gap:1rem 1.3rem;padding:0;margin:.7rem 0}.local-refs li{border-left:2px solid var(--line);padding-left:.7rem}.local-refs li p{font-size:.94rem;line-height:1.48;margin:0 0 .35rem}.local-refs li a{font-size:.86rem;color:#714029;text-decoration-thickness:1px}
+.portrait-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.6rem;margin:1.25rem 0 1.8rem;max-width:58rem}.portrait-grid figure{margin:0}.resident{background-image:var(--cast-sheet);background-size:500% 100%;background-repeat:no-repeat;aspect-ratio:3/5;border-radius:7px}.portrait-grid figcaption{padding:.38rem .1rem}.portrait-grid small{display:block;font-size:.83rem;color:var(--soft)}
+.map-window{width:100%;overflow-x:auto}.el-map{display:block;width:100%;height:auto}.map-figure label{cursor:pointer;font-size:.86rem}.map-figure input{accent-color:var(--deep)}.map-figure input:checked~.map-window .el-map{min-width:960px}.map-figure .map-window{margin-top:.5rem}
+@media(max-width:40rem){.portrait-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.local-refs ul{gap:.8rem}.map-window .el-map{min-width:0}.portrait-grid small{font-size:.74rem}}
+@media print{.map-window .el-map{min-width:0!important}.map-figure>input,.map-figure>label{display:none}.town-view,.portrait-grid,.map-figure{break-inside:avoid}.local-refs li{break-inside:avoid}.resident{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+
+
+
+.shop-scene{max-width:45rem;margin:1.25rem 0}.shop-scene svg{width:100%;height:auto;display:block;border-radius:6px}.shop-scene figcaption,.margin-studies figcaption{font-size:.91rem;line-height:1.5;color:var(--soft);margin-top:.45rem}
+.margin-studies{display:flex;align-items:flex-start;flex-wrap:wrap;gap:1rem 2rem;margin:1.2rem 0}.margin-studies figure{display:grid;grid-template-columns:76px minmax(0,15rem);gap:.7rem;align-items:center;margin:0}.margin-studies svg{width:76px;height:auto;border-radius:4px}.margin-studies figcaption{margin:0}.art-direction details a{color:#75432b}
+@media(max-width:42rem){.margin-studies{gap:.7rem}.shop-scene{margin-block:1rem}}
+.studies-strip{display:grid;grid-template-columns:minmax(110px,155px) minmax(0,42ch);gap:1rem;align-items:center;margin:1rem 0 1.4rem}.studies-strip svg{width:100%;height:auto;display:block;border-radius:3px}.studies-strip figcaption{font-size:.9rem;line-height:1.48;color:var(--soft)}.map-figure{max-width:56rem}.map-window:focus-visible{outline:2px solid var(--rust)}.map-figure input:checked~.map-window .el-map{min-width:1050px}@media(max-width:36rem){.studies-strip{grid-template-columns:100px 1fr;gap:.7rem}}
+.city-atlas{max-width:none}.city-atlas .map-controls{display:flex;gap:.8rem 1.4rem;flex-wrap:wrap;align-items:center;margin-bottom:.45rem}.city-atlas .map-window{background:#ede9df;border:1px solid #c7c2ac;border-radius:5px}.city-atlas:has(#map-large:checked) .el-map{min-width:1536px}.city-atlas:has(#map-pins:not(:checked)) .map-pins{display:none}.atlas-key{counter-reset:place;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem 1.7rem;list-style:none;padding:0}.atlas-key li{position:relative;padding-left:2rem;font-size:.91rem;line-height:1.45}.atlas-key li:before{counter-increment:place;content:counter(place);position:absolute;left:0;top:.04rem;border-radius:50%;background:#713e33;color:white;width:1.45rem;height:1.45rem;text-align:center;font:700 .78rem/1.45rem Arial,sans-serif}.city-atlas>small{display:block;max-width:90ch;color:var(--soft)}.winter-life{margin:2.2rem 0}.winter-life>h3{font-size:1.62rem}.winter-strip{display:grid;gap:1rem;max-width:54rem}.winter-frame{margin:0}.winter-frame svg{display:block;width:100%;height:auto}.winter-frame figcaption{font-size:.9rem;line-height:1.45;color:var(--soft);padding:.4rem 0}.winter-life>.small{max-width:85ch;line-height:1.5}.map-figure .el-map{border-radius:0}@media(max-width:42rem){.atlas-key{grid-template-columns:1fr}.city-atlas .map-controls{gap:.5rem 1rem}}@media print{.city-atlas .map-controls{display:none}.city-atlas:has(#map-large:checked) .el-map{min-width:0}.winter-frame{break-inside:avoid}}
+
+.atlas-pin{cursor:pointer}.atlas-pin .pin-disc{fill:var(--pc)}.atlas-pin:focus .pin-disc,.atlas-pin.selected .pin-disc{stroke:#ffe193;stroke-width:5}.atlas-inspector{display:grid;grid-template-columns:minmax(8rem,15rem) 1fr;align-items:center;gap:1.1rem;max-width:62rem;margin-top:.9rem}.atlas-inspector svg{width:100%;height:auto;border-radius:4px}.atlas-inspector small{display:block;color:var(--soft);margin:.2rem 0}.atlas-inspector p{margin:.4rem 0;font-size:.95rem}#station-map-list{list-style:none;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.3rem}#station-map-list button{display:flex;align-items:baseline;gap:.5rem;width:100%;height:100%;background:transparent;color:var(--ink);border:0;border-bottom:1px solid var(--line);font:inherit;text-align:left;cursor:pointer;padding:.42rem .12rem}#station-map-list button b{color:#805039;font-size:.83rem}#station-map-list button[aria-pressed=true]{background:#e6e2cf}.map-controls select{font:inherit;color:var(--ink);border:1px solid var(--line);background:var(--paper);padding:.3rem}.market-notes{margin:1.2rem 0}.market-notes>p{max-width:84ch;line-height:1.5}.warm-pair{margin:1.3rem 0;max-width:47rem}.warm-pair img{width:100%;height:auto;display:block;border-radius:6px}.warm-pair figcaption{font-size:.92rem;line-height:1.45;padding-top:.45rem}.rail-scroll{overflow-x:auto;max-width:48rem}.rail-scroll svg{width:100%;min-width:430px}.scale-rows{max-width:48rem}.scale-rows>div{display:grid;grid-template-columns:minmax(8rem,1fr) 1.4fr 3rem;gap:.55rem;align-items:center;font-size:.9rem;margin:.32rem 0}.scale-rows i{display:block;height:.36rem;background:#936749}.city-atlas{max-width:none}.map-window .el-map{width:100%}@media(max-width:50rem){#station-map-list{grid-template-columns:repeat(2,minmax(0,1fr))}.atlas-inspector{grid-template-columns:minmax(6rem,32%) 1fr}.rail-scroll{max-width:100%}}
+@media(max-width:38rem){.map-controls select{width:100%;max-width:100%;min-width:0;box-sizing:border-box}.atlas-inspector>div,#station-map-list li{min-width:0}#station-map-list button{overflow-wrap:anywhere}.rail-scroll{width:100%}.market-notes .agenda>div{min-width:0}}
+.atlas-meeting-pins,.meeting-key{display:none}.city-atlas:has(#atlas-meet:checked) .atlas-meeting-pins{display:inline}.city-atlas:has(#atlas-meet:checked) .meeting-key{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:.8rem}.meeting-key dt{font-weight:bold}.meeting-key dd{margin:.3rem 0;line-height:1.45}.train-demo{max-width:48rem;background:#f4efdd;padding:.8rem 1rem}.train-demo svg{display:block;width:100%;height:auto}.train-buttons{display:flex;gap:.35rem;flex-wrap:wrap}.train-buttons button{border:1px solid #60736a;background:#fff9e9;color:#22473e;border-radius:3px;padding:.3rem .7rem;cursor:pointer}.train-buttons button[aria-pressed=true]{background:#245045;color:white}.city-atlas:has(#map-large:checked) .el-map{min-width:1774px}
+.origin,.evening-note{margin:1.6rem 0}.origin>p,.evening-note p,#game>p{max-width:84ch;line-height:1.55}.origin h3,.evening-note h3,#game h3{font:1.55rem var(--serif)}.origin h4{margin:.85rem 0 .3rem}.place-shelf table{margin-bottom:1rem}.place-shelf th:first-child{width:25%}.view-tabs{margin-top:.7rem}
+.seen-in-views{max-width:82ch;margin-block:1.5rem}.seen-in-views p{line-height:1.54}.place-shelf summary{font-size:1.05rem}
+@font-face{font-family:"Source Serif 4";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/source-serif-4-400-02194deb9.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Source Serif 4";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/source-serif-4-400-4899e7140.woff2) format("woff2");unicode-range:U+0400-052F,U+2116}
+@font-face{font-family:"Source Serif 4";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/source-serif-4-600-f2b7e1cf1.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Source Serif 4";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/source-serif-4-600-881a5cd61.woff2) format("woff2");unicode-range:U+0400-052F,U+2116}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/source-sans-3-400-0f73f35e0.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/source-sans-3-400-b0324c3af.woff2) format("woff2");unicode-range:U+0400-052F,U+2116}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/source-sans-3-600-14527d193.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/source-sans-3-600-31fe183d2.woff2) format("woff2");unicode-range:U+0400-052F,U+2116}
+@font-face{font-family:"CMU Serif";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/cmu-serif-400-c6da425a2.woff2) format("woff2")}
+@font-face{font-family:"CMU Serif";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/cmu-serif-700-85c0acfbc.woff2) format("woff2")}
+/* Embedded font licenses:
+Google Inc.
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+http://scripts.sil.org/OFL
+
+
+-----------------------------------------------------------
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+-----------------------------------------------------------
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+fonts, including any derivative works, can be bundled, embedded,
+redistributed and/or sold with any software provided that any reserved
+names are not used by derivative works. The fonts and derivatives,
+however, cannot be released under any other type of license. The
+requirement for fonts to remain under this license does not apply
+to any document created using the fonts or their derivatives.
+
+DEFINITIONS
+"Font Software" refers to the set of files released by the Copyright
+Holder(s) under this license and clearly marked as such. This may
+include source files, build scripts and documentation.
+
+"Reserved Font Name" refers to any names specified as such after the
+copyright statement(s).
+
+"Original Version" refers to the collection of Font Software components as
+distributed by the Copyright Holder(s).
+
+"Modified Version" refers to any derivative made by adding to, deleting,
+or substituting -- in part or in whole -- any of the components of the
+Original Version, by changing formats or by porting the Font Software to a
+new environment.
+
+"Author" refers to any designer, engineer, programmer, technical
+writer or other person who contributed to the Font Software.
+
+PERMISSION & CONDITIONS
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of the Font Software, to use, study, copy, merge, embed, modify,
+redistribute, and sell modified and unmodified copies of the Font
+Software, subject to the following conditions:
+
+1) Neither the Font Software nor any of its individual components,
+in Original or Modified Versions, may be sold by itself.
+
+2) Original or Modified Versions of the Font Software may be bundled,
+redistributed and/or sold with any software, provided that each copy
+contains the above copyright notice and this license. These can be
+included either as stand-alone text files, human-readable headers or
+in the appropriate machine-readable metadata fields within text or
+binary files as long as those fields can be easily viewed by the user.
+
+3) No Modified Version of the Font Software may use the Reserved Font
+Name(s) unless explicit written permission is granted by the corresponding
+Copyright Holder. This restriction only applies to the primary font name as
+presented to the users.
+
+4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+Software shall not be used to promote, endorse or advertise any
+Modified Version, except to acknowledge the contribution(s) of the
+Copyright Holder(s) and the Author(s) or with their explicit written
+permission.
+
+5) The Font Software, modified or unmodified, in part or in whole,
+must be distributed entirely under this license, and must not be
+distributed under any other license. The requirement for fonts to
+remain under this license does not apply to any document created
+using the Font Software.
+
+TERMINATION
+This license becomes null and void if any of the above conditions are
+not met.
+
+DISCLAIMER
+THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+OTHER DEALINGS IN THE FONT SOFTWARE.
+
+Copyright (C) Authors of original metafont fonts:
+Donald Ervin Knuth (cm, concrete fonts)
+1995, 1996, 1997 J"org Knappen, 1990, 1992 Norbert Schwarz (ec fonts)
+1992-2006 A.Khodulev, O.Lapko, A.Berdnikov, V.Volovich (lh fonts)
+1997-2005 Claudio Beccari (cb greek fonts)
+2002 FUKUI Rei (tipa fonts)
+2003-2005 Han The Thanh (Vietnamese fonts)
+1996-2005 Walter Schmidt (cmbright fonts)
+
+Copyright (C) 2003-2009, Andrey V. Panov (panov@canopus.iacp.dvo.ru),
+with Reserved Font Family Name "Computer Modern Unicode fonts".
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+http://scripts.sil.org/OFL
+
+
+-----------------------------------------------------------
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+-----------------------------------------------------------
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+fonts, including any derivative works, can be bundled, embedded, 
+redistributed and/or sold with any software provided that any reserved
+names are not used by derivative works. The fonts and derivatives,
+however, cannot be released under any other type of license. The
+requirement for fonts to remain under this license does not apply
+to any document created using the fonts or their derivatives.
+
+DEFINITIONS
+"Font Software" refers to the set of files released by the Copyright
+Holder(s) under this license and clearly marked as such. This may
+include source files, build scripts and documentation.
+
+"Reserved Font Name" refers to any names specified as such after the
+copyright statement(s).
+
+"Original Version" refers to the collection of Font Software components as
+distributed by the Copyright Holder(s).
+
+"Modified Version" refers to any derivative made by adding to, deleting,
+or substituting -- in part or in whole -- any of the components of the
+Original Version, by changing formats or by porting the Font Software to a
+new environment.
+
+"Author" refers to any designer, engineer, programmer, technical
+writer or other person who contributed to the Font Software.
+
+PERMISSION & CONDITIONS
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of the Font Software, to use, study, copy, merge, embed, modify,
+redistribute, and sell modified and unmodified copies of the Font
+Software, subject to the following conditions:
+
+1) Neither the Font Software nor any of its individual components,
+in Original or Modified Versions, may be sold by itself.
+
+2) Original or Modified Versions of the Font Software may be bundled,
+redistributed and/or sold with any software, provided that each copy
+contains the above copyright notice and this license. These can be
+included either as stand-alone text files, human-readable headers or
+in the appropriate machine-readable metadata fields within text or
+binary files as long as those fields can be easily viewed by the user.
+
+3) No Modified Version of the Font Software may use the Reserved Font
+Name(s) unless explicit written permission is granted by the corresponding
+Copyright Holder. This restriction only applies to the primary font name as
+presented to the users.
+
+4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+Software shall not be used to promote, endorse or advertise any
+Modified Version, except to acknowledge the contribution(s) of the
+Copyright Holder(s) and the Author(s) or with their explicit written
+permission.
+
+5) The Font Software, modified or unmodified, in part or in whole,
+must be distributed entirely under this license, and must not be
+distributed under any other license. The requirement for fonts to
+remain under this license does not apply to any document created
+using the Font Software.
+
+TERMINATION
+This license becomes null and void if any of the above conditions are
+not met.
+
+DISCLAIMER
+THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+OTHER DEALINGS IN THE FONT SOFTWARE.
+
+*/
+.atlas-back{position:sticky;top:0;z-index:10;display:block;width:max-content;max-width:100%;padding:.55em 1em;background:#29514b;color:#eaf1ec;text-decoration:none}
+#atlas-start{scroll-margin:3rem}
+#atlas-library .wharf-view img{display:block;width:100%;height:auto}
+.festival-detail h4{margin:.86em 0 .2em;color:var(--festival-ink);font-size:1em}
+@page{size:A4;margin:14mm 17mm}
+#cc {
+  --festival-bg:#171a1f;
+  --festival-panel:#20262b;
+  --festival-ink:#f0efea;
+  --festival-muted:#b6bac1;
+  --festival-rule:#46514f;
+  --festival-gold:#e4ce93;
+  --festival-green:#8fc9ae;
+  --festival-forest:#29514b;
+  --festival-serif:"Source Serif 4",Georgia,serif;
+  --festival-sans:"Source Sans 3",system-ui,sans-serif;
+  --festival-title:"CMU Serif",Georgia,serif;
+  min-height:100svh;
+  background:var(--festival-bg);
+  color:var(--festival-ink);
+  font:400 17px/1.46 var(--festival-sans);
+  color-scheme:dark;
+}
+#cc [hidden], #atlas-library[hidden] {display:none!important}
+#cc a:focus-visible, #cc summary:focus-visible, #cc :focus-visible {
+  outline:2px solid var(--festival-gold);
+  outline-offset:4px;
+}
+.festival-header {
+  background:var(--festival-forest);
+  border-bottom:1px solid #4a716a;
+}
+.festival-header-inner {
+  max-width:1460px;
+  margin-inline:auto;
+  padding-inline:clamp(22px,4.5vw,72px);
+  min-height:65px;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:24px;
+}
+.festival-header a {text-decoration:none}
+.festival-brand, .festival-atlas {white-space:nowrap;font-size:16px}
+.festival-brand {font-weight:600}
+.festival-atlas {justify-self:end;color:#e4efe9}
+.festival-atlas span {margin-inline-start:.18em;color:var(--festival-gold)}
+.festival-nav {display:flex;justify-content:center;gap:clamp(12px,2vw,30px)}
+.festival-nav a {position:relative;display:block;padding:19px 0;color:#dceae4;white-space:nowrap}
+.festival-nav a:hover,.festival-atlas:hover {color:var(--festival-gold)}
+.festival-nav a[aria-current="page"] {color:var(--festival-gold)}
+.festival-nav a[aria-current="page"]::after {
+  content:"";position:absolute;inset:auto 0 0;height:2px;background:var(--festival-gold)
+}
+.festival-panel {
+  width:min(100%,1460px);
+  margin:auto;
+  padding:clamp(27px,4.15vh,64px) clamp(22px,4.5vw,72px);
+  display:grid;
+  grid-template-columns:minmax(0,.92fr) minmax(0,1fr);
+  align-items:center;
+  gap:clamp(36px,6.6vw,100px);
+  min-height:calc(100svh - 66px);
+}
+.festival-panel:has(details[open]) {align-items:start}
+.festival-copy, .festival-board {min-width:0}
+.no-break {white-space:nowrap}
+.festival-copy h1,.festival-copy h2 {
+  margin:0 0 .38em;
+  max-width:16ch;
+  font:400 clamp(42px,5.15vw,80px)/.99 var(--festival-title);
+  letter-spacing:-.048em;
+  text-wrap:balance;
+}
+.festival-date {
+  display:flex;flex-wrap:wrap;align-items:center;
+  gap:6px 18px;margin:0 0 1.02em!important;
+  font:600 16px/1.35 var(--festival-sans)!important;
+  color:var(--festival-gold);
+}
+.festival-date span {border-left:1px solid var(--festival-rule);padding-left:18px;color:var(--festival-muted);font-weight:400}
+.festival-copy > p, .festival-copy blockquote {
+  max-width:45ch;
+  margin:.78em 0 0;
+  font:400 clamp(17px,1.55vw,22px)/1.45 var(--festival-serif);
+  text-wrap:pretty;
+}
+.festival-copy .festival-lead {
+  margin-top:0;
+  font-size:clamp(20px,1.94vw,28px);
+  line-height:1.29;
+  color:var(--festival-ink);
+}
+.festival-copy blockquote {border-left:2px solid var(--festival-gold);padding-left:.83em;color:var(--festival-gold)}
+#cc details {margin:1.25em 0 0;border-top:1px solid var(--festival-rule)}
+#cc details summary {
+  display:flex;align-items:baseline;gap:.6em;
+  min-height:44px;padding:.65em 0;cursor:pointer;
+  font:600 17px/1.35 var(--festival-sans);color:var(--festival-green);list-style:none;
+}
+#cc details summary::-webkit-details-marker {display:none}
+#cc details summary::before {
+  content:"";width:.52em;height:.52em;flex:none;
+  border:solid currentColor;border-width:0 1.5px 1.5px 0;
+  transform:translateY(-.12em) rotate(-45deg);
+}
+#cc details[open] summary::before {transform:translateY(-.25em) rotate(45deg)}
+#cc details summary:hover {color:var(--festival-gold)}
+.festival-detail {max-width:65ch;color:var(--festival-muted);font:17px/1.53 var(--festival-sans)}
+.festival-detail p,.festival-detail ul,.festival-detail ol {margin:.35em 0 .7em}
+.festival-detail li+li {margin-top:.48em}
+.festival-board {
+  margin:0;
+  padding:clamp(20px,2.8vw,36px);
+  background:var(--festival-panel);
+  border-top:1px solid var(--festival-green);
+}
+.festival-board h2,.festival-board h3 {
+  margin:0;
+  font:400 clamp(26px,2.7vw,39px)/1.05 var(--festival-title);
+  letter-spacing:-.022em;
+}
+.festival-board .board-note,.festival-figure figcaption {
+  font:400 16px/1.42 var(--festival-sans);
+  color:var(--festival-muted);
+  margin:.62em 0 0;
+  text-wrap:pretty;
+}
+.festival-board ol,.route-times {list-style:none;margin:0;padding:0}
+.festival-timetable ol {margin-top:.8em}
+.festival-timetable li {
+  display:grid;grid-template-columns:minmax(4.2em,.35fr) minmax(0,1fr);
+  align-items:baseline;gap:12px;
+  padding:.65em 0;border-top:1px solid var(--festival-rule)
+}
+.festival-timetable li:last-child {padding-bottom:0}
+.festival-timetable time,.route-times time {
+  color:var(--festival-gold);font-variant-numeric:tabular-nums;
+  font:400 clamp(20px,2.5vw,34px)/1 var(--festival-serif)
+}
+.festival-timetable strong,.floor-plan strong {display:block;font-weight:600;font-size:clamp(17px,1.57vw,23px);line-height:1.19}
+.festival-timetable li span,.floor-plan li div span {display:block;margin-top:.19em;color:var(--festival-muted);font-size:clamp(15px,1.26vw,18px);line-height:1.24}
+.festival-figure {margin:0}
+.town-figure img {display:block;width:100%;height:auto;max-height:min(55vh,520px);object-fit:cover;object-position:center 49%;border-bottom:2px solid var(--festival-gold)}
+.stages {list-style:none}
+.stages li {display:grid;grid-template-columns:2.5rem 1fr;gap:13px;padding:.93em 0;border-bottom:1px solid var(--festival-rule)}
+.stages li:first-child {padding-top:0}
+.stages li:last-child {border:0;padding-bottom:0}
+.stages h3 {font-size:clamp(22px,2.4vw,33px)}
+.stages p {margin:.38em 0 0;color:var(--festival-muted)}
+.stage-number,.floor-number {font:400 28px/1 var(--festival-serif);color:var(--festival-gold)}
+.floor-plan {background:var(--festival-forest)}
+.floor-plan ol {margin-top:1.15em}
+.floor-plan li {display:grid;grid-template-columns:3.25rem 1fr;align-items:center;gap:14px;padding:.8em 0;border-top:1px solid #72968a}
+.floor-plan li:last-child {padding-bottom:0}
+.floor-plan li div span {color:#daebe4}
+.station-examples {list-style:none;margin:0;padding:0;max-width:48ch;font:clamp(17px,1.6vw,23px)/1.37 var(--festival-serif)}
+.station-examples li {padding:.63em 0;border-bottom:1px solid var(--festival-rule)}
+.station-examples li:first-child {padding-top:0}
+.station-examples li:last-child {border:0;padding-bottom:0}
+.station-examples strong {color:var(--festival-gold);font-weight:600}
+.set-cards {display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(6px,1.4vw,18px);margin:1.3em 0}
+.set-card {
+  aspect-ratio:4/5;min-width:0;
+  border:1px solid #dfdbd0;border-radius:6%;
+  background:#f0efea;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11%;
+}
+.set-card i {width:47%;height:15%;display:block}
+.set-card .oval {border-radius:999px;background:#28664d}
+.set-card .diamond {clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#aa303a}
+.set-card .squiggle {
+  width:51%;height:18%;background:#613982;
+  clip-path:polygon(0 66%,6% 40%,19% 20%,35% 15%,51% 24%,64% 26%,82% 16%,93% 11%,100% 23%,99% 43%,88% 68%,73% 86%,56% 89%,38% 76%,27% 74%,13% 86%,4% 82%);
+}
+.set-figure figcaption {max-width:39ch}
+.route-times {margin:.72em 0 0;max-width:54ch}
+.route-times li {display:grid;grid-template-columns:4.1em 1fr;align-items:baseline;gap:12px;padding:.43em 0;border-bottom:1px solid var(--festival-rule)}
+.route-times li:last-child {border:0}
+.route-times time {font-size:clamp(17px,1.5vw,23px)}
+.wheel-table {width:100%;border-collapse:collapse;margin-top:1em;text-align:left;font-size:clamp(15px,1.35vw,19px)}
+.wheel-table th,.wheel-table td {padding:.58em .34em;border-bottom:1px solid var(--festival-rule);vertical-align:middle;line-height:1.25}
+.wheel-table thead th {color:var(--festival-muted);font-weight:400}
+.wheel-table tbody th {font-weight:600}
+.correct-wheel {color:var(--festival-green);background:#263a34}
+.atlas-extra-views {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.2rem}
+.atlas-extra-views .wharf-view {min-width:0;margin-inline:0}
+@media(max-width:900px) {
+  .festival-header-inner {gap:16px;min-height:60px}
+  .festival-panel {gap:32px;min-height:calc(100svh - 61px)}
+}
+@media(max-width:740px) {
+  .festival-header-inner {grid-template-columns:1fr auto;gap:0 12px;padding-top:9px}
+  .festival-brand,.festival-atlas {font-size:15px}
+  .festival-nav {
+    grid-column:1/-1;grid-row:2;
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 12px;
+  }
+  .festival-nav a {font-size:15px;padding:8px 0;justify-self:start}
+  .festival-panel {min-height:0;grid-template-columns:1fr;align-content:start;max-width:38rem;padding:30px clamp(16px,4vw,25px) 38px;gap:28px}
+  .festival-copy h1,.festival-copy h2 {font-size:clamp(37px,9.2vw,57px)}
+  .festival-copy > p,.festival-copy blockquote {font-size:17px}
+  .festival-copy .festival-lead {font-size:21px}
+  .hero-break {display:none}
+  .festival-board {padding:18px}
+  .festival-timetable time {font-size:24px}
+  .festival-timetable li {grid-template-columns:minmax(3.55em,.3fr) 1fr}
+  .floor-plan li {grid-template-columns:2.4rem 1fr}
+  .stage-number,.floor-number {font-size:24px}
+  .town-figure img {height:auto;max-height:none;object-fit:contain}
+  .atlas-extra-views {grid-template-columns:1fr}
+}
+@media(max-height:690px) and (min-width:741px) {
+  .festival-panel {padding-block:20px}
+  .festival-copy h1,.festival-copy h2 {font-size:clamp(40px,4.65vw,68px)}
+  .festival-copy > p,.festival-copy blockquote {font-size:clamp(17px,1.38vw,20px)}
+  .festival-copy .festival-lead {font-size:clamp(20px,1.65vw,25px)}
+  .festival-board {padding:19px 24px}
+  .festival-timetable h2 {font-size:clamp(24px,2.5vw,32px)}
+  .festival-timetable li {padding-block:.48em}
+}
+@media print {
+  #atlas-library,.festival-header {display:none!important}
+  #cc {background:white;color:#222;color-scheme:light;min-height:0;--festival-ink:#222;--festival-muted:#444;--festival-rule:#aaa;--festival-gold:#333;--festival-green:#273f36;--festival-panel:#f4f4f4}
+  #cc .festival-panel {display:grid!important;min-height:0;margin:0;padding:15px 0;gap:18px;break-inside:avoid}
+  .festival-copy h1,.festival-copy h2 {font-size:23px}
+  .festival-copy > p,.festival-copy .festival-lead,.festival-copy blockquote {font-size:13px}
+  .festival-board {padding:13px}
+  .festival-board h2,.festival-board h3,.festival-timetable time {font-size:17px}
+  .festival-board .board-note,.festival-figure figcaption,.festival-timetable li span,.floor-plan li div span {font-size:11px;color:#444}
+  .floor-plan,.correct-wheel {background:#f4f4f4}
+  .festival-copy details {display:none}
+}
+
+.story-views{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.story-views figure,.object-views figure{margin:0;min-width:0}
+.story-views figure:first-child{grid-column:1/-1}
+.story-views img,.object-views img{display:block;width:100%;height:auto;object-fit:contain}
+.story-views figcaption,.object-views figcaption{color:#c2c8c8;font:15px/1.25 var(--festival-sans);padding-top:5px}
+.object-views{display:flex;gap:1rem;margin-top:.8rem}
+.object-views figure{flex:1}
+.object-views img{height:clamp(90px,18vh,240px)}
+#games .set-card{aspect-ratio:1.2}
+@media screen and (min-width:901px){
+.festival-panel,.festival-header-inner{max-width:none;width:100%;padding-inline:clamp(20px,2.5vw,60px)}
+.festival-panel{gap:clamp(24px,3.1vw,70px);padding-block:2.4vh;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+#format{align-items:stretch}
+#format .festival-copy,.festival-timetable{display:flex;flex-direction:column;justify-content:space-between}
+#format .festival-copy p{max-width:none;font-size:clamp(18px,min(1.76vw,3.12vh),39px);line-height:1.25;margin:.24em 0}
+#format .festival-copy h1{font-size:clamp(44px,min(5.25vw,8.85vh),112px);margin:.14em 0}
+#format .festival-copy .festival-date{margin:0!important}
+.festival-timetable ol{flex:1;display:flex;flex-direction:column}
+.festival-timetable li{flex:1;align-items:center}
+.story-views figure:first-child img{max-height:38vh}
+.story-views figure:not(:first-child) img{max-height:25vh}
+#example .festival-board,#games .festival-board{padding:clamp(13px,1.7vw,28px)}
+}
+@media(max-width:740px){.story-views{gap:.6rem}.story-views figcaption{font-size:14px}}
+
+@media screen and (min-width:901px) and (max-height:760px){#format .festival-copy p{font-size:clamp(17px,2.9vh,22px)}.festival-panel:not(#format) .festival-copy>p,.festival-panel:not(#format) .festival-copy blockquote{font-size:clamp(17px,2.75vh,21px);margin:.62em 0}.festival-panel:not(#format) .festival-copy h2{font-size:clamp(40px,6.8vh,54px)}}
+@media screen and (min-width:901px){#school .floor-plan{align-self:stretch;display:flex;flex-direction:column;justify-content:center}#school .floor-plan li{padding-block:clamp(12px,3vh,40px)}#games .festival-copy>p,#example .festival-copy>p{font-size:clamp(17px,min(1.45vw,2.7vh),27px)}#school .festival-copy>p{max-width:54ch}#games .station-examples{max-width:none}#games .set-figure{align-self:center}}
+@media screen and (min-width:901px) and (max-height:760px){#games .festival-copy h2,#example .festival-copy h2,#school .festival-copy h2{font-size:clamp(35px,6vh,48px);max-width:none}#games .station-examples li{padding-block:.33em}#games .festival-copy>p,#school .festival-copy>p,#example .festival-copy>p{font-size:clamp(16px,2.55vh,19px);line-height:1.32}#games details{margin-top:.5em}#example .route-times li{padding-block:.33em}#school .floor-plan li{padding-block:1em}}
+@media screen and (min-width:901px) and (max-height:650px){#example .route-times{font-size:16px}#example .route-times li{padding-block:.23em}#games .station-examples{font-size:17px}#example .festival-board .object-views img{height:15vh}}
+@media screen and (min-width:901px){#games .festival-copy h2{max-width:none;font-size:clamp(35px,min(4.05vw,6vh),70px)}#school .floor-plan ol{flex:1;display:flex;flex-direction:column}#school .floor-plan li{flex:1}#games .station-examples{font-size:clamp(17px,min(1.55vw,2.65vh),26px)}}
+@media screen and (min-width:901px) and (max-height:650px){#games,#example{padding-block:7px}#games .festival-copy p{margin-block:.35em}}
+
+.scene-gallery{min-width:0;align-self:center}
+.scene-gallery figure{margin:0}
+.scene-gallery img{display:block;width:100%;height:clamp(200px,55vh,620px);object-fit:contain}
+.scene-gallery figcaption,.schedule-note{font:16px/1.35 var(--festival-sans);color:var(--festival-muted);margin:.6em 0}
+.scene-buttons{display:flex;align-items:center;justify-content:center;gap:1em}
+.scene-buttons button{font:22px var(--festival-sans);min-width:44px;min-height:40px;background:transparent;border:1px solid var(--festival-rule);color:var(--festival-gold);cursor:pointer}
+#school .festival-copy>p,#example .festival-copy>p{max-width:none}
+@media(min-width:901px){#cc .festival-panel:not(#format) .festival-copy{align-self:stretch;display:flex;flex-direction:column;justify-content:space-evenly}}
+@media(max-width:740px){.scene-gallery img{height:auto;aspect-ratio:3/2}.scene-gallery{align-self:start}}
+
+.festival-header-inner{grid-template-columns:auto minmax(0,1fr)}.festival-nav{justify-content:flex-end}
+.story-views{grid-template-columns:1fr;gap:12px}.story-views .zoom-img{background:none;border:0;display:block;width:100%;cursor:zoom-in;padding:0}
+.story-views figure img{max-height:33vh!important}.story-views figcaption,.scene-gallery figcaption{text-align:center}
+#picture{background:#121917;border:0;color:white;padding:1rem;width:100vw;height:100dvh;max-width:100vw;max-height:100dvh;margin:0}
+#picture[open]{display:grid;grid-template-rows:auto 1fr}#picture img{width:100%;height:100%;min-height:0;object-fit:contain}#picture button{justify-self:end;background:#27332e;color:white;border:1px solid #76887a;padding:.45em .9em;cursor:pointer}
+.inventory{grid-column:1/-1;font-family:var(--festival-sans)}.inventory>p{font:clamp(19px,2vw,32px)/1.22 var(--festival-serif);margin:0 0 .75em}.shelves{display:grid;grid-template-columns:1fr 1fr;gap:4vw}.shelves h2{font:600 clamp(18px,1.6vw,25px)/1.2 var(--festival-sans);margin:0 0 .55em;color:var(--festival-green)}.shelves ul{list-style:none;padding:0;margin:0}.shelves li{display:grid;grid-template-columns:43% 1fr;gap:8px;border-top:1px solid var(--festival-rule);padding:.33em 0;font-size:clamp(15px,min(1.4vw,2.35vh),23px);line-height:1.2}.shelves li b{font-weight:600}.shelves li span,.island{color:var(--festival-muted)}.island{font-size:clamp(15px,1.4vw,22px);line-height:1.35}.island b{display:block;color:var(--festival-green)}
+@media(max-width:740px){.shelves{grid-template-columns:1fr;gap:24px}.festival-header-inner{display:block}.festival-nav{display:grid;grid-template-columns:repeat(3,auto)}.shelves li{padding:.55em 0}.story-views figure img{max-height:none!important}}
+@media screen and (min-width:901px){#cc .festival-panel .festival-copy>p{max-width:none}#fabula .festival-copy>p,#school .festival-copy>p,#games .festival-copy>p{font-size:clamp(16px,min(1.55vw,2.65vh),26px);line-height:1.32;margin:.45em 0}#format .festival-copy>p{font-size:clamp(16px,min(1.65vw,2.8vh),32px)}}
+@media screen and (min-width:901px){#fabula,#school,#games,#example{grid-template-columns:minmax(0,1.23fr) minmax(0,1fr)}#cc #fabula .festival-copy>p,#cc #school .festival-copy>p,#cc #games .festival-copy>p{font-size:clamp(16px,min(1.48vw,2.5vh),25px);line-height:1.27;margin:.32em 0}#cc #example .route-times{max-width:none}#fabula .story-views{align-self:center}}
+
+#cc .city-directory{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2.6vw,54px);align-self:start;width:100%;font-family:var(--festival-sans)}
+.city-directory section{min-width:0}.city-directory h2{margin:0 0 .55em;max-width:none;font:600 clamp(18px,1.7vw,30px)/1.1 var(--festival-sans);color:var(--festival-ink)}
+.city-directory small{display:block;font:600 .66em/1.5 var(--festival-sans);color:var(--festival-green);margin-bottom:.3em}
+#cc .city-directory ul,#cc .stage-list{list-style:none;padding:0;margin:0;max-width:none}
+.city-directory li,.stage-list li{border-top:1px solid var(--festival-rule);margin:0}
+.city-directory li{padding:.39em 0;font-size:clamp(15px,min(1.25vw,2.25vh),23px);line-height:1.2}
+.city-directory b,.stage-list strong{color:var(--festival-green);font-weight:600}
+#cc #school .festival-copy,#cc #games .festival-copy{display:block;align-self:center}
+.stage-list{counter-reset:stage}.stage-list li{position:relative;font:clamp(17px,min(1.6vw,2.8vh),30px)/1.28 var(--festival-serif);padding:.63em 0}.stage-list li:first-child{border-top:0}
+#school .stage-list li{counter-increment:stage;padding-left:2em}#school .stage-list li:before{position:absolute;left:0;content:counter(stage,decimal-leading-zero);font:600 .76em/1.8 var(--festival-sans);color:var(--festival-gold)}
+#school .stage-list strong{display:block;font:600 1em/1.28 var(--festival-sans);margin-bottom:.12em}
+#games .stage-list li{font-size:clamp(16px,min(1.5vw,2.6vh),26px);padding:.49em 0}
+#cc #fabula .story-views{width:100%;max-width:min(100%,65vh);justify-self:center;gap:1.3vh}
+#cc #fabula .story-views img{width:100%;height:clamp(130px,32vh,430px);max-height:none!important;object-fit:cover}
+#cc #picture button{font:32px/1 var(--festival-sans);width:46px;height:46px;padding:0}
+#cc #school .scene-gallery img{width:100%;height:clamp(220px,58vh,700px);object-fit:cover}
+#example .scene-gallery img{height:clamp(160px,37vh,480px)}
+.trial{width:100%;border-collapse:collapse;margin-top:.6em;font:clamp(14px,1.25vw,21px)/1.22 var(--festival-sans);text-align:left}
+.trial caption{text-align:left;color:var(--festival-green);font-weight:600;padding:.3em 0}.trial th,.trial td{border-bottom:1px solid var(--festival-rule);padding:.3em .2em}.trial tbody th{font-weight:500}
+@media screen and (min-width:901px){#cc #fabula .festival-copy{justify-content:center;gap:1.4vh}#cc #fabula .festival-copy>p{margin:0;line-height:1.29;font-size:clamp(16px,min(1.45vw,2.55vh),27px)}#cc #school,#cc #games{grid-template-columns:1.28fr 1fr}#cc #example .route-times{font-size:clamp(16px,min(1.45vw,2.55vh),26px);line-height:1.27}#cc #example .festival-copy{justify-content:center}#cc #example .route-times li{padding-block:.48em}}
+@media(max-width:900px){#cc .city-directory{grid-template-columns:1fr}.city-directory li{font-size:17px}#cc #fabula .story-views{max-width:100%}#cc #fabula .story-views img{height:auto;aspect-ratio:2/1}#cc #school .scene-gallery img{height:auto}}
+@media screen and (min-width:901px){
+#cc #school{grid-template-columns:1.38fr 1fr}
+#school .stage-list li{font-size:clamp(17px,min(1.6vw,2.65vh),28px);padding-block:.45em}
+#games .scene-gallery img{object-fit:contain;height:auto;aspect-ratio:1.45}
+}
+@media screen and (min-width:901px) and (max-height:650px){
+#cc #fabula,#cc #games,#cc #school{grid-template-columns:1.52fr 1fr;padding-block:9px}
+#cc #fabula .festival-copy{gap:.8vh}
+#cc #fabula .festival-copy>p,#school .stage-list li,#games .stage-list li{font-size:16px;line-height:1.22}
+#school .stage-list li,#games .stage-list li{padding-block:.31em}
+#cc #festival-stations{padding-block:9px}
+.city-directory li{padding:.22em 0;line-height:1.16}
+}
+@media screen and (min-width:901px) and (max-height:800px){#cc #fabula .festival-copy{gap:.65vh}}
+
+/* Nine school spaces; each one contains its own activity list. */
+#cc .venue-guide{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:clamp(18px,2.4vw,49px);align-self:center;font-family:var(--festival-sans)}
+#cc .venue-column{display:flex;flex-direction:column;min-width:0;gap:clamp(12px,1.7vh,24px)}
+#cc .school-place{margin:0;padding:0;min-width:0;font-size:clamp(15px,min(1.30vw,2.25vh),25px);line-height:1.21}
+#cc .school-place h2{display:flex;align-items:baseline;justify-content:space-between;gap:.36em;margin:0 0 .32em;padding:0 0 .22em;border-bottom:1px solid var(--festival-rule);color:var(--festival-gold);font:600 1.28em/1.12 var(--festival-sans);max-width:none}
+#cc .school-place h2 small{font:400 .64em/1.1 var(--festival-sans);white-space:nowrap;color:var(--festival-muted)}
+#cc .school-place ul{list-style:disc outside;margin:0;padding:0 0 0 1em;max-width:none}
+#cc .school-place li{margin:0;padding:.14em 0}
+#cc .school-place li::marker{font-size:.76em;color:var(--festival-green)}
+#cc .school-place strong{color:var(--festival-green);font-weight:600}
+
+
+
+#cc #games>.play-intro{grid-column:1/-1;font:400 clamp(18px,min(1.65vw,2.8vh),28px)/1.28 var(--festival-serif);color:var(--festival-ink);margin:0;max-width:none}
+#cc #games .stage-list li{padding-block:.38em}
+#cc #example{grid-template-columns:1fr}
+#cc .day-route{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:clamp(24px,3vw,60px);row-gap:clamp(8px,1.1vh,18px);align-self:center;min-width:0}
+#cc .day-lead{grid-column:1/-1;margin:0;max-width:none;color:var(--festival-ink);font:400 clamp(19px,min(1.68vw,3vh),32px)/1.23 var(--festival-serif)}
+#cc .day-lead b{font-weight:600;white-space:nowrap}
+#cc .day-list{list-style:none;margin:0;padding:0;max-width:none}
+#cc .day-list li{display:grid;grid-template-columns:3em minmax(0,1fr);align-items:baseline;gap:.65em;border-top:1px solid var(--festival-rule);padding:.31em 0;margin:0;font:400 clamp(15px,min(1.34vw,2.28vh),25px)/1.24 var(--festival-serif)}
+#cc .day-list p{margin:0;max-width:none;font:inherit}
+#cc .day-list time{color:var(--festival-gold);font:600 1em/1.15 var(--festival-sans);font-variant-numeric:tabular-nums}
+#cc .day-address{font-weight:600;color:var(--festival-green)}
+#cc .return-label{color:var(--festival-ink);font-weight:600}
+@media screen and (min-width:901px){
+#cc #games{grid-template-columns:1.28fr 1fr;align-content:center;row-gap:clamp(8px,1.0vh,16px)}
+#cc #games .festival-copy{align-self:center}
+#cc #games>.scene-gallery{margin:0;align-self:center}
+#cc #games .scene-gallery img{width:100%;height:clamp(240px,50vh,600px);object-fit:contain}
+#cc .venue-guide{grid-template-columns:1fr 1.02fr 1.05fr;gap:clamp(18px,2.1vw,42px)}
+#cc .school-place li{padding:.10em 0}
+}
+@media screen and (min-width:901px) and (max-height:760px){
+#cc #festival-stations,#cc #example,#cc #games{padding-block:12px}
+#cc .venue-column{gap:clamp(9px,1.5vh,13px)}
+#cc .day-list li{padding:.27em 0}
+}
+@media screen and (min-width:901px) and (max-height:650px){
+#cc #festival-stations,#cc #example,#cc #games{padding-block:9px}
+#cc .school-place{padding:0;font-size:15px;line-height:1.16}
+#cc .school-place li{padding:.05em 0}
+#cc .school-place h2{margin:0 0 .17em;padding-bottom:.16em}
+#cc .venue-column{gap:8px}
+#cc .day-list li{font-size:15px;line-height:1.16;padding:.17em 0}
+#cc #games .stage-list li{font-size:16px;line-height:1.22;padding-block:.28em}
+}
+@media(max-width:900px){
+#cc .venue-guide{grid-template-columns:1fr;gap:20px}
+#cc .school-place{font-size:17px}
+#cc .day-route{grid-template-columns:1fr;gap:0}
+#cc .day-lead{margin-bottom:16px;font-size:21px}
+#cc .day-list li{font-size:17px;padding:.6em 0}
+#cc #games>.play-intro{font-size:19px}
+}
+@media screen and (min-width:901px) and (max-height:800px){
+#cc #games .stage-list li{padding-block:.25em}
+}
+@media screen and (min-width:741px) and (max-width:900px){
+#cc .festival-panel{grid-template-columns:1fr;min-height:0;max-width:740px;margin-inline:auto;padding:26px 28px 36px;gap:24px}
+#cc .festival-copy>p{max-width:none}
+#cc .scene-gallery img{max-height:50vh;object-fit:contain}
+#cc #fabula .story-views{max-width:600px}
+}
+
+#cc #fabula .story-views img{height:auto;aspect-ratio:auto;max-height:none!important;object-fit:contain}
+#cc #school .scene-gallery img{width:100%;height:auto;aspect-ratio:1.63;max-height:none;object-fit:contain}
+@media screen and (min-width:1100px){
+#cc #school{grid-template-columns:1.26fr 1fr}
+#cc .venue-column:nth-child(-n+2) .school-place li{padding-block:.19em}
+#cc .day-list:last-child li{padding-block:.48em}
+}
+@media screen and (min-width:901px) and (max-width:1099px) and (max-height:660px){
+#cc .venue-column{gap:5px}
+#cc .school-place ul{padding-left:.84em}
+#cc .school-place li{padding-block:0}
+#cc .school-place h2{font-size:1.16em;margin-bottom:.14em;padding-bottom:.14em}
+#cc #festival-stations{padding-block:6px}
+}
+@media screen and (min-width:901px){
+#format .festival-timetable ol{margin-top:0}
+#format .festival-timetable li{grid-template-columns:minmax(4.4em,.28fr) minmax(0,1fr);column-gap:clamp(12px,1.1vw,24px)}
+#format .festival-timetable time{font-size:clamp(24px,min(2.65vw,4.2vh),48px)}
+#format .festival-timetable li strong{font-size:clamp(17px,min(1.58vw,2.7vh),32px)}
+#format .festival-timetable li span{font-size:clamp(15px,min(1.28vw,2.15vh),24px)}
+}
+
+/* Media can be opened from every visible frame, including the fixed check-in scene. */
+#cc .zoom-img {display:block;width:100%;min-width:0;margin:0;padding:0;background:transparent;border:0;border-radius:0;cursor:zoom-in}
+#cc .zoom-img:focus-visible {outline:3px solid var(--festival-gold);outline-offset:3px}
+#cc .zoom-img img,#cc .zoom-img picture {display:block;width:100%;min-width:0}
+#cc .scene-gallery>figure[hidden],#cc #picture .picture-controls[hidden] {display:none!important}
+#cc .school-views {display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(8px,1.3vh,16px);width:min(100%,calc(89svh - 127px));justify-self:center;align-self:center}
+#cc .school-views figure,#cc .school-views .scene-gallery {margin:0;min-width:0;width:100%}
+#cc #school .school-views .zoom-img img {width:100%;height:auto;max-height:none;aspect-ratio:1.84;object-fit:cover}
+#cc #school .school-views>figure img {object-position:50% 58%}
+#cc .scene-buttons,#cc #picture .picture-controls {display:flex;align-items:center;justify-content:center;gap:.85em}
+#cc .scene-buttons {margin-top:clamp(6px,1vh,12px)}
+#cc .scene-buttons output,#cc #picture output {min-width:3.5em;text-align:center;font-variant-numeric:tabular-nums}
+#cc #games .scene-gallery {width:100%;margin:0}
+#cc #games .scene-gallery .zoom-img img {width:100%;height:auto;max-height:none;aspect-ratio:1.5;object-fit:contain}
+#cc #picture[open] {display:grid;grid-template: auto minmax(0,1fr) auto / minmax(0,1fr);gap:8px;overflow:hidden;border:0}
+#cc #picture .picture-controls {justify-self:center}
+#cc #picture .picture-controls button {justify-self:auto;width:44px;height:36px;font-size:21px}
+#cc #picture .picture-full {object-fit:contain;min-width:0;width:100%;height:100%}
+#cc #format .festival-timetable {justify-content:flex-start;padding-top:clamp(13px,2.0vh,25px)}
+#cc #format .festival-timetable ol {margin-top:0}
+#cc #format .festival-timetable li {align-items:baseline;align-content:start;padding-top:clamp(12px,2.25vh,27px)}
+#cc #format .festival-timetable li:first-child {border-top:0;padding-top:0}
+@media screen and (min-width:901px){
+  #cc #fabula .story-views {max-width:min(100%,71vh)}
+}
+@media screen and (min-width:1100px){
+  #cc .venue-column:last-child .school-place li {padding-block:.23em}
+}
+@media screen and (max-width:900px){
+  #cc .school-views {width:100%;max-width:650px;gap:12px}
+  #cc #school .school-views .zoom-img img {aspect-ratio:1.5;object-fit:contain}
+  #cc #games .scene-gallery {max-width:650px;justify-self:center}
+  #cc #format .festival-timetable li {padding-top:.65em}
+}
+@media screen and (min-width:901px){
+#cc .venue-guide{grid-template-columns:1.13fr 1fr 1.04fr;column-gap:clamp(17px,2vw,38px)}
+}
+@media screen and (min-width:1100px){
+#cc .venue-column:first-child .school-place li{padding-block:.06em}
+#cc .venue-column:nth-child(2) .school-place li{padding-block:.24em}
+#cc .venue-column:last-child .school-place li{padding-block:.25em}
+}
+@media screen and (min-width:901px) and (max-width:1099px) and (max-height:650px){
+#cc #example .day-list li{padding-block:.10em}
+}
+@media screen and (max-width:740px){
+#cc .festival-nav{grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:0 7px}
+#cc .festival-nav a{max-width:100%;min-width:0;white-space:normal;line-height:1.15;align-self:stretch;display:flex;align-items:center}
+}
+#cc .festival-nav a[href="#guide"]{color:var(--festival-gold);padding-inline-start:.85em;margin-inline-start:.2em;border-inline-start:1px solid #507068}
+#cc #festival-stations{align-content:center;row-gap:clamp(4px,.65vh,10px)}
+#cc .catalog-note{grid-column:1/-1;position:relative;z-index:2;justify-self:start;font-family:var(--festival-sans);line-height:1.15}
+#cc .catalog-note button{display:inline-flex;align-items:center;gap:.38em;background:none;border:0;color:var(--festival-muted);padding:5px 0;cursor:pointer;font:500 clamp(15px,1.12vw,21px)/1.14 var(--festival-sans)}
+#cc .catalog-note button strong{color:var(--festival-gold);font-size:1.1em}
+#cc .catalog-note .note-text{position:absolute;top:100%;left:0;width:min(28em,84vw);margin:3px 0 0;padding:12px 15px;background:#263532;color:#f5f2e9;border:1px solid #789b8a;box-shadow:0 7px 24px #0007;font-size:16px;line-height:1.35}
+#cc .catalog-note button:focus-visible,#cc .guide-links a:focus-visible,#cc .save-guide:focus-visible{outline:2px solid var(--festival-gold);outline-offset:3px}
+#cc #guide{grid-template-columns:1fr;align-items:center}
+#cc .guide-inner{max-width:1420px;width:100%;margin-inline:auto}
+#cc .guide-inner h1{margin:0;color:var(--festival-ink);font:400 clamp(35px,min(4.3vw,7vh),76px)/1.03 var(--festival-title);letter-spacing:-.025em}
+#cc .guide-inner .guide-place{margin:.55em 0 1.5em;max-width:none;color:var(--festival-muted);font:400 clamp(17px,1.5vw,26px)/1.32 var(--festival-sans)}
+#cc .guide-links{display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(24px,4.1vw,76px)}
+#cc .guide-links a{display:block;border-top:1px solid var(--festival-rule);padding:clamp(13px,2.4vh,32px) 0;color:inherit;text-decoration:none}
+#cc .guide-links a:hover strong{text-decoration:underline;text-underline-offset:.18em}
+#cc .guide-links strong{display:block;font:600 clamp(20px,min(2.05vw,3.6vh),38px)/1.16 var(--festival-sans);color:var(--festival-green)}
+#cc .guide-links span{display:block;margin:.35em 0 0;font:400 clamp(17px,min(1.55vw,2.8vh),28px)/1.35 var(--festival-serif);max-width:45ch}
+#cc .guide-bottom{margin:clamp(10px,2.3vh,27px) 0 0;font:400 clamp(15px,1.2vw,22px)/1.35 var(--festival-sans);color:var(--festival-muted)}
+#cc .save-guide{color:var(--festival-gold);text-underline-offset:.22em}
+#manual-reader{padding:0;margin:0;width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;background:#171a1f;color:#efefe9;border:0;color-scheme:dark}
+#manual-reader[open]{display:grid;grid-template: auto minmax(0,1fr) / minmax(0,1fr);overflow:hidden}
+#manual-reader .reader-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px clamp(12px,3vw,42px);background:#253f39;font:500 15px/1.25 system-ui,sans-serif}
+#manual-reader button{border:1px solid #739186;border-radius:3px;color:white;background:#223b34;padding:7px 12px;cursor:pointer;font:inherit}
+#manual-reader iframe{display:block;width:100%;height:100%;border:0;background:#171a1f}
+@media(max-width:900px){#cc .guide-links{grid-template-columns:1fr}#cc .guide-inner .guide-place{margin-bottom:1em}#cc .guide-links span{max-width:none}#cc #guide{align-content:start}}
+@media(max-width:740px){
+#cc .festival-header-inner{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-flow:row;column-gap:7px}
+#cc .festival-brand{grid-column:1/3;grid-row:1;justify-self:start}
+#cc .festival-nav{display:contents}
+#cc .festival-nav a[href="#guide"]{grid-column:3;grid-row:1;padding:4px 0;min-height:26px;justify-self:end;border-inline-start:0}
+#cc .festival-nav a{display:flex;align-items:center;max-width:100%;min-width:0;white-space:normal;line-height:1.15;padding-block:7px}
+#cc .guide-inner h1{font-size:36px}
+}
+@media(min-width:741px) and (max-width:1050px){#cc .festival-nav{gap:clamp(7px,1.2vw,14px)}#cc .festival-nav a{font-size:clamp(13px,1.45vw,16px)}#cc .festival-header-inner{gap:12px}}
+@media(min-width:901px) and (max-height:680px){#cc #festival-stations{padding-block:4px;row-gap:2px}#cc .catalog-note button{padding:2px 0}#cc .venue-column{gap:4px}#cc .school-place h2{padding-bottom:.10em;margin-bottom:.10em}}
+@media print{#cc .catalog-note button{color:black}#cc .catalog-note .note-text{position:static;display:block!important;border:0;box-shadow:none;background:white;color:black;width:auto;margin:0;padding:0;font-size:10pt}#cc .save-guide,#manual-reader{display:none!important}}
+@media screen and (min-width:901px) and (max-height:820px){
+#cc #festival-stations{padding-block:5px;row-gap:2px}
+#cc #festival-stations .venue-column{gap:7px}
+#cc .catalog-note button{padding:2px 0}
+}
