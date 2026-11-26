@@ -1289,41 +1289,40 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:.18em;
 }
 
-/* Text layouts for the readers' edition. */
-#cc #fabula,
-#cc #school, #cc #school[data-fit],
+/* Story and school locations share one reader panel. */
+#cc #city {
+  grid-template-columns:minmax(0,.86fr) minmax(0,1fr);
+  align-items:start;
+  align-content:center;
+  gap:clamp(26px,5vw,80px);
+}
+#cc #city[data-fit] {grid-template-columns:minmax(0,.86fr) minmax(0,1fr)}
+#cc #city > div {min-width:0;padding:0}
+#cc #city h2 {
+  margin:0 0 .75em;
+  color:var(--festival-green);
+  font:600 clamp(20px,2vw,30px)/1.17 var(--festival-sans);
+}
+#cc .city-story p {
+  margin:0 0 .8em;
+  font:400 clamp(17px,min(1.62vw,3vh),25px)/1.4 var(--festival-serif);
+}
+#cc .city-story p:last-child {margin-bottom:0}
+#cc .city-location .zone-list li {line-height:1.32}
+#cc .city-location .zone-list li:first-child {padding-top:0}
+#cc .city-location .zone-list li:last-child {padding-bottom:0}
 #cc #games, #cc #games[data-fit] {
   grid-template-columns:minmax(0,1fr);
+  row-gap:clamp(12px,2vh,24px);
 }
-#cc #fabula {
-  min-height:0;
-  padding-block:clamp(24px,6vh,65px);
-}
-#cc #fabula .festival-copy {
-  display:block;
-  width:min(100%,63ch);
-  margin-inline:auto;
-  font-size:clamp(18px,1.75vw,25px);
-}
-#cc #fabula .festival-copy > p {
-  margin:0 0 .85em;
-  font-size:1em;
-  line-height:1.45;
-}
-#cc #fabula .festival-copy > p:first-child {
-  font-size:1.13em;
-  color:var(--festival-ink);
-}
-#cc #fabula .festival-copy > p:last-child {margin-bottom:0}
-#cc #games {row-gap:clamp(12px,2vh,24px)}
 #cc #games > .play-intro {margin:0}
 @media screen and (min-width:741px) {
-  #cc #school .zone-list, #cc #games .stage-list {
+  #cc #games .stage-list {
     display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
     gap:clamp(12px,3vh,34px) clamp(22px,3vw,54px);
   }
-  #cc #school .zone-list > li, #cc #games .stage-list > li {
+  #cc #games .stage-list > li {
     border-top:1px solid var(--festival-rule);
     padding-block:.65em .15em;
     font-size:clamp(17px,min(1.65vw,3.1vh),26px);
@@ -1331,14 +1330,16 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   }
 }
 @media screen and (min-width:1050px) {
-  #cc #school .zone-list > li:last-child {
-    grid-column:1/-1;
-    display:grid;
-    grid-template-columns:auto 1fr minmax(0,2.2fr);
-    align-items:baseline;
-    gap:.5em;
-  }
-  #cc #school .zone-list > li:last-child p {margin:0}
   #cc #games .stage-list {grid-template-columns:repeat(3,minmax(0,1fr))}
 }
-
+@media screen and (max-width:740px) {
+  #cc #city {grid-template-columns:minmax(0,1fr)}
+  #cc .city-location {border-top:1px solid var(--festival-rule)}
+  #cc .city-location h2 {margin-top:1em}
+  #cc .festival-nav {grid-template-columns:repeat(6,minmax(0,1fr))}
+  #cc .festival-nav a {grid-column:span 2}
+  #cc .festival-nav a:nth-last-child(-n+2) {grid-column:span 3}
+}
+@media print {
+  #cc .city-story p, #cc .city-location .zone-list li {font-size:11pt}
+}

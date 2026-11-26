@@ -11,7 +11,7 @@
   function fitSlide() {
     if (presentation.hidden) return;
     const page = pages.find(item => !item.hidden);
-    if (!page || page.id === 'guide' || page.id === 'fabula') return;
+    if (!page || page.id === 'guide') return;
     if (!desktopSlides.matches || (page.id === 'format' && window.matchMedia('(max-width:960px) and (max-height:500px)').matches)) {
       delete page.dataset.fit;
       for (const name of ['zoom', 'width', 'min-height']) page.style.removeProperty(name);
@@ -54,8 +54,9 @@
   }
   function showPage(scroll) {
     const id = location.hash.slice(1);
-    const zone = id.startsWith('stations-') ? document.getElementById(id) : null;
-    const requested = zone?.closest('#festival-stations') ? 'festival-stations' : id;
+    const target = document.getElementById(id);
+    const zone = target?.matches('#festival-stations .school-place') ? target : null;
+    const requested = target?.closest('.festival-panel')?.id;
     const index = pages.findIndex(page => page.id === requested);
     for (const place of presentation.querySelectorAll('.school-place')) {
       place.toggleAttribute('data-selected', place === zone);
@@ -71,7 +72,7 @@
     fitSlide();
     if (scroll) requestAnimationFrame(() => {
       if (zone) zone.focus({preventScroll:true});
-      if (zone && !desktopSlides.matches) zone.scrollIntoView({block:'start'});
+      if (!desktopSlides.matches && (zone || id === 'school')) target.scrollIntoView({block:'start'});
       else window.scrollTo(0, 0);
     });
   }
