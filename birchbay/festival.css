@@ -1310,6 +1310,14 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   row-gap:clamp(12px,2vh,24px);
 }
 #cc #games > .play-intro {margin:0}
+@media screen {
+  #cc #games .stage-list .mechanic-trigger {
+    margin-bottom:.24em;
+    text-decoration:underline dotted;
+    text-decoration-thickness:1px;
+    text-underline-offset:.18em;
+  }
+}
 @media screen and (min-width:741px) {
   #cc #city, #cc #city[data-fit] {
     grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);
