@@ -1334,3 +1334,17 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   #cc #example[data-fit] .day-list {display:flex;flex-direction:column;justify-content:space-between}
   #cc #example[data-fit] .day-list li {padding-block:.22em}
 }
+
+/* Contextual questions share the existing anchored popovers. */
+#cc #format .festival-copy .faq-term {
+  display:inline; max-width:100%; font:inherit; line-height:inherit; color:inherit;
+  text-decoration:underline dotted; text-decoration-color:var(--festival-green);
+  text-decoration-thickness:1px; text-underline-offset:.17em;
+}
+#cc #format .festival-copy .faq-term:is(:hover,:focus-visible,[aria-expanded=true]) {color:var(--festival-green)}
+#cc .faq-question {
+  display:block;margin:0 0 .32em;color:var(--festival-green);font:600 1em/1.27 var(--festival-sans)
+}
+#cc .catalog-note button {
+  text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:.18em;
+}
