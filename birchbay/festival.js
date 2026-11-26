@@ -4,97 +4,6 @@
   const nav = presentation.querySelector('.festival-nav');
   const links = [...nav.querySelectorAll('a')];
   const pages = [...presentation.querySelectorAll('.festival-panel')];
-  const picture = document.getElementById('picture');
-  const fullImage = picture.querySelector('.picture-full');
-  const fullControls = picture.querySelector('.picture-controls');
-  let opener = null;
-  let pictures = [];
-  let pictureIndex = 0;
-
-  function galleryFrames(gallery) {
-    return [...gallery.querySelectorAll(':scope > figure')];
-  }
-
-  function showFrame(gallery, frames, index) {
-    frames.forEach((frame, i) => { frame.hidden = i !== index; });
-    gallery.querySelector('output').value = (index + 1) + ' / ' + frames.length;
-  }
-
-  function showPicture(index) {
-    pictureIndex = index;
-    const button = pictures[index];
-    const image = button.querySelector('img');
-    const gallery = button.closest('.scene-gallery');
-    if (gallery) {
-      const frames = galleryFrames(gallery);
-      showFrame(gallery, frames, frames.indexOf(button.closest('figure')));
-    }
-    fullImage.alt = image.alt;
-    fullImage.src = image.currentSrc || image.src;
-    fullControls.hidden = pictures.length < 2;
-    fullControls.querySelector('output').value = (index + 1) + ' / ' + pictures.length;
-    if (image.dataset.full) {
-      fullSize(image).then(original => {
-        if (original && picture.open && pictures[pictureIndex] === button) fullImage.src = original.src;
-      });
-    }
-  }
-
-  function turnPicture(step) {
-    if (pictures.length > 1) {
-      showPicture((pictureIndex + step + pictures.length) % pictures.length);
-    }
-  }
-
-  for (const button of presentation.querySelectorAll('.zoom-img')) {
-    button.addEventListener('click', () => {
-      opener = button;
-      pictures = [...button.closest('.festival-panel').querySelectorAll('.zoom-img')];
-      showPicture(pictures.indexOf(button));
-      picture.showModal();
-    });
-  }
-  for (const gallery of presentation.querySelectorAll('.scene-gallery')) {
-    for (const button of gallery.querySelectorAll('.scene-buttons button')) {
-      button.addEventListener('click', () => {
-        const frames = galleryFrames(gallery);
-        const current = frames.findIndex(frame => !frame.hidden);
-        showFrame(gallery, frames, (current + Number(button.dataset.step) + frames.length) % frames.length);
-      });
-    }
-  }
-  for (const button of fullControls.querySelectorAll('button')) {
-    button.addEventListener('click', () => turnPicture(Number(button.dataset.step)));
-  }
-  picture.querySelector('.picture-close').addEventListener('click', () => picture.close());
-  picture.addEventListener('keydown', event => {
-    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
-    if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
-    event.preventDefault();
-    turnPicture(event.key === 'ArrowLeft' ? -1 : 1);
-  });
-  let touchStart = null;
-  fullImage.addEventListener('touchstart', event => {
-    touchStart = event.touches.length === 1 ? event.touches[0] : null;
-  }, {passive:true});
-  fullImage.addEventListener('touchcancel', () => {touchStart = null;});
-  fullImage.addEventListener('touchend', event => {
-    if (!touchStart) return;
-    const end = event.changedTouches[0];
-    const dx = end.clientX - touchStart.clientX;
-    const dy = end.clientY - touchStart.clientY;
-    touchStart = null;
-    if (Math.abs(dx) > 50 && Math.abs(dx) > 2 * Math.abs(dy)) turnPicture(dx < 0 ? 1 : -1);
-  }, {passive:true});
-  picture.addEventListener('close', () => {
-    const target = opener?.getClientRects().length ? opener : pictures[pictureIndex];
-    target?.focus({preventScroll:true});
-    fullImage.removeAttribute('src');
-    pictures = [];
-    opener = null;
-    touchStart = null;
-  });
-
   const slideHeader = presentation.querySelector('.festival-header');
   const desktopSlides = window.matchMedia('(min-width: 901px), (min-width: 741px) and (orientation: landscape) and (hover: hover) and (pointer: fine)');
   let fitRequest = 0;
@@ -102,7 +11,7 @@
   function fitSlide() {
     if (presentation.hidden) return;
     const page = pages.find(item => !item.hidden);
-    if (!page || page.id === 'guide') return;
+    if (!page || page.id === 'guide' || page.id === 'fabula') return;
     if (!desktopSlides.matches || (page.id === 'format' && window.matchMedia('(max-width:960px) and (max-height:500px)').matches)) {
       delete page.dataset.fit;
       for (const name of ['zoom', 'width', 'min-height']) page.style.removeProperty(name);
@@ -143,48 +52,6 @@
     document.fonts.ready.then(scheduleFit);
     document.fonts.addEventListener('loadingdone', scheduleFit);
   }
-  presentation.addEventListener('load', e => {
-    if (e.target.tagName === 'IMG' && e.target.closest('.festival-panel:not([hidden])')) scheduleFit();
-  }, true);
-
-  // The inline preview stays visible throughout the high-resolution download.
-  const originals = new Map();
-  function fullSize(image) {
-    const url = image.dataset.full;
-    if (!originals.has(url)) {
-      const bitmap = new Image();
-      bitmap.src = url;
-      originals.set(url, bitmap.decode().then(() => bitmap).catch(() => {
-        originals.delete(url);
-        return null;
-      }));
-    }
-    return originals.get(url);
-  }
-  function upgradeImages(scope) {
-    const images = [...scope.querySelectorAll('img[data-full]')];
-    const shown = images.filter(image => !image.closest('figure')?.hidden);
-    function upgrade(image) {
-      return fullSize(image).then(bitmap => {
-        if (bitmap && image.src !== bitmap.src) image.src = bitmap.src;
-      });
-    }
-    Promise.all(shown.map(upgrade)).then(() => {
-      if (!scope.hidden) images.filter(image => !shown.includes(image)).forEach(upgrade);
-    });
-  }
-
-  // Decode slide-sized frames in advance, including the frames still hidden in a carousel.
-  function warmGallery(scope) {
-    for (const image of scope.querySelectorAll('.zoom-img img')) {
-      if (image.dataset.warmed || !image.src) continue;
-      image.dataset.warmed = '1';
-      if (image.decode) image.decode().catch(() => {delete image.dataset.warmed;});
-    }
-  }
-  if (window.requestIdleCallback) requestIdleCallback(() => warmGallery(presentation), {timeout:800});
-  else setTimeout(() => warmGallery(presentation), 0);
-
   function showPage(scroll) {
     const id = location.hash.slice(1);
     const zone = id.startsWith('stations-') ? document.getElementById(id) : null;
@@ -202,8 +69,6 @@
       else link.removeAttribute('aria-current');
     }
     fitSlide();
-    warmGallery(pages[active]);
-    upgradeImages(pages[active]);
     if (scroll) requestAnimationFrame(() => {
       if (zone) zone.focus({preventScroll:true});
       if (zone && !desktopSlides.matches) zone.scrollIntoView({block:'start'});
@@ -335,8 +200,9 @@
     if (anchor.bottom < 0 || anchor.top > height) { zoneCard.hidePopover(); return; }
     const below = height - anchor.bottom - 14;
     const above = anchor.top - 14;
-    const left = Math.max(8,list.left);
-    zoneCard.style.width = Math.min(435,list.width,width-left-8) + 'px';
+    const cardWidth = Math.min(435, list.width, width - 16);
+    const left = Math.max(8, Math.min(anchor.left, width - cardWidth - 8));
+    zoneCard.style.width = cardWidth + 'px';
     zoneCard.style.left = left + 'px';
     const style = getComputedStyle(zoneCard);
     const inset = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom) +
@@ -420,9 +286,6 @@
     next.focus({preventScroll:true});
     location.hash = next.hash;
   }
-  window.addEventListener('hashchange', () => {
-    if (picture.open) picture.close();
-    showPage(true);
-  });
+  window.addEventListener('hashchange', () => showPage(true));
   showPage(!!location.hash);
 })();

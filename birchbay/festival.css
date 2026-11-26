@@ -795,13 +795,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   .festival-board .board-note,.festival-figure figcaption,.festival-timetable li span,.floor-plan li div span {font-size:11px;color:#444}
   .floor-plan,.correct-wheel {background:#f4f4f4}
   .festival-copy details {display:none}
-}
-
-.story-views{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.story-views figure,.object-views figure{margin:0;min-width:0}
-.story-views figure:first-child{grid-column:1/-1}
-.story-views img,.object-views img{display:block;width:100%;height:auto;object-fit:contain}
-.story-views figcaption,.object-views figcaption{color:#c2c8c8;font:15px/1.25 var(--festival-sans);padding-top:5px}
+}.object-views figure{margin:0;min-width:0}.object-views img{display:block;width:100%;height:auto;object-fit:contain}.object-views figcaption{color:#c2c8c8;font:15px/1.25 var(--festival-sans);padding-top:5px}
 .object-views{display:flex;gap:1rem;margin-top:.8rem}
 .object-views figure{flex:1}
 .object-views img{height:clamp(90px,18vh,240px)}
@@ -816,38 +810,25 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 #format .festival-copy .festival-date{margin:0!important}
 .festival-timetable ol{flex:1;display:flex;flex-direction:column}
 .festival-timetable li{flex:1;align-items:center}
-.story-views figure:first-child img{max-height:38vh}
-.story-views figure:not(:first-child) img{max-height:25vh}
 #example .festival-board,#games .festival-board{padding:clamp(13px,1.7vw,28px)}
 }
-@media(max-width:740px){.story-views{gap:.6rem}.story-views figcaption{font-size:14px}}
+@media(max-width:740px){}
 
 @media screen and (min-width:901px) and (max-height:760px){#format .festival-copy p{font-size:clamp(17px,2.9vh,22px)}.festival-panel:not(#format) .festival-copy>p,.festival-panel:not(#format) .festival-copy blockquote{font-size:clamp(17px,2.75vh,21px);margin:.62em 0}.festival-panel:not(#format) .festival-copy h2{font-size:clamp(40px,6.8vh,54px)}}
 @media screen and (min-width:901px){#school .floor-plan{align-self:stretch;display:flex;flex-direction:column;justify-content:center}#school .floor-plan li{padding-block:clamp(12px,3vh,40px)}#games .festival-copy>p,#example .festival-copy>p{font-size:clamp(17px,min(1.45vw,2.7vh),27px)}#school .festival-copy>p{max-width:54ch}#games .station-examples{max-width:none}#games .set-figure{align-self:center}}
 @media screen and (min-width:901px) and (max-height:760px){#games .festival-copy h2,#example .festival-copy h2,#school .festival-copy h2{font-size:clamp(35px,6vh,48px);max-width:none}#games .station-examples li{padding-block:.33em}#games .festival-copy>p,#school .festival-copy>p,#example .festival-copy>p{font-size:clamp(16px,2.55vh,19px);line-height:1.32}#games details{margin-top:.5em}#example .route-times li{padding-block:.33em}#school .floor-plan li{padding-block:1em}}
 @media screen and (min-width:901px) and (max-height:650px){#example .route-times{font-size:16px}#example .route-times li{padding-block:.23em}#games .station-examples{font-size:17px}#example .festival-board .object-views img{height:15vh}}
 @media screen and (min-width:901px){#games .festival-copy h2{max-width:none;font-size:clamp(35px,min(4.05vw,6vh),70px)}#school .floor-plan ol{flex:1;display:flex;flex-direction:column}#school .floor-plan li{flex:1}#games .station-examples{font-size:clamp(17px,min(1.55vw,2.65vh),26px)}}
-@media screen and (min-width:901px) and (max-height:650px){#games,#example{padding-block:7px}#games .festival-copy p{margin-block:.35em}}
-
-.scene-gallery{min-width:0;align-self:center}
-.scene-gallery figure{margin:0}
-.scene-gallery img{display:block;width:100%;height:clamp(200px,55vh,620px);object-fit:contain}
-.scene-gallery figcaption,.schedule-note{font:16px/1.35 var(--festival-sans);color:var(--festival-muted);margin:.6em 0}
-.scene-buttons{display:flex;align-items:center;justify-content:center;gap:1em}
-.scene-buttons button{font:22px var(--festival-sans);min-width:44px;min-height:40px;background:transparent;border:1px solid var(--festival-rule);color:var(--festival-gold);cursor:pointer}
+@media screen and (min-width:901px) and (max-height:650px){#games,#example{padding-block:7px}#games .festival-copy p{margin-block:.35em}}.schedule-note{font:16px/1.35 var(--festival-sans);color:var(--festival-muted);margin:.6em 0}
 #school .festival-copy>p,#example .festival-copy>p{max-width:none}
 @media(min-width:901px){#cc .festival-panel:not(#format) .festival-copy{align-self:stretch;display:flex;flex-direction:column;justify-content:space-evenly}}
-@media(max-width:740px){.scene-gallery img{height:auto;aspect-ratio:3/2}.scene-gallery{align-self:start}}
+@media(max-width:740px){}
 
 .festival-header-inner{grid-template-columns:auto minmax(0,1fr)}.festival-nav{justify-content:flex-end}
-.story-views{grid-template-columns:1fr;gap:12px}.story-views .zoom-img{background:none;border:0;display:block;width:100%;cursor:zoom-in;padding:0}
-.story-views figure img{max-height:33vh!important}.story-views figcaption,.scene-gallery figcaption{text-align:center}
-#picture{background:#121917;border:0;color:white;padding:1rem;width:100vw;height:100dvh;max-width:100vw;max-height:100dvh;margin:0}
-#picture[open]{display:grid;grid-template-rows:auto 1fr}#picture img{width:100%;height:100%;min-height:0;object-fit:contain}#picture button{justify-self:end;background:#27332e;color:white;border:1px solid #76887a;padding:.45em .9em;cursor:pointer}
 .inventory{grid-column:1/-1;font-family:var(--festival-sans)}.inventory>p{font:clamp(19px,2vw,32px)/1.22 var(--festival-serif);margin:0 0 .75em}.shelves{display:grid;grid-template-columns:1fr 1fr;gap:4vw}.shelves h2{font:600 clamp(18px,1.6vw,25px)/1.2 var(--festival-sans);margin:0 0 .55em;color:var(--festival-green)}.shelves ul{list-style:none;padding:0;margin:0}.shelves li{display:grid;grid-template-columns:43% 1fr;gap:8px;border-top:1px solid var(--festival-rule);padding:.33em 0;font-size:clamp(15px,min(1.4vw,2.35vh),23px);line-height:1.2}.shelves li b{font-weight:600}.shelves li span,.island{color:var(--festival-muted)}.island{font-size:clamp(15px,1.4vw,22px);line-height:1.35}.island b{display:block;color:var(--festival-green)}
-@media(max-width:740px){.shelves{grid-template-columns:1fr;gap:24px}.festival-header-inner{display:block}.festival-nav{display:grid;grid-template-columns:repeat(3,auto)}.shelves li{padding:.55em 0}.story-views figure img{max-height:none!important}}
+@media(max-width:740px){.shelves{grid-template-columns:1fr;gap:24px}.festival-header-inner{display:block}.festival-nav{display:grid;grid-template-columns:repeat(3,auto)}.shelves li{padding:.55em 0}}
 @media screen and (min-width:901px){#cc .festival-panel .festival-copy>p{max-width:none}#fabula .festival-copy>p,#school .festival-copy>p,#games .festival-copy>p{font-size:clamp(16px,min(1.55vw,2.65vh),26px);line-height:1.32;margin:.45em 0}#format .festival-copy>p{font-size:clamp(16px,min(1.65vw,2.8vh),32px)}}
-@media screen and (min-width:901px){#fabula,#school,#games,#example{grid-template-columns:minmax(0,1.23fr) minmax(0,1fr)}#cc #fabula .festival-copy>p,#cc #school .festival-copy>p,#cc #games .festival-copy>p{font-size:clamp(16px,min(1.48vw,2.5vh),25px);line-height:1.27;margin:.32em 0}#cc #example .route-times{max-width:none}#fabula .story-views{align-self:center}}
+@media screen and (min-width:901px){#fabula,#school,#games,#example{grid-template-columns:minmax(0,1.23fr) minmax(0,1fr)}#cc #fabula .festival-copy>p,#cc #school .festival-copy>p,#cc #games .festival-copy>p{font-size:clamp(16px,min(1.48vw,2.5vh),25px);line-height:1.27;margin:.32em 0}#cc #example .route-times{max-width:none}}
 
 #cc .city-directory{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2.6vw,54px);align-self:start;width:100%;font-family:var(--festival-sans)}
 .city-directory section{min-width:0}.city-directory h2{margin:0 0 .55em;max-width:none;font:600 clamp(18px,1.7vw,30px)/1.1 var(--festival-sans);color:var(--festival-ink)}
@@ -861,19 +842,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 #school .stage-list li{counter-increment:stage;padding-left:2em}#school .stage-list li:before{position:absolute;left:0;content:counter(stage,decimal-leading-zero);font:600 .76em/1.8 var(--festival-sans);color:var(--festival-gold)}
 #school .stage-list strong{display:block;font:600 1em/1.28 var(--festival-sans);margin-bottom:.12em}
 #games .stage-list li{font-size:clamp(16px,min(1.5vw,2.6vh),26px);padding:.49em 0}
-#cc #fabula .story-views{width:100%;max-width:min(100%,65vh);justify-self:center;gap:1.3vh}
-#cc #fabula .story-views img{width:100%;height:clamp(130px,32vh,430px);max-height:none!important;object-fit:cover}
-#cc #picture button{font:32px/1 var(--festival-sans);width:46px;height:46px;padding:0}
-#cc #school .scene-gallery img{width:100%;height:clamp(220px,58vh,700px);object-fit:cover}
-#example .scene-gallery img{height:clamp(160px,37vh,480px)}
 .trial{width:100%;border-collapse:collapse;margin-top:.6em;font:clamp(14px,1.25vw,21px)/1.22 var(--festival-sans);text-align:left}
 .trial caption{text-align:left;color:var(--festival-green);font-weight:600;padding:.3em 0}.trial th,.trial td{border-bottom:1px solid var(--festival-rule);padding:.3em .2em}.trial tbody th{font-weight:500}
 @media screen and (min-width:901px){#cc #fabula .festival-copy{justify-content:center;gap:1.4vh}#cc #fabula .festival-copy>p{margin:0;line-height:1.29;font-size:clamp(16px,min(1.45vw,2.55vh),27px)}#cc #school,#cc #games{grid-template-columns:1.28fr 1fr}#cc #example .route-times{font-size:clamp(16px,min(1.45vw,2.55vh),26px);line-height:1.27}#cc #example .festival-copy{justify-content:center}#cc #example .route-times li{padding-block:.48em}}
-@media(max-width:900px){#cc .city-directory{grid-template-columns:1fr}.city-directory li{font-size:17px}#cc #fabula .story-views{max-width:100%}#cc #fabula .story-views img{height:auto;aspect-ratio:2/1}#cc #school .scene-gallery img{height:auto}}
+@media(max-width:900px){#cc .city-directory{grid-template-columns:1fr}.city-directory li{font-size:17px}}
 @media screen and (min-width:901px){
 #cc #school{grid-template-columns:1.38fr 1fr}
 #school .stage-list li{font-size:clamp(17px,min(1.6vw,2.65vh),28px);padding-block:.45em}
-#games .scene-gallery img{object-fit:contain;height:auto;aspect-ratio:1.45}
 }
 @media screen and (min-width:901px) and (max-height:650px){
 #cc #fabula,#cc #games,#cc #school{grid-template-columns:1.52fr 1fr;padding-block:9px}
@@ -912,8 +887,6 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 @media screen and (min-width:901px){
 #cc #games{grid-template-columns:1.28fr 1fr;align-content:center;row-gap:clamp(8px,1.0vh,16px)}
 #cc #games .festival-copy{align-self:center}
-#cc #games>.scene-gallery{margin:0;align-self:center}
-#cc #games .scene-gallery img{width:100%;height:clamp(240px,50vh,600px);object-fit:contain}
 #cc .venue-guide{grid-template-columns:1fr 1.02fr 1.05fr;gap:clamp(18px,2.1vw,42px)}
 #cc .school-place li{padding:.10em 0}
 }
@@ -945,12 +918,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 @media screen and (min-width:741px) and (max-width:900px){
 #cc .festival-panel{grid-template-columns:1fr;min-height:0;max-width:740px;margin-inline:auto;padding:26px 28px 36px;gap:24px}
 #cc .festival-copy>p{max-width:none}
-#cc .scene-gallery img{max-height:50vh;object-fit:contain}
-#cc #fabula .story-views{max-width:600px}
 }
-
-#cc #fabula .story-views img{height:auto;aspect-ratio:auto;max-height:none!important;object-fit:contain}
-#cc #school .scene-gallery img{width:100%;height:auto;aspect-ratio:1.63;max-height:none;object-fit:contain}
 @media screen and (min-width:1100px){
 #cc #school{grid-template-columns:1.26fr 1fr}
 #cc .venue-column:nth-child(-n+2) .school-place li{padding-block:.19em}
@@ -971,38 +939,15 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 #format .festival-timetable li span{font-size:clamp(15px,min(1.28vw,2.15vh),24px)}
 }
 
-/* Media can be opened from every visible frame, including the fixed check-in scene. */
-#cc .zoom-img {display:block;width:100%;min-width:0;margin:0;padding:0;background:transparent;border:0;border-radius:0;cursor:zoom-in}
-#cc .zoom-img:focus-visible {outline:3px solid var(--festival-gold);outline-offset:3px}
-#cc .zoom-img img,#cc .zoom-img picture {display:block;width:100%;min-width:0}
-#cc .scene-gallery>figure[hidden],#cc #picture .picture-controls[hidden] {display:none!important}
-#cc .school-views {display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(8px,1.3vh,16px);width:min(100%,calc(89svh - 127px));justify-self:center;align-self:center}
-#cc .school-views figure,#cc .school-views .scene-gallery {margin:0;min-width:0;width:100%}
-#cc #school .school-views .zoom-img img {width:100%;height:auto;max-height:none;aspect-ratio:1.84;object-fit:cover}
-#cc #school .school-views>figure img {object-position:50% 58%}
-#cc .scene-buttons,#cc #picture .picture-controls {display:flex;align-items:center;justify-content:center;gap:.85em}
-#cc .scene-buttons {margin-top:clamp(6px,1vh,12px)}
-#cc .scene-buttons output,#cc #picture output {min-width:3.5em;text-align:center;font-variant-numeric:tabular-nums}
-#cc #games .scene-gallery {width:100%;margin:0}
-#cc #games .scene-gallery .zoom-img img {width:100%;height:auto;max-height:none;aspect-ratio:1.5;object-fit:contain}
-#cc #picture[open] {display:grid;grid-template: auto minmax(0,1fr) auto / minmax(0,1fr);gap:8px;overflow:hidden;border:0}
-#cc #picture .picture-controls {justify-self:center}
-#cc #picture .picture-controls button {justify-self:auto;width:44px;height:36px;font-size:21px}
-#cc #picture .picture-full {object-fit:contain;min-width:0;width:100%;height:100%}
 #cc #format .festival-timetable {justify-content:flex-start;padding-top:clamp(13px,2.0vh,25px)}
 #cc #format .festival-timetable ol {margin-top:0}
 #cc #format .festival-timetable li {align-items:baseline;align-content:start;padding-top:clamp(12px,2.25vh,27px)}
 #cc #format .festival-timetable li:first-child {border-top:0;padding-top:0}
-@media screen and (min-width:901px){
-  #cc #fabula .story-views {max-width:min(100%,71vh)}
-}
+
 @media screen and (min-width:1100px){
   #cc .venue-column:last-child .school-place li {padding-block:.23em}
 }
 @media screen and (max-width:900px){
-  #cc .school-views {width:100%;max-width:650px;gap:12px}
-  #cc #school .school-views .zoom-img img {aspect-ratio:1.5;object-fit:contain}
-  #cc #games .scene-gallery {max-width:650px;justify-self:center}
   #cc #format .festival-timetable li {padding-top:.65em}
 }
 @media screen and (min-width:901px){
@@ -1075,9 +1020,6 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   #cc #format[data-fit] .festival-timetable ol{display:flex;flex-direction:column;height:100%}
   #cc #format[data-fit] .festival-timetable li{flex:1}
   #cc #fabula[data-fit] .festival-copy p{font-size:17px;line-height:1.26;max-width:none;margin:.45em 0}
-  #cc #fabula[data-fit] .story-views{width:100%;max-width:68vh}
-  #cc #school[data-fit] .school-views{width:min(100%,calc(88vh - 105px))}
-  #cc #school[data-fit] .school-views .zoom-img img{aspect-ratio:1.84;object-fit:cover}
   #cc #festival-stations[data-fit]{grid-template-columns:1fr;gap:4px}
   #cc #festival-stations[data-fit] .venue-guide{grid-template-columns:1.13fr 1fr 1.04fr;gap:16px}
   #cc #festival-stations[data-fit] .venue-column{gap:7px}
@@ -1090,15 +1032,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 @media screen and (max-width:740px){
   #cc .festival-header-inner{display:block}
   #cc .festival-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 6px}
-  #cc .festival-nav a{justify-self:stretch;min-width:0}
+  #cc .festival-nav a{display:block;align-content:center;justify-self:stretch;min-width:0;overflow-wrap:anywhere}
 }
 @media print{
   #cc .festival-panel[data-fit]{zoom:1!important;width:100%!important;min-height:0!important}
   #cc #guide[hidden]{display:none!important}
 }
-@media screen {
-  #cc #games[data-fit] .scene-gallery .zoom-img img{max-height:50vh;object-fit:contain}
-}
+
 
 #cc .festival-brand{display:inline-flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;padding-block:6px;width:max-content}
 #cc .festival-brand strong{font:600 clamp(17px,1.3vw,23px)/1.15 var(--festival-sans);color:var(--festival-ink)}
@@ -1348,3 +1288,57 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 #cc .catalog-note button {
   text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:.18em;
 }
+
+/* Text layouts for the readers' edition. */
+#cc #fabula,
+#cc #school, #cc #school[data-fit],
+#cc #games, #cc #games[data-fit] {
+  grid-template-columns:minmax(0,1fr);
+}
+#cc #fabula {
+  min-height:0;
+  padding-block:clamp(24px,6vh,65px);
+}
+#cc #fabula .festival-copy {
+  display:block;
+  width:min(100%,63ch);
+  margin-inline:auto;
+  font-size:clamp(18px,1.75vw,25px);
+}
+#cc #fabula .festival-copy > p {
+  margin:0 0 .85em;
+  font-size:1em;
+  line-height:1.45;
+}
+#cc #fabula .festival-copy > p:first-child {
+  font-size:1.13em;
+  color:var(--festival-ink);
+}
+#cc #fabula .festival-copy > p:last-child {margin-bottom:0}
+#cc #games {row-gap:clamp(12px,2vh,24px)}
+#cc #games > .play-intro {margin:0}
+@media screen and (min-width:741px) {
+  #cc #school .zone-list, #cc #games .stage-list {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:clamp(12px,3vh,34px) clamp(22px,3vw,54px);
+  }
+  #cc #school .zone-list > li, #cc #games .stage-list > li {
+    border-top:1px solid var(--festival-rule);
+    padding-block:.65em .15em;
+    font-size:clamp(17px,min(1.65vw,3.1vh),26px);
+    line-height:1.35;
+  }
+}
+@media screen and (min-width:1050px) {
+  #cc #school .zone-list > li:last-child {
+    grid-column:1/-1;
+    display:grid;
+    grid-template-columns:auto 1fr minmax(0,2.2fr);
+    align-items:baseline;
+    gap:.5em;
+  }
+  #cc #school .zone-list > li:last-child p {margin:0}
+  #cc #games .stage-list {grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+
