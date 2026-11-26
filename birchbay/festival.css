@@ -1296,13 +1296,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   align-content:center;
   gap:clamp(26px,5vw,80px);
 }
-#cc #city[data-fit] {grid-template-columns:minmax(0,.86fr) minmax(0,1fr)}
 #cc #city > div {min-width:0;padding:0}
-#cc #city h2 {
-  margin:0 0 .75em;
-  color:var(--festival-green);
-  font:600 clamp(20px,2vw,30px)/1.17 var(--festival-sans);
-}
 #cc .city-story p {
   margin:0 0 .8em;
   font:400 clamp(17px,min(1.62vw,3vh),25px)/1.4 var(--festival-serif);
@@ -1317,6 +1311,18 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 }
 #cc #games > .play-intro {margin:0}
 @media screen and (min-width:741px) {
+  #cc #city, #cc #city[data-fit] {
+    grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);
+    column-gap:clamp(28px,5.2vw,84px);
+  }
+  #cc #city > .city-story {
+    align-self:center;
+    max-width:56ch;
+    margin-inline:auto;
+    font:400 clamp(19px,min(1.57vw,2.92vh),22px)/1.42 var(--festival-serif);
+  }
+  #cc .city-story p {font:inherit;margin-bottom:.75em}
+  #cc .city-story p:first-child {font-size:1.05em}
   #cc #games .stage-list {
     display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
@@ -1334,8 +1340,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 }
 @media screen and (max-width:740px) {
   #cc #city {grid-template-columns:minmax(0,1fr)}
-  #cc .city-location {border-top:1px solid var(--festival-rule)}
-  #cc .city-location h2 {margin-top:1em}
+  #cc .city-story p {font-size:18px}
+  #cc #city > .city-location {border-top:1px solid var(--festival-rule);padding-top:1.25rem}
   #cc .festival-nav {grid-template-columns:repeat(6,minmax(0,1fr))}
   #cc .festival-nav a {grid-column:span 2}
   #cc .festival-nav a:nth-last-child(-n+2) {grid-column:span 3}

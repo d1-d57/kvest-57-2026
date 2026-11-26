@@ -1302,13 +1302,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   align-content:center;
   gap:clamp(26px,5vw,80px);
 }
-#cc #city[data-fit] {grid-template-columns:minmax(0,.86fr) minmax(0,1fr)}
 #cc #city > div {min-width:0;padding:0}
-#cc #city h2 {
-  margin:0 0 .75em;
-  color:var(--festival-green);
-  font:600 clamp(20px,2vw,30px)/1.17 var(--festival-sans);
-}
 #cc .city-story p {
   margin:0 0 .8em;
   font:400 clamp(17px,min(1.62vw,3vh),25px)/1.4 var(--festival-serif);
@@ -1323,6 +1317,18 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 }
 #cc #games > .play-intro {margin:0}
 @media screen and (min-width:741px) {
+  #cc #city, #cc #city[data-fit] {
+    grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);
+    column-gap:clamp(28px,5.2vw,84px);
+  }
+  #cc #city > .city-story {
+    align-self:center;
+    max-width:56ch;
+    margin-inline:auto;
+    font:400 clamp(19px,min(1.57vw,2.92vh),22px)/1.42 var(--festival-serif);
+  }
+  #cc .city-story p {font:inherit;margin-bottom:.75em}
+  #cc .city-story p:first-child {font-size:1.05em}
   #cc #games .stage-list {
     display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
@@ -1340,8 +1346,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 }
 @media screen and (max-width:740px) {
   #cc #city {grid-template-columns:minmax(0,1fr)}
-  #cc .city-location {border-top:1px solid var(--festival-rule)}
-  #cc .city-location h2 {margin-top:1em}
+  #cc .city-story p {font-size:18px}
+  #cc #city > .city-location {border-top:1px solid var(--festival-rule);padding-top:1.25rem}
   #cc .festival-nav {grid-template-columns:repeat(6,minmax(0,1fr))}
   #cc .festival-nav a {grid-column:span 2}
   #cc .festival-nav a:nth-last-child(-n+2) {grid-column:span 3}
@@ -1380,16 +1386,14 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 </section>
 </section>
 <section aria-label="Город" class="festival-panel" hidden="" id="city">
-<div class="city-story" id="fabula">
-<h2>Сюжет</h2>
+<div aria-label="Сюжет" class="city-story" id="fabula" role="region">
 <p>На берегу реки стоит Бёрчбей, город игрушечников. На острове напротив пристани работает Мастер с помощниками. К его мастерской с ярмарочной площади ведёт деревянный мост.</p>
 <p>Каждую зиму на ярмарку привозят новые игрушки. К открытию ребята приезжают поездом и первыми пробуют их в деле. В лавках можно решить задачу, сыграть в игру или смастерить игрушку.</p>
 <p>С ярмарки можно отправиться на остров. Для желающих несколько станций можно связать одной историей.</p>
 <p>За мостом работают мастерские. Здесь ребята встречают снеговика: у него своё сыскное агентство — Бюро снежных следов.</p>
 <p>Среди этих чудес они начинают догадываться, кто хозяин мастерских. В финале Дед Мороз сам выходит к детям.</p>
 </div>
-<div class="city-location" id="school">
-<h2>Расположение</h2>
+<div aria-label="Расположение" class="city-location" id="school" role="region">
 <ul class="zone-list"><li><button aria-controls="zone-directory-note" aria-expanded="false" aria-haspopup="dialog" class="zone-trigger" data-places="stations-arrival" popovertarget="zone-directory-note" type="button">Вокзал и Привокзальная площадь</button><small>гардероб</small><p>В гардеробе дети «сходят с поезда». У столов под лестницей дежурные находят команду в списке и выдают карту для прогулки по городу. На ней же ставят отметки.</p></li><li><button aria-controls="zone-directory-note" aria-expanded="false" aria-haspopup="dialog" class="zone-trigger" data-places="stations-quay" popovertarget="zone-directory-note" type="button">Набережная</button><small>I этаж</small><p>От площади одни команды идут в сторону пристани, другие спускаются в <button aria-controls="zone-directory-note" aria-expanded="false" aria-haspopup="dialog" class="zone-trigger zone-inline" data-places="stations-hill" popovertarget="zone-directory-note" type="button">спортзал</button> или сразу поднимаются на ярмарку.</p></li><li><button aria-controls="zone-directory-note" aria-expanded="false" aria-haspopup="dialog" class="zone-trigger" data-places="stations-fair stations-old-town" popovertarget="zone-directory-note" type="button">Ярмарка и Старый город</button><small>II этаж</small><p><button aria-controls="zone-directory-note" aria-expanded="false" aria-haspopup="dialog" class="zone-trigger zone-inline" data-places="stations-tree" popovertarget="zone-directory-note" type="button">У ёлки</button> на втором этаже сходятся два крыла. В одном торгуют и играют, в другом работают <button aria-controls="zone-directory-note" aria-expanded="false" aria-haspopup="dialog" class="zone-trigger zone-inline" data-places="stations-old-town" popovertarget="zone-directory-note" type="button">театр, училище и мастерские</button>. В учительской у ёлки — штаб организаторов.</p></li><li><button aria-controls="zone-directory-note" aria-expanded="false" aria-haspopup="dialog" class="zone-trigger" data-places="stations-island" popovertarget="zone-directory-note" type="button">Мастерские Деда Мороза</button><small>III этаж</small><p>Наверху дети попадают в усадьбу. За одной дверью собирают ёлочные игрушки, за другой показывают театр теней. Помощник Мастера подскажет, где есть места.</p></li><li><button aria-controls="zone-directory-note" aria-expanded="false" aria-haspopup="dialog" class="zone-trigger" data-places="stations-hall" popovertarget="zone-directory-note" type="button">Дом Деда Мороза</button><small>актовый зал</small><p>В Бюро гостей встречает снеговик-сыщик, а в актовом зале слушают лекции и собираются на финал. После основного потока гостей часть волонтёров переходит с регистрации в Бюро. Внизу остаётся дежурный для опоздавших.</p></li></ul>
 </div>
 </section>
