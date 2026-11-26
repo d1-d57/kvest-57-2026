@@ -1341,6 +1341,23 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     line-height:1.35;
   }
 }
+@media screen and (min-width:901px) {
+  #cc #city, #cc #city[data-fit] {
+    grid-template-columns:minmax(0,1.18fr) minmax(0,1fr);
+    column-gap:clamp(24px,4.5vw,72px);
+  }
+  #cc #city > .city-story {
+    width:100%;
+    max-width:55ch;
+    font-size:clamp(20px,min(1.73vw,3.1vh),24px);
+    line-height:1.41;
+  }
+  #cc #city > .city-location {align-self:center}
+  #cc .city-location .zone-list > li {
+    padding-block:.44em;
+    font-size:clamp(16px,min(1.33vw,2.38vh),21px);
+  }
+}
 @media screen and (min-width:1050px) {
   #cc #games .stage-list {grid-template-columns:repeat(3,minmax(0,1fr))}
 }
