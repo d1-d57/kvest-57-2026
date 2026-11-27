@@ -19,40 +19,7 @@
       <p>Собираем программу вместе. Отметьте станции, которые вам хочется провести, или предложите свою. Я вам напишу, и мы вместе докрутим занятие.</p>
     </header>
     <aside class="controls" aria-label="Поиск и фильтры">
-      <details class="proposal" id="proposal" hidden>
-        <summary>Предложить станцию</summary>
-        <form id="idea-form">
-          <p id="application-selection" hidden></p>
-          <label for="participant">Как вас записать?
-            <input id="participant" maxlength="80" autocomplete="name">
-          </label>
-          <label class="choice"><input id="any-station" type="checkbox">Могу провести любую станцию</label>
-          <label for="idea">Своя идея</label>
-          <textarea id="idea" rows="3" maxlength="700" placeholder="Что будут делать школьники?"></textarea>
-          <details class="extra">
-            <summary>Детали идеи</summary>
-            <label for="title">Название</label><input type="text" id="title" maxlength="90">
-            <label for="location">Место в городе</label><input id="location" maxlength="120">
-            <fieldset><legend>Форматы</legend><div id="idea-tags" class="chips"></div></fieldset>
-            <fieldset><legend>Темы</legend><div id="idea-topics" class="chips"></div></fieldset>
-            <label for="idea-mode">Как проходит заход?</label><input id="idea-mode" maxlength="240">
-            <label for="idea-capacity">Сколько может начать одновременно?</label><input id="idea-capacity" maxlength="220">
-            <label for="idea-team">Кто нужен и что делает?</label><input id="idea-team" maxlength="220">
-            <label for="idea-materials">Что подготовить, распечатать или купить?</label><input id="idea-materials" maxlength="280">
-            <label for="idea-probe">Что проверить?</label><input id="idea-probe" maxlength="240">
-          <label for="idea-tasks">Задания <small>по одному на строку</small></label>
-          <textarea id="idea-tasks" rows="3" maxlength="700"></textarea>
-          <label for="idea-check">Ответ или критерий</label><input id="idea-check" maxlength="650">
-          <label for="idea-taskPrep">Заготовки к заданиям</label><textarea id="idea-taskPrep" rows="2" maxlength="650"></textarea>
-          <label for="idea-sources">Источники</label><textarea id="idea-sources" rows="2" maxlength="650"></textarea>
-          </details>
-          <button type="submit" class="primary" id="idea-submit">Отправить</button>
-          <p id="idea-status" role="status"></p>
-          <p id="preview-note" class="form-note" hidden>Предпросмотр: заявки сохраняются только в этом браузере.</p>
-          <p id="static-note" class="form-note" hidden>Для записи откройте Google-таблицу.</p>
-        </form>
-      </details>
-      <button class="quiet flexible-open" id="flexible-open" type="button" hidden>Подойдёт любая</button>
+      <button class="primary" id="proposal-open" type="button" hidden><span aria-hidden="true">+</span> Предложить станцию</button>
       <div class="top-controls">
         <input type="search" id="query" aria-label="Поиск станций" placeholder="Поиск">
 
@@ -61,7 +28,7 @@
             <span class="icon-info" aria-hidden="true">i</span>
           </button>
           <div class="info-panel" id="info-panel" hidden>
-            <p id="info-flow">Отметьте станции или предложите свою и нажмите «Отправить». Можно отправить ещё раз.</p>
+            <p id="info-flow">Отметьте станции и нажмите «Отправить». Общая галочка отмечает весь каталог. Новые идеи можно предложить отдельно.</p>
             <p>Результат подходит под все выбранные теги.</p>
             <p id="info-sheet" hidden>В Google-таблице с доступом можно вписаться или добавить станцию.</p>
           </div>
@@ -89,20 +56,79 @@
     </aside>
 
     <section id="catalog" hidden aria-label="Станции">
-      <div class="catalog-result"><button type="button" id="reset-catalog" class="quiet" hidden>Сбросить</button><p id="catalog-status" role="status"></p></div>
+      <div class="catalog-result">
+        <button type="button" id="reset-catalog" class="quiet" hidden>Сбросить</button>
+        <p id="catalog-status" role="status"></p>
+        <label class="master-pick" id="master-pick" hidden>
+          <input id="select-all" type="checkbox">
+          <span id="select-all-label"></span>
+        </label>
+      </div>
       <ul id="cards"></ul>
     </section>
 
     <div id="selection" hidden>
-      <details id="selection-list">
-        <summary id="selection-count"></summary>
-        <div class="selection-popover">
-          <ul id="selection-titles"></ul>
-          <button type="button" class="quiet" id="clear-selected">Снять все</button>
-        </div>
-      </details>
+      <span id="selection-count"></span>
       <button class="primary" type="button" id="selection-submit">Отправить</button>
     </div>
+    <p id="submission-feedback" role="status" hidden></p>
+
+    <dialog id="submission" aria-labelledby="submission-title">
+      <header class="dialog-header">
+        <h2 id="submission-title"></h2>
+        <button id="close-submission" class="icon-button" type="button" aria-label="Закрыть">×</button>
+      </header>
+      <form id="submission-form">
+        <div id="application-summary" hidden>
+          <p id="application-count"></p>
+          <ul id="application-selection"></ul>
+        </div>
+        <div id="proposal-fields" hidden>
+          <div id="idea-list"></div>
+          <button type="button" id="add-idea" class="quiet">+ Ещё станция</button>
+        </div>
+        <label class="name-field" for="participant">Имя
+          <input id="participant" maxlength="80" autocomplete="name" required>
+        </label>
+        <div class="dialog-actions">
+          <button type="submit" class="primary" id="idea-submit">Отправить</button>
+        </div>
+        <p id="idea-status" role="status"></p>
+        <details id="draft-fallback" hidden>
+          <summary id="draft-fallback-label">Telegram не открылся?</summary>
+          <label for="draft-text">Текст для Telegram</label>
+          <textarea id="draft-text" readonly rows="5"></textarea>
+          <button type="button" class="quiet" id="copy-draft">Скопировать</button>
+          <a id="open-chat" target="_blank" rel="noopener noreferrer">Открыть Telegram</a>
+        </details>
+      </form>
+    </dialog>
+
+    <template id="idea-template">
+      <fieldset class="idea-draft">
+        <legend></legend>
+        <button class="quiet remove-idea" type="button" hidden>Убрать</button>
+        <label class="idea-action">Что будут делать школьники?
+          <textarea name="action" rows="3" maxlength="700"></textarea>
+        </label>
+        <details class="extra">
+          <summary>Детали</summary>
+          <label>Название<input name="title" maxlength="90"></label>
+          <label>Локация в городе<input name="location" maxlength="120"></label>
+          <fieldset><legend>Форматы</legend><div data-formats class="chips"></div></fieldset>
+          <fieldset><legend>Темы</legend><div data-topics class="chips"></div></fieldset>
+          <label>Как проходит заход?<input name="mode" maxlength="240"></label>
+          <label>Сколько участников одновременно?<input name="capacity" maxlength="220"></label>
+          <label>Кто нужен из ведущих?<input name="team" maxlength="220"></label>
+          <label>Что подготовить, распечатать или купить?<input name="materials" maxlength="280"></label>
+          <label>Что проверить заранее?<input name="probe" maxlength="240"></label>
+          <label>Задания <small>по одному на строку</small><textarea name="tasks" rows="3" maxlength="700"></textarea></label>
+          <label>Как проверить решение?<textarea name="check" rows="2" maxlength="650"></textarea></label>
+          <label>Заготовки<textarea name="taskPrep" rows="2" maxlength="650"></textarea></label>
+          <label>Источники<textarea name="sources" rows="2" maxlength="650"></textarea></label>
+        </details>
+      </fieldset>
+    </template>
   </main>
 </body>
 </html>

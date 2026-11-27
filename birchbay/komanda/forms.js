@@ -20,7 +20,6 @@ const element = (selector) => document.querySelector(selector);
 const live = Boolean(globalThis.google?.script?.run);
 const preview = !live && (location.protocol === "file:" || ["localhost", "127.0.0.1"].includes(location.hostname));
 const previewKey = "festival-stations-submissions-v1";
-let requestId = "";
 let stations = globalThis.stationSeed ?? [];
 
 const selected = new Set();
@@ -28,12 +27,14 @@ const expanded = new Set();
 const filters = new Set();
 const topicFilters = new Set();
 const catalog = element("#catalog");
-const proposal = element("#proposal");
+const proposal = element("#submission");
+const proposalOpen = element("#proposal-open");
+const selectAll = element("#select-all");
 const query = element("#query");
 const cards = element("#cards");
 let fullCatalog = true;
 const selection = element("#selection");
-const ideaForm = element("#idea-form");
+const ideaForm = element("#submission-form");
 const ideaStatus = element("#idea-status");
 const ideaSubmit = element("#idea-submit");
 const selectionSubmit = element("#selection-submit");
@@ -67,32 +68,23 @@ function stationTitle(station) {
 }
 
 function updateSelection() {
-  selection.hidden = selected.size === 0 || proposal.open;
-  const count = element("#selection-count");
-  count.textContent = String(selected.size);
-  count.setAttribute("aria-label", `Отмечено станций: ${selected.size}`);
+  selection.hidden = selected.size === 0;
+  selectAll.checked = stations.length > 0 && selected.size === stations.length;
+  selectAll.indeterminate = selected.size > 0 && selected.size < stations.length;
+  element("#selection-count").textContent = `Выбрано ${selected.size}`;
   const marked = stations.filter(station => selected.has(station.id));
-  const list = element("#selection-titles");
-  const disclosure = element("#selection-list");
-  list.replaceChildren(...marked.map(station => {
-    const name = stationTitle(station);
-    const row = node("li");
-    const remove = node("button", "Снять", "plain");
-    remove.type = "button";
-    remove.setAttribute("aria-label", `Снять отметку — ${name}`);
-    remove.addEventListener("click", () => {
-      selected.delete(station.id);
-        render();
-      (selected.size ? element("#selection-count") : query).focus();
-    });
-    row.append(node("span", name), remove);
-    return row;
-  }));
-  if (!marked.length) disclosure.open = false;
-  const application = element("#application-selection");
-  application.hidden = !marked.length;
-  application.textContent = marked.length ? "Вы отметили\n" + marked.map(stationTitle).join(", ") : "";
+  const list = element("#application-selection");
+  list.hidden = selectAll.checked;
+  list.replaceChildren(...marked.map(station => node("li", stationTitle(station))));
+  element("#application-count").textContent = selectAll.checked
+    ? `Все станции · ${selected.size}` : `Выбрано ${selected.size}`;
 }
+
+selectAll.addEventListener("change", () => {
+  selected.clear();
+  if (selectAll.checked) stations.forEach(station => selected.add(station.id));
+  render();
+});
 
 function stationDetails(station) {
   const detail = node("article", "", "card-body");
@@ -218,7 +210,10 @@ function render() {
   cards.replaceChildren(...matches.map(card));
   updateCatalogFill();
   const count = element("#catalog-status");
-  count.textContent = String(matches.length);
+  count.textContent = fullCatalog && stations.length ? "" : `Найдено ${matches.length}`;
+  element("#master-pick").hidden = !stations.length;
+  element("#select-all-label").textContent = `Все ${stations.length}`;
+  selectAll.setAttribute("aria-label", `Выбрать все станции (${stations.length})`);
   count.setAttribute("aria-label", `Найдено станций: ${matches.length}`);
   element("#reset-catalog").hidden = matches.length > 0 || !(filters.size || topicFilters.size || words.length);
   const topicsButton = element("#toggle-filters");
@@ -227,7 +222,7 @@ function render() {
   updateSelection();
 }
 
-function makeFilters(values, state, container, ideaContainer, fieldName) {
+function makeFilters(values, state, container) {
   for (const value of values) {
     const filter = node("button", value);
     filter.type = "button";
@@ -239,18 +234,23 @@ function makeFilters(values, state, container, ideaContainer, fieldName) {
       render();
     });
     element(container).append(filter);
+  }
+}
+
+function addChoices(container, values, fieldName) {
+  for (const value of values) {
     const choice = node("label", "", "choice");
     const input = node("input");
     input.type = "checkbox";
     input.name = fieldName;
     input.value = value;
     choice.append(input, document.createTextNode(value));
-    element(ideaContainer).append(choice);
+    container.append(choice);
   }
 }
 
-makeFilters(tags, filters, "#filters", "#idea-tags", "format");
-makeFilters(topics, topicFilters, "#topic-filters", "#idea-topics", "topic");
+makeFilters(tags, filters, "#filters");
+makeFilters(topics, topicFilters, "#topic-filters");
 
 element("#toggle-filters").addEventListener("click", event => {
   const button = event.currentTarget;
@@ -346,41 +346,85 @@ element("#reset-catalog").addEventListener("click", () => {
   render();
   query.focus();
 });
-element("#clear-selected").addEventListener("click", () => {
-  selected.clear();
-  render();
-  query.focus();
-});
+const maxIdeas = 5;
+const ideaList = element("#idea-list");
+const addIdeaButton = element("#add-idea");
+const participant = element("#participant");
+const draftFallback = element("#draft-fallback");
+const pending = new Map();
+let mode = "pick";
+let origin;
+let saving = false;
+if (!live && !preview) ideaSubmit.textContent = "Открыть черновик в Telegram";
 
-proposal.addEventListener("toggle", () => {
-  if (!proposal.open) proposal.querySelector("summary").textContent = "Предложить станцию";
-  updateSelection();
-});
-function openSubmission() {
-  element("#selection-list").open = false;
-  proposal.querySelector("summary").textContent = "Ваш выбор";
-  proposal.open = true;
-  element("#participant").focus();
-  proposal.scrollIntoView({ block: "nearest" });
+function updateIdeaNumbers() {
+  const drafts = [...ideaList.children];
+  drafts.forEach((draft, index) => {
+    draft.querySelector("legend").textContent = drafts.length > 1 ? `Станция ${index + 1}` : "";
+    const remove = draft.querySelector(".remove-idea");
+    remove.hidden = drafts.length === 1;
+    remove.setAttribute("aria-label", `Убрать станцию ${index + 1}`);
+  });
+  addIdeaButton.hidden = drafts.length >= maxIdeas;
 }
-selectionSubmit.addEventListener("click", openSubmission);
-element("#flexible-open").addEventListener("click", () => {
-  element("#any-station").checked = true;
-  openSubmission();
+
+function addIdea(focus = false) {
+  const draft = element("#idea-template").content.firstElementChild.cloneNode(true);
+  addChoices(draft.querySelector("[data-formats]"), tags, "format");
+  addChoices(draft.querySelector("[data-topics]"), topics, "topic");
+  draft.querySelector(".remove-idea").addEventListener("click", () => {
+    const neighbor = draft.nextElementSibling || draft.previousElementSibling;
+    draft.remove();
+    updateIdeaNumbers();
+    clearStatus();
+    neighbor?.querySelector('[name="action"]').focus();
+  });
+  ideaList.append(draft);
+  updateIdeaNumbers();
+  if (focus) draft.querySelector('[name="action"]').focus();
+  return draft;
+}
+
+function clearStatus() {
+  ideaStatus.textContent = "";
+  draftFallback.hidden = true;
+  draftFallback.open = false;
+}
+
+function openSubmission(kind, button) {
+  mode = kind;
+  origin = button;
+  element("#submission-feedback").hidden = true;
+  const proposing = kind === "ideas";
+  clearStatus();
+  element("#submission-title").textContent = proposing ? "Предложить станцию" : "Выбранные станции";
+  element("#application-summary").hidden = proposing;
+  element("#proposal-fields").hidden = !proposing;
+  if (proposing && !ideaList.children.length) addIdea();
+  proposal.showModal();
+  (proposing ? ideaList.querySelector('[name="action"]') : participant).focus();
+}
+
+proposalOpen.addEventListener("click", () => openSubmission("ideas", proposalOpen));
+selectionSubmit.addEventListener("click", () => openSubmission("pick", selectionSubmit));
+addIdeaButton.addEventListener("click", () => {
+  if (ideaList.children.length < maxIdeas) addIdea(true);
+});
+element("#close-submission").addEventListener("click", () => proposal.close());
+proposal.addEventListener("cancel", event => {
+  if (saving) event.preventDefault();
+});
+proposal.addEventListener("close", () => {
+  (origin && !origin.closest("[hidden]") ? origin : proposalOpen).focus({ preventScroll: true });
 });
 
-function readIdea(action) {
-  const data = new FormData(ideaForm);
-  const station = {
-    action,
-    title: element("#title").value.trim(),
-    location: element("#location").value.trim(),
-    tags: data.getAll("format"),
-    topics: data.getAll("topic")
-  };
-  for (const [key, , selector] of fields) station[key] = element(selector).value.trim();
-  for (const key of ["tasks", "check", "taskPrep", "sources"]) station[key] = element(`#idea-${key}`).value.trim();
-  return station;
+function readIdea(draft) {
+  const checked = field => [...draft.querySelectorAll(`[name="${field}"]:checked`)].map(input => input.value);
+  const idea = { tags: checked("format"), topics: checked("topic") };
+  for (const field of draft.querySelectorAll("input:not([type=checkbox]),textarea")) {
+    idea[field.name] = field.value.trim();
+  }
+  return idea;
 }
 
 function readPreview() {
@@ -388,107 +432,168 @@ function readPreview() {
   catch { return {}; }
 }
 
-function resetSubmission(name, stationIds) {
+function resetSubmission(stationIds) {
   for (const id of stationIds) selected.delete(id);
-  requestId = "";
-  ideaForm.reset();
-  proposal.querySelector("summary").textContent = "Предложить станцию";
-  element("#participant").value = name;
+  if (mode === "ideas") {
+    ideaList.replaceChildren();
+    addIdea();
+  }
   render();
 }
 
-ideaForm.addEventListener("input", () => {
-  requestId = "";
-  ideaStatus.textContent = "";
-});
-ideaForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const action = element("#idea").value.trim();
-  const stationIds = [...selected];
-  const name = element("#participant").value.trim();
-  const anyStation = element("#any-station").checked;
-  if (!stationIds.length && !action && !anyStation) {
-    ideaStatus.textContent = "Отметьте станцию, предложите свою или выберите «Могу провести любую станцию».";
-    element("#idea").focus();
+function prepareTelegram({ stationIds, name, ideas }) {
+  const link = new URL(element("#direct").href);
+  const lines = [`Привет! Это ${name}. Про фестиваль 13 декабря.`];
+  if (stationIds.length === stations.length && stationIds.length) {
+    lines.push("Могу провести любую станцию.");
+  } else if (stationIds.length) {
+    lines.push("Хочу провести:", ...stations.filter(station => selected.has(station.id))
+      .map(station => `• ${stationTitle(station)}`));
+  }
+  ideas.forEach((idea, index) => {
+    lines.push("", `Станция${ideas.length > 1 ? ` ${index + 1}` : ""}${idea.title ? ` — ${idea.title}` : ""}`, idea.action);
+    const details = [["location", "Локация"], ["tags", "Форматы"], ["topics", "Темы"], ...fields,
+      ["tasks", "Задания"], ["check", "Проверка решения"], ["taskPrep", "Заготовки"], ["sources", "Источники"]];
+    for (const [key, label] of details) {
+      const value = Array.isArray(idea[key]) ? idea[key].join(", ") : idea[key];
+      if (value) lines.push(`${label}: ${value}`);
+    }
+  });
+  const message = lines.join("\n");
+  element("#draft-text").value = message;
+  element("#open-chat").href = link.href;
+  draftFallback.hidden = false;
+  link.searchParams.set("text", message);
+  if (link.href.length > 7500 || [...message].length > 4096) {
+    element("#draft-fallback-label").textContent = "Черновик Telegram";
+    draftFallback.open = true;
+    ideaStatus.textContent = "Черновик длинный. Скопируйте текст и вставьте его в Telegram.";
+    element("#copy-draft").focus();
     return;
   }
+  element("#draft-fallback-label").textContent = "Telegram не открылся?";
+  element("#open-chat").href = link.href;
+  ideaStatus.textContent = "Нажмите «Отправить» в Telegram.";
+  element("#open-chat").click();
+}
+
+element("#copy-draft").addEventListener("click", async () => {
+  const draft = element("#draft-text");
+  try {
+    await navigator.clipboard.writeText(draft.value);
+    ideaStatus.textContent = "Текст скопирован.";
+  } catch {
+    draft.focus();
+    draft.select();
+    ideaStatus.textContent = "Текст выделен. Скопируйте его.";
+  }
+});
+
+ideaForm.addEventListener("input", clearStatus);
+ideaForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  if (saving) return;
+  const stationIds = mode === "pick" ? [...selected] : [];
+  const drafts = mode === "ideas" ? [...ideaList.children] : [];
+  const name = participant.value.trim();
   if (!name || /[\n\r,;]/.test(name)) {
     ideaStatus.textContent = "Напишите, как вас записать.";
-    element("#participant").focus();
+    participant.focus();
     return;
   }
-
-  if (!requestId) requestId = crypto.randomUUID();
-  const submission = { stationIds, anyStation, name, idea: action ? readIdea(action) : null, requestId };
-  if (preview) {
-    const saved = readPreview();
-    const ideas = Array.isArray(saved.ideas) ? saved.ideas : [];
-    if (submission.idea) {
-      const added = { ...submission.idea, id: requestId, status: "Идея" };
-      ideas.push(added);
-      stations = [...stations, added];
-    }
-    try {
-      localStorage.setItem(previewKey, JSON.stringify({ name, ideas }));
-    } catch {
-      resetSubmission(name, stationIds);
-      ideaStatus.textContent = "Принято для этой вкладки.";
+  const ideas = [];
+  for (const draft of drafts) {
+    const idea = readIdea(draft);
+    if (idea.action) ideas.push(idea);
+    else if (drafts.length === 1 || Object.values(idea).some(value => value.length)) {
+      ideaStatus.textContent = "Напишите, что будут делать на станции.";
+      draft.querySelector('[name="action"]').focus();
       return;
     }
-    resetSubmission(name, stationIds);
-    ideaStatus.textContent = "Сохранено в предпросмотре. Можно отправить ещё.";
+  }
+  if (!stationIds.length && !ideas.length) {
+    ideaStatus.textContent = "Напишите, что будут делать на станции.";
+    ideaList.querySelector('[name="action"]')?.focus();
     return;
   }
-  if (!live) {
-    ideaStatus.textContent = "Для записи откройте Google-таблицу по значку.";
+  const data = { stationIds, name, ideas };
+  if (!live && !preview) {
+    prepareTelegram(data);
     return;
   }
 
-  ideaSubmit.disabled = true;
-  const flexibleOpen = element("#flexible-open");
-  flexibleOpen.disabled = true;
-  const fieldsToLock = [...ideaForm.querySelectorAll("input,textarea")].filter(field => !field.disabled);
-  fieldsToLock.forEach(field => { field.disabled = true; });
+  const fingerprint = JSON.stringify(data);
+  let requestId = pending.get(fingerprint);
+  if (!requestId) {
+    requestId = crypto.randomUUID();
+    pending.set(fingerprint, requestId);
+  }
+  if (preview) {
+    const saved = readPreview();
+    const storedIdeas = Array.isArray(saved.ideas) ? saved.ideas : [];
+    const added = ideas.map((idea, index) => ({
+      ...idea, id: index ? `${requestId}-${index + 1}` : requestId, status: "Идея"
+    }));
+    try {
+      localStorage.setItem(previewKey, JSON.stringify({ name, ideas: [...storedIdeas, ...added] }));
+    } catch {
+      ideaStatus.textContent = "Не удалось сохранить предпросмотр в этом браузере.";
+      return;
+    }
+    stations = [...stations, ...added];
+    resetSubmission(stationIds);
+    pending.delete(fingerprint);
+    ideaStatus.textContent = "Сохранено в этом браузере.";
+    proposal.close();
+    announceSubmission(ideaStatus.textContent);
+    return;
+  }
+
+  saving = true;
+  const controls = [...proposal.querySelectorAll("button,input,textarea")].filter(field => !field.disabled);
+  controls.forEach(field => { field.disabled = true; });
   ideaStatus.textContent = "Отправляем…";
   try {
-    const result = await googleCall("saveApplication", submission);
+    const result = await googleCall("saveApplication", { ...data, requestId });
     stations = result.stations;
-    resetSubmission(name, stationIds);
-    ideaStatus.textContent = "Записано в таблицу. Можно отправить ещё.";
+    resetSubmission(stationIds);
+    pending.delete(fingerprint);
+    proposal.close();
+    announceSubmission("Записано в таблицу. Можно отправить ещё.");
   } catch (error) {
     ideaStatus.textContent = error.message || "Не удалось отправить. Попробуйте ещё раз.";
   } finally {
-    fieldsToLock.forEach(field => { field.disabled = false; });
-    ideaSubmit.disabled = false;
-    flexibleOpen.disabled = false;
+    saving = false;
+    controls.forEach(field => { field.disabled = false; });
   }
 });
 
+function announceSubmission(message) {
+  const feedback = element("#submission-feedback");
+  feedback.hidden = false;
+  feedback.textContent = message;
+}
+
 if (live) {
-  element("#catalog-status").textContent = "Загружаем карточки…";
+  element("#catalog-status").textContent = "Загружаем станции…";
   catalog.hidden = false;
   googleCall("listStations").then((result) => {
     stations = result.stations;
     sheetLink(result.sheetUrl);
-    proposal.hidden = false;
-    element("#flexible-open").hidden = false;
+    proposalOpen.hidden = false;
     render();
     openLinkedStation();
   }).catch(() => {
-    element("#catalog-status").textContent = "Не удалось прочитать таблицу. Проверьте доступ или напишите Ване.";
+    element("#catalog-status").textContent = "Не удалось загрузить станции. Попробуйте обновить страницу.";
   });
 } else {
   sheetLink("https://docs.google.com/spreadsheets/d/1_-AZ2h8Fq_GWkSKkp-a6S1Gc4gWQIEbKwZvOWYt6vDA/edit");
-  proposal.hidden = false;
-  element("#flexible-open").hidden = false;
+  proposalOpen.hidden = false;
   catalog.hidden = false;
   if (preview) {
-    element("#preview-note").hidden = false;
     const saved = readPreview();
-    element("#participant").value = saved.name || "";
+    participant.value = saved.name || "";
     if (Array.isArray(saved.ideas)) stations = [...stations, ...saved.ideas];
-  } else {
-    element("#static-note").hidden = false;
   }
   render();
   openLinkedStation();
