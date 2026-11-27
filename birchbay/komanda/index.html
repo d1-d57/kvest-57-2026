@@ -9,24 +9,29 @@
   <meta name="description" content="Идеи станций фестиваля 13 декабря в 57-й школе.">
   <title>13 декабря · Станции</title>
   <link rel="stylesheet" href="fonts.css">
-  <link rel="stylesheet" href="style.css?v=24310aadbd36">
+  <link rel="stylesheet" href="style.css?v=61d6d89cb3f8">
   <script src="stations.js" defer></script>
-  <script src="forms.js?v=cce8f8df93ea" defer></script>
+  <script src="forms.js?v=0dbb21bfe0d9" defer></script>
 </head>
 <body>
   <main id="idei">
     <header class="intro">
       <div class="header-row">
-        <h1>Станции фестиваля <span class="festival-date">13 декабря</span></h1>
+        <h1>Станции фестиваля <a class="festival-link" href="../" title="Страница фестиваля"><span class="festival-date">13 декабря</span></a></h1>
         <div class="top-controls">
-          <input type="search" id="query" aria-label="Поиск станций" placeholder="Поиск">
+          <button type="button" id="search-toggle" class="icon-button icon-hint" aria-label="Поиск" aria-controls="search-panel" aria-expanded="false">
+            <span class="icon-search" aria-hidden="true"></span><span class="icon-tooltip" aria-hidden="true">Поиск</span>
+          </button>
+          <div id="search-panel" hidden>
+            <input type="search" id="query" aria-label="Поиск станций" placeholder="Поиск станций">
+          </div>
 
           <div class="info-control" id="info-control">
             <button type="button" id="info-toggle" class="icon-button" aria-label="Информация" aria-controls="info-panel" aria-expanded="false">
               <span class="icon-info" aria-hidden="true">i</span>
             </button>
             <div class="info-panel" id="info-panel" hidden>
-              <p id="info-flow">Отметьте станции и нажмите стрелку. Общая галочка отмечает весь список. Новые идеи можно предложить отдельно.</p>
+              <p id="info-flow">Отметьте идеи и нажмите стрелку. Общая галочка отмечает весь список. Плюс открывает форму новой станции.</p>
               <p>Результат подходит под все выбранные теги.</p>
               <p id="info-sheet" hidden>В Google-таблице с доступом можно вписаться или добавить станцию.</p>
             </div>
@@ -41,20 +46,21 @@
             <span class="icon-tooltip" aria-hidden="true">Telegram</span>
           </a>
           <button class="primary icon-button" id="proposal-open" type="button" aria-label="Предложить станцию" title="Предложить станцию" hidden>
-            <span class="proposal-plus" aria-hidden="true">+</span><span class="proposal-label">Предложить станцию</span>
+            <span class="proposal-plus" aria-hidden="true">+</span>
           </button>
           <div class="pick-actions">
             <label class="master-pick" id="master-pick" title="Выбрать все станции" hidden>
               <input id="select-all" type="checkbox" aria-label="Выбрать все станции">
-              <span id="select-all-label"></span>
             </label>
+            <output id="selection-count" aria-live="polite" aria-label="Выбрано станций">0</output>
             <button class="primary icon-button icon-hint" type="button" id="selection-submit" aria-label="Открыть отклик" disabled>
               <span aria-hidden="true">→</span><span class="icon-tooltip" aria-hidden="true">Открыть отклик</span>
             </button>
           </div>
         </div>
       </div>
-      <p>Собираем программу. Отметьте, что хотите провести, или предложите станцию. Я вам напишу, и мы вместе её докрутим.</p>
+      <h2>Примеры станций</h2>
+      <p>Программа ещё не утверждена. Отметьте, что вам хотелось бы провести, или предложите свою идею</p>
     </header>
     <aside class="controls" aria-label="Фильтры станций">
       <fieldset class="format-group">
@@ -78,10 +84,21 @@
 
     <p id="submission-feedback" role="status" hidden></p>
 
+    <dialog id="station-dialog" aria-labelledby="station-dialog-title">
+      <header class="dialog-header">
+        <h2 id="station-dialog-title"></h2>
+        <button id="close-station" class="icon-button dialog-close" type="button" aria-label="Закрыть" autofocus>×</button>
+      </header>
+      <div id="station-dialog-content"></div>
+      <footer class="station-dialog-footer">
+        <label class="choice"><input id="station-dialog-pick" type="checkbox">Хочу провести</label>
+      </footer>
+    </dialog>
+
     <dialog id="submission" aria-labelledby="submission-title">
       <header class="dialog-header">
         <h2 id="submission-title"></h2>
-        <button id="close-submission" class="icon-button" type="button" aria-label="Закрыть">×</button>
+        <button id="close-submission" class="icon-button dialog-close" type="button" aria-label="Закрыть">×</button>
       </header>
       <form id="submission-form">
         <div id="application-summary" hidden>

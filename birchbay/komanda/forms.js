@@ -24,7 +24,6 @@ const previewKey = "festival-stations-submissions-v1";
 let stations = globalThis.stationSeed ?? [];
 
 const selected = new Set();
-const expanded = new Set();
 const filters = new Set();
 const topicFilters = new Set();
 const catalog = element("#catalog");
@@ -33,6 +32,9 @@ const proposalOpen = element("#proposal-open");
 const selectAll = element("#select-all");
 const query = element("#query");
 const cards = element("#cards");
+const stationDialog = element("#station-dialog");
+const stationDialogPick = element("#station-dialog-pick");
+let activeStationId = "";
 let fullCatalog = true;
 const ideaForm = element("#submission-form");
 const ideaStatus = element("#idea-status");
@@ -69,8 +71,12 @@ function stationTitle(station) {
 
 function updateSelection() {
   selectionSubmit.disabled = selected.size === 0;
+  element("#selection-count").value = String(selected.size);
   selectAll.checked = stations.length > 0 && selected.size === stations.length;
   selectAll.indeterminate = selected.size > 0 && selected.size < stations.length;
+  const allAction = selectAll.checked ? "Снять все отметки" : "Выбрать все станции";
+  selectAll.setAttribute("aria-label", allAction);
+  element("#master-pick").title = allAction;
   const marked = stations.filter(station => selected.has(station.id));
   const list = element("#application-selection");
   list.hidden = marked.length === 0;
@@ -83,7 +89,7 @@ selectAll.addEventListener("change", () => {
   render();
 });
 
-const stateLabels = { open: "Идея", interested: "Есть отклики", confirmed: "Ведущий подтверждён" };
+const stateLabels = { open: "Черновик", interested: "Есть отклики", confirmed: "Ведущий подтверждён" };
 
 function stationState(station) {
   return station.stage || (station.confirmed ? "confirmed" : station.people ? "interested" : "open");
@@ -106,13 +112,13 @@ function stationDetails(station) {
 
   const tasks = (station.tasks || "").split("\n").map(line => line.trim()).filter(Boolean);
   if (tasks.length) {
-    const handout = node("details", "", "station-handout");
+    const handout = node("section", "", "station-handout");
     const list = node("ol");
     for (const task of tasks) list.append(node("li", task));
-    handout.append(node("summary", "Задания"), list);
+    handout.append(node("h3", "Примеры заданий"), list);
     if (station.check || station.taskPrep) {
       const check = node("details", "", "handout-check");
-      check.append(node("summary", "Проводящему"));
+      check.append(node("summary", "Ответы и заготовки"));
       if (station.check) check.append(node("p", station.check));
       if (station.taskPrep) check.append(node("p", station.taskPrep, "handout-preparation"));
       handout.append(check);
@@ -129,7 +135,11 @@ function stationDetails(station) {
       item.append(link);
       sources.append(item);
     }
-    if (sources.childElementCount) handout.append(sources);
+    if (sources.childElementCount) {
+      const references = node("details", "", "handout-check");
+      references.append(node("summary", "Источники"), sources);
+      handout.append(references);
+    }
     detail.append(handout);
   }
 
@@ -140,15 +150,26 @@ function stationDetails(station) {
   const labels = [...station.tags, ...(station.topics ?? [])];
   if (labels.length) describe(facts, "Форматы и темы", [...new Set(labels)].join(" · "));
   if (facts.childElementCount) {
-    running.append(node("summary", "Проведение"), facts);
+    running.append(node("summary", "Как провести"), facts);
     detail.append(running);
   }
 
   return detail;
 }
 
+function setStationSelected(id, checked) {
+  if (checked) selected.add(id);
+  else selected.delete(id);
+  const row = document.getElementById(`station-${id}`);
+  if (row) {
+    row.dataset.selected = String(checked);
+    row.querySelector(".station-tick input").checked = checked;
+  }
+  updateSelection();
+}
+
 function updateCatalogFill() {
-  catalog.dataset.fill = String(fullCatalog && expanded.size === 0);
+  catalog.dataset.fill = String(fullCatalog);
 }
 
 function card(station) {
@@ -163,21 +184,14 @@ function card(station) {
   pick.checked = selected.has(station.id);
   pick.setAttribute("aria-label", `Отметить — ${title}`);
   result.dataset.selected = String(pick.checked);
-  pick.addEventListener("change", () => {
-    if (pick.checked) selected.add(station.id);
-    else selected.delete(station.id);
-    result.dataset.selected = String(pick.checked);
-    updateSelection();
-  });
+  pick.addEventListener("change", () => setStationSelected(station.id, pick.checked));
   label.append(pick);
   row.append(label);
 
-  const detail = stationDetails(station);
-  detail.id = `details-${station.id}`;
-
   const toggle = node("button", "", "station-toggle");
   toggle.type = "button";
-  toggle.setAttribute("aria-controls", detail.id);
+  toggle.setAttribute("aria-controls", stationDialog.id);
+  toggle.setAttribute("aria-haspopup", "dialog");
   const stage = stationState(station);
   toggle.setAttribute("aria-label", stage === "open" ? title : `${title} · ${stateLabels[stage]}`);
   toggle.append(node("span", title, "station-title"));
@@ -188,20 +202,9 @@ function card(station) {
     mark.setAttribute("aria-hidden", "true");
     toggle.append(mark);
   }
-  function update() {
-    const open = expanded.has(station.id);
-    detail.hidden = !open;
-    toggle.setAttribute("aria-expanded", String(open));
-  }
-  update();
-  toggle.addEventListener("click", () => {
-    if (expanded.has(station.id)) expanded.delete(station.id);
-    else expanded.add(station.id);
-    update();
-    updateCatalogFill();
-  });
+  toggle.addEventListener("click", () => openStation(station));
   row.append(toggle);
-  result.append(row, detail);
+  result.append(row);
   return result;
 }
 
@@ -221,8 +224,6 @@ function render() {
   const count = element("#catalog-status");
   count.textContent = matches.length ? "" : "Ничего не найдено";
   element("#master-pick").hidden = !stations.length;
-  element("#select-all-label").textContent = String(stations.length);
-  selectAll.setAttribute("aria-label", `Выбрать все станции (${stations.length})`);
   count.setAttribute("aria-label", `Найдено станций: ${matches.length}`);
   element("#reset-catalog").hidden = matches.length > 0 || !(filters.size || topicFilters.size || words.length);
   const topicsButton = element("#toggle-filters");
@@ -320,16 +321,29 @@ document.addEventListener("keydown", event => {
   if (event.key === "Escape" && !infoPanel.hidden) dismissInfo();
 });
 
+function openStation(station, tasks = false) {
+  activeStationId = station.id;
+  element("#station-dialog-title").textContent = stationTitle(station);
+  element("#station-dialog-content").replaceChildren(stationDetails(station));
+  stationDialogPick.checked = selected.has(station.id);
+  if (!stationDialog.open) stationDialog.showModal();
+  stationDialog.scrollTop = 0;
+  if (tasks) stationDialog.querySelector(".station-handout")?.scrollIntoView({ block: "nearest" });
+}
+
+element("#close-station").addEventListener("click", () => stationDialog.close());
+stationDialog.addEventListener("close", () => {
+  document.getElementById(`station-${activeStationId}`)?.querySelector(".station-toggle")
+    ?.focus({ preventScroll: true });
+});
+stationDialogPick.addEventListener("change", () => setStationSelected(activeStationId, stationDialogPick.checked));
+
 function openLinkedStation() {
   const fragment = location.hash.slice(1);
-  const taskLink = fragment.startsWith("tasks-");
-  if (!taskLink && !fragment.startsWith("station-")) return;
-  const card = document.getElementById(taskLink ? `station-${fragment.slice(6)}` : fragment);
-  const toggle = card?.querySelector(".station-toggle");
-  if (toggle?.getAttribute("aria-expanded") === "false") toggle.click();
-  const handout = taskLink && card?.querySelector(".station-handout");
-  if (handout) handout.open = true;
-  card?.scrollIntoView();
+  const match = /^(station-|tasks-)(.+)$/.exec(fragment);
+  if (!match) return;
+  const station = stations.find(entry => entry.id === match[2]);
+  if (station) openStation(station, match[1] === "tasks-");
 }
 
 window.addEventListener("hashchange", openLinkedStation);
@@ -347,13 +361,39 @@ function clearCatalogFilters() {
   topicFilters.clear();
   for (const filter of document.querySelectorAll("#filters button, #topic-filters button")) filter.setAttribute("aria-pressed", "false");
   query.value = "";
+  element("#search-toggle").classList.remove("has-query");
 }
 
-query.addEventListener("input", render);
+const searchButton = element("#search-toggle");
+const searchPanel = element("#search-panel");
+
+function setSearchOpen(open, returnFocus = false) {
+  searchPanel.hidden = !open;
+  searchButton.setAttribute("aria-expanded", String(open));
+  if (open) query.focus();
+  else if (returnFocus) searchButton.focus();
+}
+
+searchButton.addEventListener("click", () => setSearchOpen(searchPanel.hidden));
+searchPanel.addEventListener("keydown", event => {
+  if (event.key === "Escape") {
+    event.preventDefault();
+    setSearchOpen(false, true);
+  }
+});
+document.addEventListener("pointerdown", event => {
+  if (!searchPanel.hidden && !searchPanel.contains(event.target) && !searchButton.contains(event.target)) {
+    setSearchOpen(false);
+  }
+});
+query.addEventListener("input", () => {
+  searchButton.classList.toggle("has-query", Boolean(query.value.trim()));
+  render();
+});
 element("#reset-catalog").addEventListener("click", () => {
   clearCatalogFilters();
   render();
-  query.focus();
+  searchButton.focus();
 });
 const maxIdeas = 5;
 const ideaList = element("#idea-list");
@@ -579,7 +619,7 @@ element("#submit-in-google").addEventListener("click", () => {
 });
 
 async function refreshPublicCatalog() {
-  if (!intake || live) return;
+  if (!intake || live || preview) return;
   try {
     const url = new URL(intake);
     url.searchParams.set("view", "catalog");
@@ -589,7 +629,6 @@ async function refreshPublicCatalog() {
     if (!Array.isArray(result.stations) || !result.stations.every(station => typeof station.action === "string")) return;
     const present = new Set(result.stations.map(station => station.id));
     for (const id of selected) if (!present.has(id)) selected.delete(id);
-    for (const id of expanded) if (!present.has(id)) expanded.delete(id);
     stations = result.stations;
     render();
   } catch {
