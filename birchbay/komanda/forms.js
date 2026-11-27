@@ -16,6 +16,7 @@ const intake = element('meta[name="station-intake"]').content;
 const previewKey = "festival-stations-submissions-v1";
 let stations = globalThis.stationSeed ?? [];
 
+const catalogStations = () => stations.filter(station => station.status !== "Резерв");
 const selected = new Set();
 const filters = new Set();
 const topicFilters = new Set();
@@ -67,8 +68,9 @@ function updateSelection() {
   selectionSubmit.disabled = selectionSubmit.hidden;
   element("#selection-count").textContent = selected.size ? String(selected.size) : "";
   selectionSubmit.setAttribute("aria-label", `Открыть отклик: выбрано ${selected.size}`);
-  selectAll.checked = stations.length > 0 && selected.size === stations.length;
-  selectAll.indeterminate = selected.size > 0 && selected.size < stations.length;
+  const count = catalogStations().length;
+  selectAll.checked = count > 0 && selected.size === count;
+  selectAll.indeterminate = selected.size > 0 && selected.size < count;
   const allAction = selectAll.checked ? "Снять все отметки" : "Выбрать все станции";
   selectAll.setAttribute("aria-label", allAction);
   element("#master-pick").title = allAction;
@@ -80,7 +82,7 @@ function updateSelection() {
 
 selectAll.addEventListener("change", () => {
   selected.clear();
-  if (selectAll.checked) stations.forEach(station => selected.add(station.id));
+  if (selectAll.checked) catalogStations().forEach(station => selected.add(station.id));
   render();
 });
 
@@ -181,7 +183,7 @@ function card(station) {
 
 function render() {
   const words = normalize(query.value).split(" ").filter(Boolean).map(word => aliases.get(word) || word);
-  const matches = stations.filter(station => {
+  const matches = catalogStations().filter(station => {
     const stationTopics = station.topics ?? [];
     const terms = normalize([station.title, station.short, station.location, station.action, station.keywords,
       station.team, station.materials, ...station.tags, ...stationTopics].join(" ")).split(" ");
@@ -194,7 +196,7 @@ function render() {
   updateCatalogFill();
   const count = element("#catalog-status");
   count.textContent = matches.length ? "" : "Ничего не найдено";
-  element("#master-pick").hidden = !stations.length;
+  element("#master-pick").hidden = !catalogStations().length;
   count.setAttribute("aria-label", `Найдено станций: ${matches.length}`);
   element("#reset-catalog").hidden = !words.length && (matches.length > 0 || !(filters.size || topicFilters.size));
   const filtersButton = element("#toggle-filters");
@@ -308,7 +310,7 @@ function openLinkedStation() {
   const fragment = location.hash.slice(1);
   const match = /^(station-|tasks-)(.+)$/.exec(fragment);
   if (!match) return;
-  const station = stations.find(entry => entry.id === match[2]);
+  const station = catalogStations().find(entry => entry.id === match[2]);
   if (station) openStation(station);
 }
 
@@ -570,7 +572,7 @@ async function refreshPublicCatalog() {
     if (!response.ok) return;
     const result = await response.json();
     if (!Array.isArray(result.stations) || !result.stations.every(station => typeof station.action === "string")) return;
-    const present = new Set(result.stations.map(station => station.id));
+    const present = new Set(result.stations.filter(station => station.status !== "Резерв").map(station => station.id));
     for (const id of selected) if (!present.has(id)) selected.delete(id);
     stations = result.stations;
     render();
