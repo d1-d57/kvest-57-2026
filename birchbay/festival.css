@@ -1374,3 +1374,76 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 @media print {
   #cc .city-story p, #cc .city-location .zone-list li {font-size:11pt}
 }
+
+/* Navigation for sections that scroll on touch screens. */
+#cc .festival-contents-button,
+#cc .festival-contents,
+#cc .festival-next {
+  display: none;
+}
+
+@media screen and (max-width: 740px), screen and (max-width: 960px) and (pointer: coarse) {
+  #cc .festival-brand { max-width: calc(100vw - 80px); }
+  #cc .festival-contents-button {
+    display: grid;
+    place-items: center;
+    position: fixed;
+    z-index: 5;
+    top: max(8px, env(safe-area-inset-top));
+    right: max(10px, env(safe-area-inset-right));
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid var(--festival-rule);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--festival-panel) 84%, transparent);
+    backdrop-filter: blur(8px);
+    color: var(--festival-ink);
+    font: 22px/1 system-ui, sans-serif;
+    cursor: pointer;
+  }
+  #cc .festival-contents:popover-open {
+    display: grid;
+    height: max-content;
+    align-content: start;
+    position: fixed;
+    inset: auto;
+    top: max(60px, calc(env(safe-area-inset-top) + 52px));
+    right: max(10px, env(safe-area-inset-right));
+    width: min(16rem, calc(100vw - 28px));
+    max-height: calc(100dvh - 84px);
+    overflow: auto;
+    margin: 0;
+    padding: 6px;
+    border: 1px solid var(--festival-rule);
+    border-radius: 8px;
+    box-sizing: border-box;
+    background: var(--festival-panel);
+    color: var(--festival-ink);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 35%);
+  }
+  #cc .festival-contents a,
+  #cc .festival-next {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 12px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    color: var(--festival-ink);
+    text-decoration: none;
+    font: 500 16px/1.3 var(--festival-sans);
+  }
+  #cc .festival-contents a[aria-current="page"] {
+    background: color-mix(in srgb, var(--festival-gold) 15%, transparent);
+    color: var(--festival-gold);
+  }
+  #cc .festival-next {
+    grid-column: 1 / -1;
+    justify-self: end;
+    align-self: end;
+    margin-top: 10px;
+    border: 1px solid var(--festival-rule);
+    background: var(--festival-panel);
+  }
+}

@@ -12,7 +12,7 @@
     if (presentation.hidden) return;
     const page = pages.find(item => !item.hidden);
     if (!page || page.id === 'guide') return;
-    if (!desktopSlides.matches || (page.id === 'format' && window.matchMedia('(max-width:960px) and (max-height:500px)').matches)) {
+    if (mobileNavigation.matches || !desktopSlides.matches || (page.id === 'format' && window.matchMedia('(max-width:960px) and (max-height:500px)').matches)) {
       delete page.dataset.fit;
       for (const name of ['zoom', 'width', 'min-height']) page.style.removeProperty(name);
       return;
@@ -52,6 +52,40 @@
     document.fonts.ready.then(scheduleFit);
     document.fonts.addEventListener('loadingdone', scheduleFit);
   }
+
+  const mobileNavigation = window.matchMedia('(max-width: 740px), (max-width: 960px) and (pointer: coarse)');
+  const contentsButton = document.createElement('button');
+  contentsButton.className = 'festival-contents-button';
+  contentsButton.type = 'button';
+  contentsButton.textContent = '☰';
+  contentsButton.setAttribute('aria-label', 'Оглавление');
+  contentsButton.setAttribute('popovertarget', 'festival-mobile-contents');
+
+  const contents = document.createElement('nav');
+  contents.id = 'festival-mobile-contents';
+  contents.className = 'festival-contents';
+  contents.setAttribute('aria-label', 'Оглавление фестиваля');
+  contents.setAttribute('popover', 'auto');
+
+  const contentsLinks = links.map((link, index) => {
+    const item = link.cloneNode(true);
+    item.addEventListener('click', () => contents.hidePopover());
+    contents.append(item);
+
+    const following = links[index + 1];
+    const next = document.createElement('a');
+    next.className = 'festival-next';
+    next.href = (following || links[0]).hash;
+    next.textContent = following ? 'Дальше →' : 'К началу ↑';
+    if (following) next.setAttribute('aria-label', 'Дальше — ' + following.textContent.trim());
+    document.getElementById(link.hash.slice(1))?.append(next);
+    return item;
+  });
+  presentation.append(contentsButton, contents);
+  mobileNavigation.addEventListener('change', event => {
+    if (!event.matches) contents.hidePopover();
+  });
+
   function showPage(scroll) {
     const id = location.hash.slice(1);
     const target = document.getElementById(id);
@@ -65,7 +99,7 @@
     for (const [i, page] of pages.entries()) {
       page.hidden = i !== active;
     }
-    for (const link of links) {
+    for (const link of [...links, ...contentsLinks]) {
       if (link.hash === '#' + pages[active].id) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     }
@@ -272,6 +306,7 @@
   });
 
   function changeSection(event) {
+    if (contents.matches(':popover-open')) return;
     if (zoneCard.matches(':popover-open')) return;
     if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
     if (event.target.isContentEditable || event.target.closest?.('input, textarea, select')) return;
