@@ -9,42 +9,54 @@
   <meta name="description" content="Идеи станций фестиваля 13 декабря в 57-й школе.">
   <title>13 декабря · Станции</title>
   <link rel="stylesheet" href="fonts.css">
-  <link rel="stylesheet" href="style.css?v=e3d077f9c9fa">
+  <link rel="stylesheet" href="style.css?v=24310aadbd36">
   <script src="stations.js" defer></script>
-  <script src="forms.js?v=15b55cd1cc5a" defer></script>
+  <script src="forms.js?v=61b273e73222" defer></script>
 </head>
 <body>
   <main id="idei">
     <header class="intro">
-      <h1>Станции фестиваля <span class="festival-date">13 декабря</span></h1>
-      <p>Здесь идеи для программы 13 декабря. Отметьте, что вам хочется провести, или предложите свою станцию. Я вам напишу, и мы вместе докрутим занятие.</p>
-    </header>
-    <aside class="controls" aria-label="Поиск и фильтры">
-      <button class="primary" id="proposal-open" type="button" hidden><span aria-hidden="true">+</span> Предложить станцию</button>
-      <div class="top-controls">
-        <input type="search" id="query" aria-label="Поиск станций" placeholder="Поиск">
+      <div class="header-row">
+        <h1>Станции фестиваля <span class="festival-date">13 декабря</span></h1>
+        <div class="top-controls">
+          <input type="search" id="query" aria-label="Поиск станций" placeholder="Поиск">
 
-        <div class="info-control" id="info-control">
-          <button type="button" id="info-toggle" class="icon-button" aria-label="Информация" aria-controls="info-panel" aria-expanded="false">
-            <span class="icon-info" aria-hidden="true">i</span>
+          <div class="info-control" id="info-control">
+            <button type="button" id="info-toggle" class="icon-button" aria-label="Информация" aria-controls="info-panel" aria-expanded="false">
+              <span class="icon-info" aria-hidden="true">i</span>
+            </button>
+            <div class="info-panel" id="info-panel" hidden>
+              <p id="info-flow">Отметьте станции и нажмите стрелку. Общая галочка отмечает весь список. Новые идеи можно предложить отдельно.</p>
+              <p>Результат подходит под все выбранные теги.</p>
+              <p id="info-sheet" hidden>В Google-таблице с доступом можно вписаться или добавить станцию.</p>
+            </div>
+          </div>
+
+          <a id="sheet-link" class="icon-button icon-hint" aria-label="Открыть Google-таблицу" target="_blank" rel="noopener noreferrer" hidden>
+            <span class="icon-sheet" aria-hidden="true"></span>
+            <span class="icon-tooltip" aria-hidden="true">Google-таблица</span>
+          </a>
+          <a id="direct" class="icon-button icon-hint" aria-label="Открыть Telegram" href="https://t.me/d1_d57" target="_blank" rel="noopener noreferrer">
+            <span class="icon-plane" aria-hidden="true"></span>
+            <span class="icon-tooltip" aria-hidden="true">Telegram</span>
+          </a>
+          <button class="primary icon-button" id="proposal-open" type="button" aria-label="Предложить станцию" title="Предложить станцию" hidden>
+            <span class="proposal-plus" aria-hidden="true">+</span><span class="proposal-label">Предложить станцию</span>
           </button>
-          <div class="info-panel" id="info-panel" hidden>
-            <p id="info-flow">Отметьте станции и нажмите «Отправить». Общая галочка отмечает весь каталог. Новые идеи можно предложить отдельно.</p>
-            <p>Результат подходит под все выбранные теги.</p>
-            <p id="info-sheet" hidden>В Google-таблице с доступом можно вписаться или добавить станцию.</p>
+          <div class="pick-actions">
+            <label class="master-pick" id="master-pick" title="Выбрать все станции" hidden>
+              <input id="select-all" type="checkbox" aria-label="Выбрать все станции">
+              <span id="select-all-label"></span>
+            </label>
+            <button class="primary icon-button icon-hint" type="button" id="selection-submit" aria-label="Открыть отклик" disabled>
+              <span aria-hidden="true">→</span><span class="icon-tooltip" aria-hidden="true">Открыть отклик</span>
+            </button>
           </div>
         </div>
-
-        <a id="sheet-link" class="icon-button icon-hint" aria-label="Открыть Google-таблицу" target="_blank" rel="noopener noreferrer" hidden>
-          <span class="icon-sheet" aria-hidden="true"></span>
-          <span class="icon-tooltip" aria-hidden="true">Google-таблица</span>
-        </a>
-        <a id="direct" class="icon-button icon-hint" aria-label="Открыть Telegram" href="https://t.me/d1_d57" target="_blank" rel="noopener noreferrer">
-          <span class="icon-plane" aria-hidden="true"></span>
-          <span class="icon-tooltip" aria-hidden="true">Telegram</span>
-        </a>
       </div>
-
+      <p>Собираем программу. Отметьте, что хотите провести, или предложите станцию. Я вам напишу, и мы вместе её докрутим.</p>
+    </header>
+    <aside class="controls" aria-label="Фильтры станций">
       <fieldset class="format-group">
         <legend>Форматы</legend>
         <div id="filters" class="chips"></div>
@@ -58,16 +70,8 @@
 
     <section id="catalog" hidden aria-label="Станции">
       <div class="catalog-result">
-        <div id="selection" hidden>
-          <span id="selection-count"></span>
-          <button class="primary" type="button" id="selection-submit">Продолжить</button>
-        </div>
         <button type="button" id="reset-catalog" class="quiet" hidden>Сбросить</button>
         <p id="catalog-status" role="status"></p>
-        <label class="master-pick" id="master-pick" hidden>
-          <input id="select-all" type="checkbox">
-          <span id="select-all-label"></span>
-        </label>
       </div>
       <ul id="cards"></ul>
     </section>
@@ -81,7 +85,6 @@
       </header>
       <form id="submission-form">
         <div id="application-summary" hidden>
-          <p id="application-count"></p>
           <ul id="application-selection"></ul>
         </div>
         <div id="proposal-fields" hidden>
@@ -96,13 +99,6 @@
         </div>
         <p id="idea-status" role="status"></p>
         <button type="button" id="submit-in-google" class="quiet" hidden>Повторить через Google</button>
-        <details id="draft-fallback" hidden>
-          <summary id="draft-fallback-label">Telegram не открылся?</summary>
-          <label for="draft-text">Текст для Telegram</label>
-          <textarea id="draft-text" readonly rows="5"></textarea>
-          <button type="button" class="quiet" id="copy-draft">Скопировать</button>
-          <a id="open-chat" target="_blank" rel="noopener noreferrer">Открыть Telegram</a>
-        </details>
       </form>
     </dialog>
 

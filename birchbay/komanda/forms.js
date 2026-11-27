@@ -34,7 +34,6 @@ const selectAll = element("#select-all");
 const query = element("#query");
 const cards = element("#cards");
 let fullCatalog = true;
-const selection = element("#selection");
 const ideaForm = element("#submission-form");
 const ideaStatus = element("#idea-status");
 const ideaSubmit = element("#idea-submit");
@@ -69,16 +68,13 @@ function stationTitle(station) {
 }
 
 function updateSelection() {
-  selection.hidden = selected.size === 0;
+  selectionSubmit.disabled = selected.size === 0;
   selectAll.checked = stations.length > 0 && selected.size === stations.length;
   selectAll.indeterminate = selected.size > 0 && selected.size < stations.length;
-  element("#selection-count").textContent = `Выбрано ${selected.size}`;
   const marked = stations.filter(station => selected.has(station.id));
   const list = element("#application-selection");
-  list.hidden = selectAll.checked;
+  list.hidden = marked.length === 0;
   list.replaceChildren(...marked.map(station => node("li", stationTitle(station))));
-  element("#application-count").textContent = selectAll.checked
-    ? `Все станции · ${selected.size}` : `Выбрано ${selected.size}`;
 }
 
 selectAll.addEventListener("change", () => {
@@ -223,9 +219,9 @@ function render() {
   cards.replaceChildren(...matches.map(card));
   updateCatalogFill();
   const count = element("#catalog-status");
-  count.textContent = fullCatalog && stations.length ? "" : `Найдено ${matches.length}`;
+  count.textContent = matches.length ? "" : "Ничего не найдено";
   element("#master-pick").hidden = !stations.length;
-  element("#select-all-label").textContent = `Все станции · ${stations.length}`;
+  element("#select-all-label").textContent = String(stations.length);
   selectAll.setAttribute("aria-label", `Выбрать все станции (${stations.length})`);
   count.setAttribute("aria-label", `Найдено станций: ${matches.length}`);
   element("#reset-catalog").hidden = matches.length > 0 || !(filters.size || topicFilters.size || words.length);
@@ -363,12 +359,11 @@ const maxIdeas = 5;
 const ideaList = element("#idea-list");
 const addIdeaButton = element("#add-idea");
 const participant = element("#participant");
-const draftFallback = element("#draft-fallback");
 const pending = new Map();
 let mode = "pick";
 let origin;
 let saving = false;
-if (!live && !preview && !intake) ideaSubmit.textContent = "Открыть черновик в Telegram";
+const canSubmit = live || preview || Boolean(intake);
 
 function updateIdeaNumbers() {
   const drafts = [...ideaList.children];
@@ -400,8 +395,6 @@ function addIdea(focus = false) {
 
 function clearStatus() {
   ideaStatus.textContent = "";
-  draftFallback.hidden = true;
-  draftFallback.open = false;
   element("#submit-in-google").hidden = true;
 }
 
@@ -415,6 +408,8 @@ function openSubmission(kind, button) {
   element("#application-summary").hidden = proposing;
   element("#proposal-fields").hidden = !proposing;
   if (proposing && !ideaList.children.length) addIdea();
+  ideaSubmit.disabled = !canSubmit;
+  if (!canSubmit) ideaStatus.textContent = "Запись с сайта пока недоступна.";
   proposal.showModal();
   (proposing ? ideaList.querySelector('[name="action"]') : participant).focus();
 }
@@ -455,58 +450,10 @@ function resetSubmission(stationIds) {
   render();
 }
 
-function prepareTelegram({ stationIds, name, ideas }) {
-  const link = new URL(element("#direct").href);
-  const lines = [`Привет! Это ${name}. Про фестиваль 13 декабря.`];
-  if (stationIds.length === stations.length && stationIds.length) {
-    lines.push("Могу провести любую станцию.");
-  } else if (stationIds.length) {
-    lines.push("Хочу провести:", ...stations.filter(station => selected.has(station.id))
-      .map(station => `• ${stationTitle(station)}`));
-  }
-  ideas.forEach((idea, index) => {
-    lines.push("", `Станция${ideas.length > 1 ? ` ${index + 1}` : ""}${idea.title ? ` — ${idea.title}` : ""}`, idea.action);
-    const details = [["location", "Локация"], ["tags", "Форматы"], ["topics", "Темы"], ...fields,
-      ["tasks", "Задания"], ["check", "Проверка решения"], ["taskPrep", "Заготовки"], ["sources", "Источники"]];
-    for (const [key, label] of details) {
-      const value = Array.isArray(idea[key]) ? idea[key].join(", ") : idea[key];
-      if (value) lines.push(`${label}: ${value}`);
-    }
-  });
-  const message = lines.join("\n");
-  element("#draft-text").value = message;
-  element("#open-chat").href = link.href;
-  draftFallback.hidden = false;
-  link.searchParams.set("text", message);
-  if (link.href.length > 7500 || [...message].length > 4096) {
-    element("#draft-fallback-label").textContent = "Черновик Telegram";
-    draftFallback.open = true;
-    ideaStatus.textContent = "Черновик длинный. Скопируйте текст и вставьте его в Telegram.";
-    element("#copy-draft").focus();
-    return;
-  }
-  element("#draft-fallback-label").textContent = "Telegram не открылся?";
-  element("#open-chat").href = link.href;
-  ideaStatus.textContent = "Нажмите «Отправить» в Telegram.";
-  element("#open-chat").click();
-}
-
-element("#copy-draft").addEventListener("click", async () => {
-  const draft = element("#draft-text");
-  try {
-    await navigator.clipboard.writeText(draft.value);
-    ideaStatus.textContent = "Текст скопирован.";
-  } catch {
-    draft.focus();
-    draft.select();
-    ideaStatus.textContent = "Текст выделен. Скопируйте его.";
-  }
-});
-
-ideaForm.addEventListener("input", clearStatus);
+ideaForm.addEventListener("input", () => { if (canSubmit) clearStatus(); });
 ideaForm.addEventListener("submit", async event => {
   event.preventDefault();
-  if (saving) return;
+  if (saving || !canSubmit) return;
   const stationIds = mode === "pick" ? [...selected] : [];
   const drafts = mode === "ideas" ? [...ideaList.children] : [];
   const name = participant.value.trim();
@@ -531,10 +478,6 @@ ideaForm.addEventListener("submit", async event => {
     return;
   }
   const data = { stationIds, name, ideas };
-  if (!live && !preview && !intake) {
-    prepareTelegram(data);
-    return;
-  }
 
   const fingerprint = JSON.stringify(data);
   let requestId = pending.get(fingerprint);

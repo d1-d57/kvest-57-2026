@@ -72,7 +72,8 @@ input[type=checkbox] { accent-color: var(--accent); }
 #idea-status:not(:empty) { margin-top: 5px; }
 
 #catalog { min-width: 0; }
-.catalog-result { display: flex; justify-content: flex-end; gap: 8px; align-items: center; }
+.catalog-result { display: flex; justify-content: flex-start; gap: 8px; align-items: center; }
+.catalog-result:not(:has(:not([hidden]):not(:empty), #reset-catalog:not([hidden]))) { display: none; }
 #reset-catalog { min-height: 32px; padding-block: 0; color: var(--accent); }
 #catalog-status { color: var(--muted); margin: 0 0 3px; font-size: .86rem; text-align: right; }
 #cards { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
@@ -143,25 +144,6 @@ input[type=checkbox] { accent-color: var(--accent); }
 .primary { color: var(--chip-ink); background: var(--accent); font-weight: 600; }
 .quiet { color: var(--ink); background: none; }
 .quiet:hover { color: var(--accent); }
-#selection {
-  position: fixed;
-  z-index: 2;
-  left: 50%;
-  bottom: 9px;
-  transform: translateX(-50%);
-  width: min(100% - 24px, 480px);
-  padding: 5px 8px;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 3px 9px;
-  color: var(--ink);
-  background: var(--panel);
-  border: 1px solid var(--muted);
-  border-radius: 4px;
-}
-#selection-submit { margin-left: auto; }
-
 @media (min-width: 920px) {
   #cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
 }
@@ -179,15 +161,6 @@ input[type=checkbox] { accent-color: var(--accent); }
 }
 
 /* The sidebar keeps the main action, search and two kinds of filters in reading order. */
-#proposal-open {
-  width: 100%;
-  min-height: 52px;
-  margin-bottom: 10px;
-  padding: 8px 10px;
-  font-size: 1.08rem;
-  text-wrap: balance;
-}
-#proposal-open:hover { background: var(--chip); }
 .top-controls { position: relative; align-items: stretch; gap: 4px; }
 .info-control { display: grid; }
 .info-control .icon-button { height: 100%; }
@@ -303,9 +276,9 @@ input[type=checkbox] { accent-color: var(--accent); }
 .card-logistics > summary::before { content: "+"; }
 .card-logistics[open] > summary::before { content: "−"; }
 
-.intro { grid-column: 1 / -1; max-width: 660px; padding-bottom: 16px; }
+.intro { grid-column: 1 / -1; padding-bottom: 17px; }
 .intro h1 { margin: 0 0 3px; font: 600 clamp(1.4rem, 3vw, 2rem)/1.15 var(--serif); }
-.intro p { margin: 0; color: var(--muted); }
+.intro p { max-width: 82ch; margin: 6px 0 0; color: var(--muted); }
 @media (max-width: 700px) {
   .intro { padding: 5px 0 10px; }
   .intro p { font-size: .91rem; }
@@ -314,25 +287,7 @@ input[type=checkbox] { accent-color: var(--accent); }
 @media (min-width: 920px) {
   main { min-height: calc(100dvh - 48px); margin-bottom: 24px; grid-template-rows: auto 1fr; }
   .station-title { font-size: clamp(1.12rem, 1.28vw, 1.35rem); }
-  .catalog-result {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background: var(--bg);
-  }
-  #selection {
-    position: static;
-    transform: none;
-    width: auto;
-    margin-right: auto;
-    padding: 0;
-    gap: 8px;
-    background: none;
-    border: 0;
-  }
-  #selection-submit { min-height: 36px; }
-  #proposal-open { font-size: .98rem; }
-  #catalog[data-fill=true] { align-self: stretch; display: grid; grid-template-rows: auto 1fr; }
+  #catalog[data-fill=true] { align-self: stretch; display: grid; grid-template-rows: 1fr; }
   #catalog[data-fill=true] #cards { align-content: stretch; grid-auto-rows: auto; }
   #catalog[data-fill=true] .station-row { height: 100%; }
 }
@@ -376,16 +331,12 @@ input[type=checkbox] { accent-color: var(--accent); }
 .idea-draft + .idea-draft { border-top: 1px solid var(--rule); padding-top: 7px; }
 .idea-draft legend:empty { display: none; }
 .idea-draft > legend { color: var(--ink); font-weight: 600; padding: 0 8px 0 0; }
-.idea-draft > label, .extra > label, .name-field, #draft-fallback > label { display: block; margin-top: 8px; }
+.idea-draft > label, .extra > label, .name-field { display: block; margin-top: 8px; }
 .idea-draft input:not([type=checkbox]), .idea-draft textarea, .name-field input { display: block; margin-top: 3px; }
 .remove-idea { min-height: 34px; margin-inline-start: auto; display: block; }
 .extra > summary { color: var(--accent); font-weight: 600; padding-block: 8px; }
 #add-idea { color: var(--accent); padding-inline: 0; }
 .dialog-actions { justify-content: flex-end; margin-top: 14px; }
-#draft-fallback { margin-top: 8px; }
-#draft-fallback > summary { width: fit-content; padding-block: 5px; color: var(--accent); }
-#draft-fallback textarea { overflow-wrap: anywhere; margin: 4px 0; }
-#draft-fallback .quiet { padding-inline-start: 0; margin-inline-end: 8px; }
 #submission-feedback {
   position: fixed;
   z-index: 3;
@@ -423,3 +374,33 @@ input[type=checkbox] { accent-color: var(--accent); }
 .station-state[data-state=confirmed] { background: var(--chip); }
 
 @media (min-width: 920px) { #submission-feedback { top: 12px; bottom: auto; } }
+
+.header-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.header-row h1 { flex: 0 1 auto; }
+.header-row .top-controls { align-items: center; flex: 0 0 auto; min-width: 0; }
+#query { flex: none; width: clamp(85px, 10vw, 170px); }
+.pick-actions { display: flex; align-items: center; margin-left: 4px; }
+#proposal-open { width: auto; min-width: 40px; min-height: 40px; padding: 0 10px; display: inline-flex; gap: 6px; }
+#selection-submit { width: 40px; min-height: 40px; padding: 0; font: 23px/1 system-ui, sans-serif; }
+#proposal-open, #selection-submit { color: var(--chip-ink); background: var(--accent); }
+#proposal-open:hover, #selection-submit:hover { background: var(--chip); }
+#selection-submit:disabled { visibility: hidden; }
+#idea-submit:disabled { opacity: .55; cursor: default; }
+.proposal-plus { font-size: 1.35rem; line-height: 1; }
+
+@media (max-width: 1050px) { .proposal-label { display: none; } }
+@media (max-width: 850px) {
+  .header-row { flex-wrap: wrap; gap: 7px; }
+  .header-row .top-controls { flex: 1 1 100%; }
+  #query { flex: 1 1 70px; min-width: 0; }
+  .header-row .info-panel { left: auto; right: auto; }
+}
+@media (max-width: 520px) {
+  .header-row .top-controls { gap: 2px; }
+  .header-row .icon-button { width: 36px; min-width: 36px; padding-inline: 0; }
+  #proposal-open { min-width: 36px; padding-inline: 0; }
+  .pick-actions { margin-left: 0; }
+  .master-pick { gap: 4px; padding-inline: 3px; }
+  #query { width: 70px; }
+  .header-row .info-panel { left: 0; }
+}
