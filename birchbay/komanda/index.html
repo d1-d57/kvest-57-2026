@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2e5a54">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="Идеи станций фестиваля 13 декабря в 57-й школе.">
+  <title>13 декабря · Станции</title>
+  <link rel="stylesheet" href="fonts.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="stations.js" defer></script>
+  <script src="forms.js" defer></script>
+</head>
+<body>
+  <main id="idei">
+    <header class="intro">
+      <h1>Станции фестиваля <span class="festival-date">13 декабря</span></h1>
+      <p>Собираем программу вместе. Отметьте станции, которые вам хочется провести, или предложите свою. Я вам напишу, и мы вместе докрутим занятие.</p>
+    </header>
+    <aside class="controls" aria-label="Поиск и фильтры">
+      <details class="proposal" id="proposal" hidden>
+        <summary>Предложить станцию</summary>
+        <form id="idea-form">
+          <p id="application-selection" hidden></p>
+          <label for="participant">Как вас записать?
+            <input id="participant" maxlength="80" autocomplete="name">
+          </label>
+          <label class="choice"><input id="any-station" type="checkbox">Могу провести любую станцию</label>
+          <label for="idea">Своя идея</label>
+          <textarea id="idea" rows="3" maxlength="700" placeholder="Что будут делать школьники?"></textarea>
+          <details class="extra">
+            <summary>Детали идеи</summary>
+            <label for="title">Название</label><input type="text" id="title" maxlength="90">
+            <label for="location">Место в городе</label><input id="location" maxlength="120">
+            <fieldset><legend>Форматы</legend><div id="idea-tags" class="chips"></div></fieldset>
+            <fieldset><legend>Темы</legend><div id="idea-topics" class="chips"></div></fieldset>
+            <label for="idea-mode">Как проходит заход?</label><input id="idea-mode" maxlength="240">
+            <label for="idea-capacity">Сколько может начать одновременно?</label><input id="idea-capacity" maxlength="220">
+            <label for="idea-team">Кто нужен и что делает?</label><input id="idea-team" maxlength="220">
+            <label for="idea-materials">Что подготовить, распечатать или купить?</label><input id="idea-materials" maxlength="280">
+            <label for="idea-probe">Что проверить?</label><input id="idea-probe" maxlength="240">
+          <label for="idea-tasks">Задания <small>по одному на строку</small></label>
+          <textarea id="idea-tasks" rows="3" maxlength="700"></textarea>
+          <label for="idea-check">Ответ или критерий</label><input id="idea-check" maxlength="650">
+          <label for="idea-taskPrep">Заготовки к заданиям</label><textarea id="idea-taskPrep" rows="2" maxlength="650"></textarea>
+          <label for="idea-sources">Источники</label><textarea id="idea-sources" rows="2" maxlength="650"></textarea>
+          </details>
+          <button type="submit" class="primary" id="idea-submit">Отправить</button>
+          <p id="idea-status" role="status"></p>
+          <p id="preview-note" class="form-note" hidden>Предпросмотр: заявки сохраняются только в этом браузере.</p>
+          <p id="static-note" class="form-note" hidden>Для записи откройте Google-таблицу.</p>
+        </form>
+      </details>
+      <button class="quiet flexible-open" id="flexible-open" type="button" hidden>Подойдёт любая</button>
+      <div class="top-controls">
+        <input type="search" id="query" aria-label="Поиск станций" placeholder="Поиск">
+
+        <div class="info-control" id="info-control">
+          <button type="button" id="info-toggle" class="icon-button" aria-label="Информация" aria-controls="info-panel" aria-expanded="false">
+            <span class="icon-info" aria-hidden="true">i</span>
+          </button>
+          <div class="info-panel" id="info-panel" hidden>
+            <p id="info-flow">Отметьте станции или предложите свою и нажмите «Отправить». Можно отправить ещё раз.</p>
+            <p>Результат подходит под все выбранные теги.</p>
+            <p id="info-sheet" hidden>В Google-таблице с доступом можно вписаться или добавить станцию.</p>
+          </div>
+        </div>
+
+        <a id="sheet-link" class="icon-button icon-hint" aria-label="Открыть Google-таблицу" target="_blank" rel="noopener noreferrer" hidden>
+          <span class="icon-sheet" aria-hidden="true"></span>
+          <span class="icon-tooltip" aria-hidden="true">Google-таблица</span>
+        </a>
+        <a id="direct" class="icon-button icon-hint" aria-label="Открыть Telegram" href="https://t.me/d1_d57" target="_blank" rel="noopener noreferrer">
+          <span class="icon-plane" aria-hidden="true"></span>
+          <span class="icon-tooltip" aria-hidden="true">Telegram</span>
+        </a>
+      </div>
+
+      <fieldset class="format-group">
+        <legend>Форматы</legend>
+        <div id="filters" class="chips"></div>
+      </fieldset>
+      <button type="button" id="toggle-filters" class="quiet" aria-label="Темы" aria-expanded="false" aria-controls="filters-panel">Темы</button>
+      <fieldset id="filters-panel" class="topic-group">
+        <legend>Темы</legend>
+        <div id="topic-filters" class="chips"></div>
+      </fieldset>
+    </aside>
+
+    <section id="catalog" hidden aria-label="Станции">
+      <div class="catalog-result"><button type="button" id="reset-catalog" class="quiet" hidden>Сбросить</button><p id="catalog-status" role="status"></p></div>
+      <ul id="cards"></ul>
+    </section>
+
+    <div id="selection" hidden>
+      <details id="selection-list">
+        <summary id="selection-count"></summary>
+        <div class="selection-popover">
+          <ul id="selection-titles"></ul>
+          <button type="button" class="quiet" id="clear-selected">Снять все</button>
+        </div>
+      </details>
+      <button class="primary" type="button" id="selection-submit">Отправить</button>
+    </div>
+  </main>
+</body>
+</html>
