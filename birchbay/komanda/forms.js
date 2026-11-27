@@ -10,11 +10,11 @@ const aliases = new Map([
   ["узел", "узлы"], ["снежинка", "снежин"]
 ]);
 const fields = [
-  ["mode", "Как проходит заход", "#idea-mode"],
-  ["capacity", "Одновременно", "#idea-capacity"],
-  ["team", "Работа ведущих", "#idea-team"],
-  ["materials", "Реквизит, раздатка и закупки", "#idea-materials"],
-  ["probe", "Что проверить", "#idea-probe"]
+  ["mode", "Как устроена станция", "#idea-mode"],
+  ["capacity", "Сколько участников сразу", "#idea-capacity"],
+  ["team", "Что делают ведущие", "#idea-team"],
+  ["materials", "Реквизит и раздатка", "#idea-materials"],
+  ["probe", "Что уточнить до фестиваля", "#idea-probe"]
 ];
 const element = (selector) => document.querySelector(selector);
 const live = Boolean(globalThis.google?.script?.run);
@@ -99,61 +99,53 @@ function stationDetails(station) {
   const detail = node("article", "", "card-body");
   const overview = node("div", "", "card-overview");
   const summary = station.short || station.action;
-  overview.append(node("p", summary, "card-summary"));
-  if (live && station.confirmed) {
-    overview.append(node("p", `Ведущий: ${station.confirmed}`, "card-lead"));
-  }
-  if (live && station.people) {
-    overview.append(node("p", `Откликнулись: ${station.people}`, "card-people"));
-  }
-  const meta = [station.location, stateLabels[stationState(station)]].filter(Boolean);
+  const meta = [stateLabels[stationState(station)], station.location].filter(Boolean);
   overview.append(node("p", meta.join(" · "), "card-meta"));
+  overview.append(node("p", summary, "card-summary"));
+  if (live && station.confirmed) overview.append(node("p", `Ведущий: ${station.confirmed}`, "card-lead"));
+  if (live && station.people) overview.append(node("p", `Откликнулись: ${station.people}`, "card-people"));
+
+  const running = node("section", "", "card-logistics");
+  const facts = node("dl", "", "card-facts");
+  for (const [key, label] of fields) describe(facts, label, station[key]);
+  const labels = [...station.tags, ...(station.topics ?? [])];
+  if (labels.length) describe(facts, "Форматы и темы", [...new Set(labels)].join(" · "));
+  if (facts.childElementCount) running.append(node("h3", "Как провести"), facts);
+  if (running.childElementCount) overview.append(running);
   detail.append(overview);
 
+  const examples = node("div", "", "card-examples");
   const tasks = (station.tasks || "").split("\n").map(line => line.trim()).filter(Boolean);
   if (tasks.length) {
     const handout = node("section", "", "station-handout");
     const list = node("ol");
     for (const task of tasks) list.append(node("li", task));
     handout.append(node("h3", "Примеры заданий"), list);
-    if (station.check || station.taskPrep) {
-      const check = node("details", "", "handout-check");
-      check.append(node("summary", "Ответы и заготовки"));
-      if (station.check) check.append(node("p", station.check));
-      if (station.taskPrep) check.append(node("p", station.taskPrep, "handout-preparation"));
-      handout.append(check);
-    }
-    const sources = node("ul", "", "handout-sources");
-    for (const line of (station.sources || "").split("\n")) {
-      const [label, href] = line.split(" | ");
-      if (!href?.startsWith("https://")) continue;
-      const link = node("a", label || href);
-      link.href = href;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      const item = node("li");
-      item.append(link);
-      sources.append(item);
-    }
-    if (sources.childElementCount) {
-      const references = node("details", "", "handout-check");
-      references.append(node("summary", "Источники"), sources);
-      handout.append(references);
-    }
-    detail.append(handout);
+    examples.append(handout);
+  } else if (summary !== station.action) {
+    examples.append(node("h3", "Что делают школьники"), node("p", station.action));
   }
-
-  const running = node("details", "", "card-logistics");
-  const facts = node("dl", "", "card-facts");
-  if (!tasks.length && summary !== station.action) describe(facts, "Задание", station.action);
-  for (const [key, label] of fields) describe(facts, label, station[key]);
-  const labels = [...station.tags, ...(station.topics ?? [])];
-  if (labels.length) describe(facts, "Форматы и темы", [...new Set(labels)].join(" · "));
-  if (facts.childElementCount) {
-    running.append(node("summary", "Как провести"), facts);
-    detail.append(running);
+  if (station.check || station.taskPrep) {
+    const answers = node("section", "", "card-answers");
+    answers.append(node("h3", "Ответы и заготовки"));
+    if (station.check) answers.append(node("p", station.check));
+    if (station.taskPrep) answers.append(node("p", station.taskPrep));
+    examples.append(answers);
   }
-
+  const sources = node("ul", "", "handout-sources");
+  for (const line of (station.sources || "").split("\n")) {
+    const [caption, href] = line.split(" | ");
+    if (!href?.startsWith("https://")) continue;
+    const link = node("a", caption || href);
+    link.href = href;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    const item = node("li");
+    item.append(link);
+    sources.append(item);
+  }
+  if (sources.childElementCount) examples.append(node("h3", "Источники"), sources);
+  if (examples.childElementCount) detail.append(examples);
   return detail;
 }
 
@@ -269,74 +261,50 @@ element("#toggle-filters").addEventListener("click", event => {
   element("#filters-panel").dataset.open = String(open);
 });
 
-const info = element("#info-control");
-const infoButton = element("#info-toggle");
-const infoPanel = element("#info-panel");
-let infoHovered = false;
-let infoFocused = false;
-let infoPinned = false;
-let infoDismissed = false;
-
-function renderInfo() {
-  const show = !infoDismissed && (infoHovered || infoFocused || infoPinned);
-  infoPanel.hidden = !show;
-  infoButton.setAttribute("aria-expanded", String(show));
-}
-
-info.addEventListener("pointerenter", event => {
-  if (event.pointerType !== "mouse") return;
-  infoHovered = true;
-  infoDismissed = false;
-  renderInfo();
-});
-info.addEventListener("pointerleave", event => {
-  if (event.pointerType !== "mouse") return;
-  infoHovered = false;
-  renderInfo();
-});
-infoButton.addEventListener("focus", () => {
-  infoFocused = true;
-  infoDismissed = false;
-  renderInfo();
-});
-info.addEventListener("focusout", event => {
-  if (info.contains(event.relatedTarget)) return;
-  infoFocused = false;
-  renderInfo();
-});
-infoButton.addEventListener("click", () => {
-  infoPinned = !infoPinned;
-  infoDismissed = !infoPinned;
-  renderInfo();
-});
-function dismissInfo() {
-  infoPinned = false;
-  infoDismissed = true;
-  renderInfo();
-}
+const headerMenu = element("#header-menu");
 document.addEventListener("pointerdown", event => {
-  if (!info.contains(event.target) && !infoPanel.hidden) dismissInfo();
+  if (headerMenu.open && !headerMenu.contains(event.target)) headerMenu.open = false;
 });
-document.addEventListener("keydown", event => {
-  if (event.key === "Escape" && !infoPanel.hidden) dismissInfo();
+headerMenu.addEventListener("keydown", event => {
+  if (event.key === "Escape" && headerMenu.open) {
+    headerMenu.open = false;
+    headerMenu.querySelector("summary").focus();
+    event.preventDefault();
+  }
 });
 
 function openStation(station, tasks = false) {
   activeStationId = station.id;
   element("#station-dialog-title").textContent = stationTitle(station);
   element("#station-dialog-content").replaceChildren(stationDetails(station));
-  stationDialogPick.checked = selected.has(station.id);
+  const picked = selected.has(station.id);
+  stationDialogPick.setAttribute("aria-pressed", String(picked));
+  element("#station-pick-label").textContent = picked ? "Снять отметку" : "Хочу провести";
   if (!stationDialog.open) stationDialog.showModal();
   stationDialog.scrollTop = 0;
   if (tasks) stationDialog.querySelector(".station-handout")?.scrollIntoView({ block: "nearest" });
 }
 
-element("#close-station").addEventListener("click", () => stationDialog.close());
+let pressedOutside = false;
+function isOutsideStation(event) {
+  if (event.target !== stationDialog) return false;
+  const bounds = stationDialog.getBoundingClientRect();
+  return event.clientX < bounds.left || event.clientX > bounds.right
+    || event.clientY < bounds.top || event.clientY > bounds.bottom;
+}
+stationDialog.addEventListener("pointerdown", event => { pressedOutside = isOutsideStation(event); });
+stationDialog.addEventListener("click", event => {
+  if (pressedOutside && isOutsideStation(event)) stationDialog.close();
+  pressedOutside = false;
+});
 stationDialog.addEventListener("close", () => {
   document.getElementById(`station-${activeStationId}`)?.querySelector(".station-toggle")
     ?.focus({ preventScroll: true });
 });
-stationDialogPick.addEventListener("change", () => setStationSelected(activeStationId, stationDialogPick.checked));
+stationDialogPick.addEventListener("click", () => {
+  setStationSelected(activeStationId, !selected.has(activeStationId));
+  stationDialog.close();
+});
 
 function openLinkedStation() {
   const fragment = location.hash.slice(1);
@@ -353,7 +321,6 @@ function sheetLink(url) {
   const link = element("#sheet-link");
   link.href = url;
   link.hidden = false;
-  element("#info-sheet").hidden = false;
 }
 
 function clearCatalogFilters() {
