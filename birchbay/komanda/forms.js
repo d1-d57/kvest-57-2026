@@ -94,9 +94,10 @@ function peopleCapacity(capacity = "") {
   const text = capacity.replace(/\s+/g, " ");
   const count = /(?:(до) )?(\d+)(?: *[–—-] *(\d+))? *(?:детей|школьников|участников)(?![\p{L}])/iu
     .exec(text);
-  if (!count) return "";
+  if (!count) return null;
   const [, upper, min, max] = count;
-  return max ? `${min}–${max}` : upper ? `до ${min}` : min;
+  if (max) return { display: `${min}–${max}`, spoken: `от ${min} до ${max}` };
+  return upper ? { display: `≤${min}`, spoken: `до ${min}` } : { display: min, spoken: min };
 }
 
 function stationDetails(station) {
@@ -110,11 +111,12 @@ function stationDetails(station) {
   const capacity = peopleCapacity(station.capacity);
   if (capacity) {
     const plan = node("p", "", "card-capacity");
-    plan.setAttribute("aria-label", `Ориентир на пробу: ${capacity} детей одновременно`);
+    plan.setAttribute("role", "img");
+    plan.setAttribute("aria-label", `Ориентир на пробу: ${capacity.spoken} детей одновременно`);
     plan.title = "Ориентир на пробу";
     const person = node("span", "", "person-glyph");
     person.setAttribute("aria-hidden", "true");
-    plan.append(person, node("span", capacity));
+    plan.append(person, node("span", capacity.display));
     detail.append(plan);
   }
 
@@ -195,9 +197,10 @@ function render() {
   element("#master-pick").hidden = !stations.length;
   count.setAttribute("aria-label", `Найдено станций: ${matches.length}`);
   element("#reset-catalog").hidden = !words.length && (matches.length > 0 || !(filters.size || topicFilters.size));
-  const topicsButton = element("#toggle-filters");
-  topicsButton.textContent = topicFilters.size ? `Темы · ${topicFilters.size}` : "Темы";
-  topicsButton.setAttribute("aria-label", topicFilters.size ? `Темы, выбрано: ${topicFilters.size}` : "Темы");
+  const filtersButton = element("#toggle-filters");
+  const filterCount = filters.size + topicFilters.size;
+  filtersButton.classList.toggle("has-filters", filterCount > 0);
+  filtersButton.setAttribute("aria-label", filterCount ? `Фильтры, выбрано: ${filterCount}` : "Фильтры");
   updateSelection();
 }
 

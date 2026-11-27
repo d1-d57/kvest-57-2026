@@ -9,9 +9,9 @@
   <meta name="description" content="Идеи станций фестиваля 13 декабря в 57-й школе.">
   <title>13 декабря · Станции</title>
   <link rel="stylesheet" href="fonts.css">
-  <link rel="stylesheet" href="style.css?v=4c43fdb5b7e3">
+  <link rel="stylesheet" href="style.css?v=b374b4b64e21">
   <script src="stations.js?v=bf78aea309c1" defer></script>
-  <script src="forms.js?v=434ee575be84" defer></script>
+  <script src="forms.js?v=f55e67313b7b" defer></script>
 </head>
 <body>
   <main id="idei">
@@ -57,15 +57,18 @@
           </div>
         </div>
       </details>
-      <fieldset class="format-group">
-        <legend>Форматы</legend>
-        <div id="filters" class="chips"></div>
-      </fieldset>
-      <button type="button" id="toggle-filters" class="quiet" aria-label="Темы" aria-expanded="false" aria-controls="filters-panel">Темы</button>
-      <fieldset id="filters-panel" class="topic-group">
-        <legend>Темы</legend>
-        <div id="topic-filters" class="chips"></div>
-      </fieldset>
+      <button type="button" id="toggle-filters" class="icon-button icon-hint" aria-label="Фильтры" aria-expanded="false" aria-controls="filters-panel">
+        <span class="filter-glyph" aria-hidden="true"></span>
+        <span class="icon-tooltip" aria-hidden="true">Фильтры</span>
+      </button>
+      <div id="filters-panel">
+        <fieldset class="format-group" aria-label="Форматы занятий">
+          <div id="filters" class="chips"></div>
+        </fieldset>
+        <fieldset class="topic-group" aria-label="Темы занятий">
+          <div id="topic-filters" class="chips"></div>
+        </fieldset>
+      </div>
     </aside>
 
     <section id="catalog" hidden aria-label="Станции">
