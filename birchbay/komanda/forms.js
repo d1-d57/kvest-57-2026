@@ -9,13 +9,6 @@ const aliases = new Map([
   ["спорт", "спортзал"], ["гонка", "подвижные"],
   ["узел", "узлы"], ["снежинка", "снежин"]
 ]);
-const fields = [
-  ["mode", "Ход станции", "#idea-mode"],
-  ["capacity", "Мест одновременно", "#idea-capacity"],
-  ["team", "Роли", "#idea-team"],
-  ["materials", "Материалы", "#idea-materials"],
-  ["probe", "Что уточнить", "#idea-probe"]
-];
 const element = (selector) => document.querySelector(selector);
 const live = Boolean(globalThis.google?.script?.run);
 const preview = !live && (location.protocol === "file:" || ["localhost", "127.0.0.1"].includes(location.hostname));
@@ -97,57 +90,39 @@ function stationState(station) {
   return station.stage || (station.confirmed ? "confirmed" : station.people ? "interested" : "open");
 }
 
+function peopleCapacity(capacity = "") {
+  const text = capacity.replace(/\s+/g, " ");
+  const count = /(?:(до) )?(\d+)(?: *[–—-] *(\d+))? *(?:детей|школьников|участников)(?![\p{L}])/iu
+    .exec(text);
+  if (!count) return "";
+  const [, upper, min, max] = count;
+  return max ? `${min}–${max}` : upper ? `до ${min}` : min;
+}
+
 function stationDetails(station) {
   const detail = node("article", "", "card-body");
-  const overview = node("div", "", "card-overview");
-  const summary = station.short || station.action;
-  const meta = [stateLabels[stationState(station)], station.location].filter(Boolean);
-  overview.append(node("p", meta.join(" · "), "card-meta"));
-  overview.append(node("p", summary, "card-summary"));
-  if (live && station.confirmed) overview.append(node("p", `Ведущий: ${station.confirmed}`, "card-lead"));
-  if (live && station.people) overview.append(node("p", `Откликнулись: ${station.people}`, "card-people"));
+  const place = (station.location || "").split("·")[0].replace(/\s*\(вариант\)$/i, "").trim();
+  if (place) detail.append(node("p", place, "card-place"));
+  const stage = stationState(station);
+  if (stage !== "open") detail.append(node("p", stateLabels[stage], "card-meta"));
+  detail.append(node("p", station.short || station.action, "card-summary"));
 
-  const running = node("section", "", "card-logistics");
+  const capacity = peopleCapacity(station.capacity);
+  if (capacity) {
+    const plan = node("p", "", "card-capacity");
+    plan.setAttribute("aria-label", `Ориентир на пробу: ${capacity} детей одновременно`);
+    plan.title = "Ориентир на пробу";
+    const person = node("span", "", "person-glyph");
+    person.setAttribute("aria-hidden", "true");
+    plan.append(person, node("span", capacity));
+    detail.append(plan);
+  }
+
   const facts = node("dl", "", "card-facts");
-  for (const [key, label] of fields) describe(facts, label, station[key]);
-  const labels = [...station.tags, ...(station.topics ?? [])];
-  if (labels.length) describe(facts, "Форматы и темы", [...new Set(labels)].join(" · "));
-  if (facts.childElementCount) running.append(node("h3", "Как провести"), facts);
-  if (running.childElementCount) overview.append(running);
-  detail.append(overview);
-
-  const examples = node("div", "", "card-examples");
-  const tasks = (station.tasks || "").split("\n").map(line => line.trim()).filter(Boolean);
-  if (tasks.length) {
-    const handout = node("section", "", "station-handout");
-    const list = node("ol");
-    for (const task of tasks) list.append(node("li", task));
-    handout.append(node("h3", "Примеры заданий"), list);
-    examples.append(handout);
-  } else if (summary !== station.action) {
-    examples.append(node("h3", "Что делают школьники"), node("p", station.action));
-  }
-  if (station.check || station.taskPrep) {
-    const answers = node("section", "", "card-answers");
-    answers.append(node("h3", "Ответы и заготовки"));
-    if (station.check) answers.append(node("p", station.check));
-    if (station.taskPrep) answers.append(node("p", station.taskPrep));
-    examples.append(answers);
-  }
-  const sources = node("ul", "", "handout-sources");
-  for (const line of (station.sources || "").split("\n")) {
-    const [caption, href] = line.split(" | ");
-    if (!href?.startsWith("https://")) continue;
-    const link = node("a", caption || href);
-    link.href = href;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    const item = node("li");
-    item.append(link);
-    sources.append(item);
-  }
-  if (sources.childElementCount) examples.append(node("h3", "Источники"), sources);
-  if (examples.childElementCount) detail.append(examples);
+  describe(facts, "Ход станции", station.mode);
+  describe(facts, "Роли", station.team);
+  describe(facts, "Материалы", station.materials);
+  if (facts.childElementCount) detail.append(facts);
   return detail;
 }
 
@@ -264,37 +239,48 @@ element("#toggle-filters").addEventListener("click", event => {
 });
 
 const headerMenu = element("#header-menu");
-document.addEventListener("pointerdown", event => {
-  if (headerMenu.open && !headerMenu.contains(event.target)) headerMenu.open = false;
-});
 const menuButton = headerMenu.querySelector("summary");
-function closeMenu() {
+const searchToggle = element("#menu-search-toggle");
+const menuSearch = element("#menu-search");
+function closeMenu(returnFocus = false) {
   headerMenu.open = false;
-  menuButton.focus();
+  if (returnFocus) menuButton.focus();
 }
+function setMenuSearch(open) {
+  menuSearch.hidden = !open;
+  searchToggle.setAttribute("aria-expanded", String(open));
+  if (open) query.focus();
+}
+headerMenu.addEventListener("toggle", () => {
+  if (!headerMenu.open) setMenuSearch(false);
+});
+headerMenu.addEventListener("pointerleave", event => {
+  if (event.pointerType === "mouse" && document.activeElement !== query) closeMenu();
+});
+document.addEventListener("pointerdown", event => {
+  if (headerMenu.open && !headerMenu.contains(event.target)) closeMenu();
+});
 headerMenu.addEventListener("keydown", event => {
   if (event.key === "Escape" && headerMenu.open) {
     event.preventDefault();
-    closeMenu();
+    closeMenu(true);
   }
 });
+searchToggle.addEventListener("click", () => setMenuSearch(menuSearch.hidden));
 query.addEventListener("keydown", event => {
   if (event.key === "Enter") {
     event.preventDefault();
-    closeMenu();
+    closeMenu(true);
   }
 });
 
-function openStation(station, tasks = false) {
+function openStation(station) {
   activeStationId = station.id;
   element("#station-dialog-title").textContent = stationTitle(station);
   element("#station-dialog-content").replaceChildren(stationDetails(station));
-  const picked = selected.has(station.id);
-  stationDialogPick.setAttribute("aria-pressed", String(picked));
-  element("#station-pick-label").textContent = picked ? "Снять отметку" : "Хочу провести";
+  stationDialogPick.checked = selected.has(station.id);
   if (!stationDialog.open) stationDialog.showModal();
   stationDialog.scrollTop = 0;
-  if (tasks) stationDialog.querySelector(".station-handout")?.scrollIntoView({ block: "nearest" });
 }
 
 let pressedOutside = false;
@@ -313,17 +299,14 @@ stationDialog.addEventListener("close", () => {
   document.getElementById(`station-${activeStationId}`)?.querySelector(".station-toggle")
     ?.focus({ preventScroll: true });
 });
-stationDialogPick.addEventListener("click", () => {
-  setStationSelected(activeStationId, !selected.has(activeStationId));
-  stationDialog.close();
-});
+stationDialogPick.addEventListener("change", () => setStationSelected(activeStationId, stationDialogPick.checked));
 
 function openLinkedStation() {
   const fragment = location.hash.slice(1);
   const match = /^(station-|tasks-)(.+)$/.exec(fragment);
   if (!match) return;
   const station = stations.find(entry => entry.id === match[2]);
-  if (station) openStation(station, match[1] === "tasks-");
+  if (station) openStation(station);
 }
 
 window.addEventListener("hashchange", openLinkedStation);
@@ -349,7 +332,7 @@ query.addEventListener("input", () => {
 });
 element("#reset-catalog").addEventListener("click", () => {
   clearCatalogFilters();
-  closeMenu();
+  closeMenu(true);
   render();
 });
 const maxIdeas = 5;

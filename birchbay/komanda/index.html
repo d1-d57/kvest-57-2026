@@ -9,9 +9,9 @@
   <meta name="description" content="Идеи станций фестиваля 13 декабря в 57-й школе.">
   <title>13 декабря · Станции</title>
   <link rel="stylesheet" href="fonts.css">
-  <link rel="stylesheet" href="style.css?v=2fd21151fe15">
+  <link rel="stylesheet" href="style.css?v=4c43fdb5b7e3">
   <script src="stations.js?v=bf78aea309c1" defer></script>
-  <script src="forms.js?v=9c6142cfbbe7" defer></script>
+  <script src="forms.js?v=434ee575be84" defer></script>
 </head>
 <body>
   <main id="idei">
@@ -39,20 +39,21 @@
           <span class="menu-glyph" aria-hidden="true"></span>
           <span class="icon-tooltip" aria-hidden="true">Меню</span>
         </summary>
-        <div class="info-panel">
-          <label class="menu-search">
+        <div class="menu-items">
+          <button type="button" class="icon-button icon-hint" id="menu-search-toggle" aria-label="Поиск" aria-controls="menu-search" aria-expanded="false">
             <span class="icon-search" aria-hidden="true"></span>
+            <span class="icon-tooltip" aria-hidden="true">Поиск</span>
+          </button>
+          <a id="sheet-link" class="icon-button icon-hint" aria-label="Google-таблица" target="_blank" rel="noopener noreferrer" hidden>
+            <span class="icon-sheet" aria-hidden="true"></span>
+            <span class="icon-tooltip" aria-hidden="true">Google-таблица</span>
+          </a>
+          <a id="direct" class="icon-button icon-hint" aria-label="Вопросы в Telegram" href="https://t.me/d1_d57" target="_blank" rel="noopener noreferrer">
+            <span class="icon-plane" aria-hidden="true"></span>
+            <span class="icon-tooltip" aria-hidden="true">Вопросы в Telegram</span>
+          </a>
+          <div id="menu-search" hidden>
             <input type="search" id="query" aria-label="Поиск по станциям" placeholder="Поиск по станциям">
-          </label>
-          <div class="menu-links">
-            <a id="sheet-link" class="icon-button icon-hint" aria-label="Google-таблица" target="_blank" rel="noopener noreferrer" hidden>
-              <span class="icon-sheet" aria-hidden="true"></span>
-              <span class="icon-tooltip" aria-hidden="true">Google-таблица</span>
-            </a>
-            <a id="direct" class="icon-button icon-hint" aria-label="Вопросы в Telegram" href="https://t.me/d1_d57" target="_blank" rel="noopener noreferrer">
-              <span class="icon-plane" aria-hidden="true"></span>
-              <span class="icon-tooltip" aria-hidden="true">Вопросы в Telegram</span>
-            </a>
           </div>
         </div>
       </details>
@@ -80,9 +81,9 @@
     <dialog id="station-dialog" aria-labelledby="station-dialog-title">
       <header class="dialog-header">
         <h2 id="station-dialog-title"></h2>
-        <button id="station-dialog-pick" class="primary" type="button" aria-pressed="false">
-          <span aria-hidden="true" class="pick-symbol">✓</span><span id="station-pick-label">Хочу провести</span>
-        </button>
+        <label class="master-pick" id="station-pick" title="Отметить станцию">
+          <input id="station-dialog-pick" type="checkbox" aria-label="Отметить станцию">
+        </label>
       </header>
       <div id="station-dialog-content"></div>
     </dialog>
