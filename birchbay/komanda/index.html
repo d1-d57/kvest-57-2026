@@ -9,9 +9,9 @@
   <meta name="description" content="Идеи станций фестиваля 13 декабря в 57-й школе.">
   <title>13 декабря · Станции</title>
   <link rel="stylesheet" href="fonts.css">
-  <link rel="stylesheet" href="style.css?v=c37f09ffa5a0">
+  <link rel="stylesheet" href="style.css?v=2fd21151fe15">
   <script src="stations.js?v=bf78aea309c1" defer></script>
-  <script src="forms.js?v=e82422394876" defer></script>
+  <script src="forms.js?v=9c6142cfbbe7" defer></script>
 </head>
 <body>
   <main id="idei">
@@ -19,44 +19,43 @@
       <div class="header-row">
         <h1>Примеры станций · <a class="festival-link" href="../" title="Страница фестиваля"><span class="festival-date">13 декабря</span></a></h1>
         <div class="top-controls">
-          <button type="button" id="search-toggle" class="icon-button icon-hint" aria-label="Поиск" aria-controls="search-panel" aria-expanded="false">
-            <span class="icon-search" aria-hidden="true"></span><span class="icon-tooltip" aria-hidden="true">Поиск</span>
-          </button>
-          <div id="search-panel" hidden>
-            <input type="search" id="query" aria-label="Поиск станций" placeholder="Поиск станций">
-          </div>
-
-          <a id="sheet-link" class="icon-button icon-hint" aria-label="Открыть Google-таблицу" target="_blank" rel="noopener noreferrer" hidden>
-            <span class="icon-sheet" aria-hidden="true"></span>
-            <span class="icon-tooltip" aria-hidden="true">Google-таблица</span>
-          </a>
-          <details class="header-menu" id="header-menu">
-            <summary class="icon-button icon-hint" aria-label="Меню">
-              <span class="menu-glyph" aria-hidden="true"></span>
-              <span class="icon-tooltip" aria-hidden="true">Меню</span>
-            </summary>
-            <div class="info-panel">
-              <a id="direct" href="https://t.me/d1_d57" target="_blank" rel="noopener noreferrer">Вопросы в Telegram</a>
-              <p>Отметьте идеи и нажмите стрелку. Галочка отмечает все станции. Новую идею можно добавить через плюс.</p>
-            </div>
-          </details>
-          <button class="primary icon-button" id="proposal-open" type="button" aria-label="Предложить станцию" title="Предложить станцию" hidden>
+          <button class="primary icon-button" id="proposal-open" type="button" aria-label="Добавить станцию" title="Добавить станцию" hidden>
             <span class="proposal-plus" aria-hidden="true">+</span>
           </button>
-          <div class="pick-actions">
-            <label class="master-pick" id="master-pick" title="Выбрать все станции" hidden>
-              <input id="select-all" type="checkbox" aria-label="Выбрать все станции">
-            </label>
-            <output id="selection-count" aria-live="polite" aria-label="Выбрано станций">0</output>
-            <button class="primary icon-button icon-hint" type="button" id="selection-submit" aria-label="Открыть отклик" disabled>
-              <span aria-hidden="true">→</span><span class="icon-tooltip" aria-hidden="true">Открыть отклик</span>
-            </button>
-          </div>
+          <label class="master-pick" id="master-pick" title="Выбрать все станции" hidden>
+            <input id="select-all" type="checkbox" aria-label="Выбрать все станции">
+          </label>
+          <button class="primary icon-button icon-hint" type="button" id="selection-submit" aria-label="Открыть отклик" hidden disabled>
+            <span id="selection-count"></span><span aria-hidden="true">→</span>
+            <span class="icon-tooltip" aria-hidden="true">Открыть отклик</span>
+          </button>
         </div>
       </div>
-      <p>Программу ещё собираем. Можно отметить одну или несколько идей, предложить свою или пока просто посмотреть</p>
+      <p>Программу ещё собираем. Можно отметить идеи, предложить свою или пока просто посмотреть</p>
     </header>
     <aside class="controls" aria-label="Фильтры станций">
+      <details class="header-menu" id="header-menu">
+        <summary class="icon-button icon-hint" aria-label="Меню">
+          <span class="menu-glyph" aria-hidden="true"></span>
+          <span class="icon-tooltip" aria-hidden="true">Меню</span>
+        </summary>
+        <div class="info-panel">
+          <label class="menu-search">
+            <span class="icon-search" aria-hidden="true"></span>
+            <input type="search" id="query" aria-label="Поиск по станциям" placeholder="Поиск по станциям">
+          </label>
+          <div class="menu-links">
+            <a id="sheet-link" class="icon-button icon-hint" aria-label="Google-таблица" target="_blank" rel="noopener noreferrer" hidden>
+              <span class="icon-sheet" aria-hidden="true"></span>
+              <span class="icon-tooltip" aria-hidden="true">Google-таблица</span>
+            </a>
+            <a id="direct" class="icon-button icon-hint" aria-label="Вопросы в Telegram" href="https://t.me/d1_d57" target="_blank" rel="noopener noreferrer">
+              <span class="icon-plane" aria-hidden="true"></span>
+              <span class="icon-tooltip" aria-hidden="true">Вопросы в Telegram</span>
+            </a>
+          </div>
+        </div>
+      </details>
       <fieldset class="format-group">
         <legend>Форматы</legend>
         <div id="filters" class="chips"></div>
@@ -125,13 +124,13 @@
           <label>Место в городе<input name="location" maxlength="120"></label>
           <fieldset><legend>Форматы</legend><div data-formats class="chips"></div></fieldset>
           <fieldset><legend>Темы</legend><div data-topics class="chips"></div></fieldset>
-          <label>Как устроена станция?<input name="mode" maxlength="240"></label>
-          <label>Сколько участников одновременно?<input name="capacity" maxlength="220"></label>
-          <label>Что делают ведущие?<input name="team" maxlength="220"></label>
-          <label>Что подготовить, распечатать или купить?<input name="materials" maxlength="280"></label>
-          <label>Что уточнить до фестиваля?<input name="probe" maxlength="240"></label>
+          <label>Ход станции<input name="mode" maxlength="240"></label>
+          <label>Мест одновременно<input name="capacity" maxlength="220"></label>
+          <label>Роли<input name="team" maxlength="220"></label>
+          <label>Материалы<input name="materials" maxlength="280"></label>
+          <label>Что уточнить<input name="probe" maxlength="240"></label>
           <label>Задания <small>по одному на строку</small><textarea name="tasks" rows="3" maxlength="700"></textarea></label>
-          <label>Как проверить решение?<textarea name="check" rows="2" maxlength="650"></textarea></label>
+          <label>Ответ<textarea name="check" rows="2" maxlength="650"></textarea></label>
           <label>Заготовки<textarea name="taskPrep" rows="2" maxlength="650"></textarea></label>
           <label>Источники<textarea name="sources" rows="2" maxlength="650"></textarea></label>
         </details>

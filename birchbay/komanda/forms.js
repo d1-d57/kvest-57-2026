@@ -10,11 +10,11 @@ const aliases = new Map([
   ["узел", "узлы"], ["снежинка", "снежин"]
 ]);
 const fields = [
-  ["mode", "Как устроена станция", "#idea-mode"],
-  ["capacity", "Сколько участников сразу", "#idea-capacity"],
-  ["team", "Что делают ведущие", "#idea-team"],
-  ["materials", "Реквизит и раздатка", "#idea-materials"],
-  ["probe", "Что уточнить до фестиваля", "#idea-probe"]
+  ["mode", "Ход станции", "#idea-mode"],
+  ["capacity", "Мест одновременно", "#idea-capacity"],
+  ["team", "Роли", "#idea-team"],
+  ["materials", "Материалы", "#idea-materials"],
+  ["probe", "Что уточнить", "#idea-probe"]
 ];
 const element = (selector) => document.querySelector(selector);
 const live = Boolean(globalThis.google?.script?.run);
@@ -70,8 +70,10 @@ function stationTitle(station) {
 }
 
 function updateSelection() {
-  selectionSubmit.disabled = selected.size === 0;
-  element("#selection-count").value = String(selected.size);
+  selectionSubmit.hidden = selected.size === 0;
+  selectionSubmit.disabled = selectionSubmit.hidden;
+  element("#selection-count").textContent = selected.size ? String(selected.size) : "";
+  selectionSubmit.setAttribute("aria-label", `Открыть отклик: выбрано ${selected.size}`);
   selectAll.checked = stations.length > 0 && selected.size === stations.length;
   selectAll.indeterminate = selected.size > 0 && selected.size < stations.length;
   const allAction = selectAll.checked ? "Снять все отметки" : "Выбрать все станции";
@@ -217,7 +219,7 @@ function render() {
   count.textContent = matches.length ? "" : "Ничего не найдено";
   element("#master-pick").hidden = !stations.length;
   count.setAttribute("aria-label", `Найдено станций: ${matches.length}`);
-  element("#reset-catalog").hidden = matches.length > 0 || !(filters.size || topicFilters.size || words.length);
+  element("#reset-catalog").hidden = !words.length && (matches.length > 0 || !(filters.size || topicFilters.size));
   const topicsButton = element("#toggle-filters");
   topicsButton.textContent = topicFilters.size ? `Темы · ${topicFilters.size}` : "Темы";
   topicsButton.setAttribute("aria-label", topicFilters.size ? `Темы, выбрано: ${topicFilters.size}` : "Темы");
@@ -265,11 +267,21 @@ const headerMenu = element("#header-menu");
 document.addEventListener("pointerdown", event => {
   if (headerMenu.open && !headerMenu.contains(event.target)) headerMenu.open = false;
 });
+const menuButton = headerMenu.querySelector("summary");
+function closeMenu() {
+  headerMenu.open = false;
+  menuButton.focus();
+}
 headerMenu.addEventListener("keydown", event => {
   if (event.key === "Escape" && headerMenu.open) {
-    headerMenu.open = false;
-    headerMenu.querySelector("summary").focus();
     event.preventDefault();
+    closeMenu();
+  }
+});
+query.addEventListener("keydown", event => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    closeMenu();
   }
 });
 
@@ -328,39 +340,17 @@ function clearCatalogFilters() {
   topicFilters.clear();
   for (const filter of document.querySelectorAll("#filters button, #topic-filters button")) filter.setAttribute("aria-pressed", "false");
   query.value = "";
-  element("#search-toggle").classList.remove("has-query");
+  headerMenu.classList.remove("has-query");
 }
 
-const searchButton = element("#search-toggle");
-const searchPanel = element("#search-panel");
-
-function setSearchOpen(open, returnFocus = false) {
-  searchPanel.hidden = !open;
-  searchButton.setAttribute("aria-expanded", String(open));
-  if (open) query.focus();
-  else if (returnFocus) searchButton.focus();
-}
-
-searchButton.addEventListener("click", () => setSearchOpen(searchPanel.hidden));
-searchPanel.addEventListener("keydown", event => {
-  if (event.key === "Escape") {
-    event.preventDefault();
-    setSearchOpen(false, true);
-  }
-});
-document.addEventListener("pointerdown", event => {
-  if (!searchPanel.hidden && !searchPanel.contains(event.target) && !searchButton.contains(event.target)) {
-    setSearchOpen(false);
-  }
-});
 query.addEventListener("input", () => {
-  searchButton.classList.toggle("has-query", Boolean(query.value.trim()));
+  headerMenu.classList.toggle("has-query", Boolean(query.value.trim()));
   render();
 });
 element("#reset-catalog").addEventListener("click", () => {
   clearCatalogFilters();
+  closeMenu();
   render();
-  searchButton.focus();
 });
 const maxIdeas = 5;
 const ideaList = element("#idea-list");
@@ -411,7 +401,7 @@ function openSubmission(kind, button) {
   element("#submission-feedback").hidden = true;
   const proposing = kind === "ideas";
   clearStatus();
-  element("#submission-title").textContent = proposing ? "Предложить станцию" : "Выбранные станции";
+  element("#submission-title").textContent = proposing ? "Новая станция" : "Выбранные станции";
   element("#application-summary").hidden = proposing;
   element("#proposal-fields").hidden = !proposing;
   if (proposing && !ideaList.children.length) addIdea();

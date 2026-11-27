@@ -383,14 +383,14 @@ input[type=checkbox] { accent-color: var(--accent); }
   border-bottom: 1px solid var(--muted);
 }
 .festival-link:hover, .festival-link:focus-visible { color: var(--accent); }
+main { --control-size: 44px; }
 .header-row .top-controls {
-  --control-size: 44px;
   align-items: center;
   flex: 0 0 auto;
   min-width: 0;
   gap: 5px;
 }
-.header-row .icon-button, .master-pick {
+.header-row .icon-button, .master-pick, .header-menu .icon-button {
   inline-size: var(--control-size);
   block-size: var(--control-size);
   min-height: var(--control-size);
@@ -403,28 +403,26 @@ input[type=checkbox] { accent-color: var(--accent); }
   background: var(--panel);
   color: var(--ink);
 }
-.header-row .icon-button:hover, .master-pick:hover { border-color: var(--accent); color: var(--accent); }
+.header-row .icon-button:hover, .master-pick:hover, .header-menu .icon-button:hover { border-color: var(--accent); color: var(--accent); }
 .header-row #proposal-open, .header-row #selection-submit:not(:disabled) {
   color: var(--chip-ink);
   background: var(--accent);
   border-color: var(--accent);
 }
 .header-row #proposal-open:hover, .header-row #selection-submit:not(:disabled):hover { background: var(--chip); }
-#selection-submit { font: 23px/1 system-ui, sans-serif; }
-#selection-submit:disabled { color: var(--muted); opacity: .5; cursor: default; }
+#selection-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: auto;
+  min-width: var(--control-size);
+  padding-inline: 7px;
+  font: 21px/1 system-ui, sans-serif;
+}
+#selection-count { font: 600 .95rem/1 var(--sans, system-ui); font-variant-numeric: tabular-nums; }
 #idea-submit:disabled { opacity: .55; cursor: default; }
 .proposal-plus { font-size: 1.55rem; line-height: 1; }
-.pick-actions { display: flex; align-items: center; gap: 5px; }
-#selection-count {
-  min-width: 2ch;
-  text-align: center;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
-}
-.master-pick:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
-.master-pick input:focus-visible { outline: none; }
 .icon-search {
   box-sizing: content-box;
   position: relative;
@@ -444,22 +442,19 @@ input[type=checkbox] { accent-color: var(--accent); }
   top: 12px;
   transform: rotate(45deg);
 }
-#search-toggle[aria-expanded=true], .header-row #search-toggle.has-query { border-color: var(--accent); color: var(--accent); }
-#search-panel {
-  position: absolute;
-  z-index: 5;
-  left: 0;
-  top: calc(100% + 6px);
-  width: min(240px, calc(100vw - 24px));
-  background: var(--panel);
-  padding: 5px;
-  border: 1px solid var(--muted);
-  border-radius: 4px;
+.header-menu { position: relative; width: max-content; }
+.header-menu .info-panel {
+  inset: calc(100% + 6px) auto auto 0;
+  width: min(17rem, calc(100vw - 24px));
+  padding: 10px;
 }
-.header-row .info-panel { left: 0; }
 .header-menu > summary { list-style: none; }
 .header-menu > summary::-webkit-details-marker { display: none; }
-.header-menu .info-panel p { margin-top: 7px; color: var(--muted); }
+.header-menu[open] > summary, .header-menu.has-query > summary { border-color: var(--accent); color: var(--accent); }
+.menu-search { display: flex; gap: 9px; align-items: center; }
+.menu-search .icon-search { flex: none; }
+#query { min-width: 0; flex: 1 1 auto; }
+.menu-links { display: flex; justify-content: flex-end; gap: 5px; margin-top: 8px; }
 .menu-glyph { width: 16px; height: 11px; border-block: 1px solid currentColor; background: linear-gradient(currentColor,currentColor) center / 100% 1px no-repeat; }
 #station-dialog .dialog-header { align-items: center; border-bottom: 1px solid var(--rule); }
 #station-dialog .dialog-header h2 { min-width: 0; }
@@ -497,9 +492,10 @@ input[type=checkbox] { accent-color: var(--accent); }
   .card-logistics { order: 2; margin: 0; }
   #station-dialog-pick { font-size: .82rem; gap: 4px; }
 }
-@media (max-width: 850px) { .header-row { flex-wrap: wrap; gap: 9px; } }
+@media (max-width: 850px) {
+  .header-row { flex-wrap: wrap; gap: 9px; }
+}
 @media (max-width: 520px) {
-  .header-row .top-controls { --control-size: clamp(35px, 9vw, 42px); gap: 4px; }
-  .pick-actions { gap: 4px; }
-  #selection-count { font-size: 1rem; }
+  main { --control-size: 42px; }
+  .header-row .top-controls { gap: 4px; }
 }
