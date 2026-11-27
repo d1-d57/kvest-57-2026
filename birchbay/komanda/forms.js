@@ -456,7 +456,7 @@ ideaForm.addEventListener("submit", async event => {
   if (saving || !canSubmit) return;
   const stationIds = mode === "pick" ? [...selected] : [];
   const drafts = mode === "ideas" ? [...ideaList.children] : [];
-  const name = participant.value.trim();
+  const name = participant.value.trim().replace(/[^\S\r\n]+/g, " ");
   if (!name || /[\n\r,;]/.test(name)) {
     ideaStatus.textContent = "Напишите, как вас записать.";
     participant.focus();
@@ -516,7 +516,7 @@ ideaForm.addEventListener("submit", async event => {
       stations = result.stations;
     } else {
       await saveToIntake({ ...data, requestId, installationId: getInstallationId() });
-      refreshPublicStatuses();
+      refreshPublicCatalog();
     }
     resetSubmission(stationIds);
     pending.delete(fingerprint);
@@ -578,7 +578,7 @@ element("#submit-in-google").addEventListener("click", () => {
   form.remove();
 });
 
-async function refreshPublicStatuses() {
+async function refreshPublicCatalog() {
   if (!intake || live) return;
   try {
     const url = new URL(intake);
@@ -586,9 +586,11 @@ async function refreshPublicStatuses() {
     const response = await fetch(url, { credentials: "omit", cache: "no-store", signal: AbortSignal.timeout(8000) });
     if (!response.ok) return;
     const result = await response.json();
-    const stages = new Map(result.stations.filter(row => Object.hasOwn(stateLabels, row.status))
-      .map(row => [row.id, row.status]));
-    stations = stations.map(station => ({ ...station, stage: stages.get(station.id) }));
+    if (!Array.isArray(result.stations) || !result.stations.every(station => typeof station.action === "string")) return;
+    const present = new Set(result.stations.map(station => station.id));
+    for (const id of selected) if (!present.has(id)) selected.delete(id);
+    for (const id of expanded) if (!present.has(id)) expanded.delete(id);
+    stations = result.stations;
     render();
   } catch {
     return;
@@ -624,5 +626,5 @@ if (live) {
   }
   render();
   openLinkedStation();
-  refreshPublicStatuses();
+  refreshPublicCatalog();
 }
