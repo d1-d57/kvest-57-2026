@@ -29,7 +29,7 @@ main {
   width: calc(100% - clamp(40px, 4vw, 76px));
   margin: 24px auto 94px;
   display: grid;
-  grid-template-columns: clamp(142px, 12vw, 174px) minmax(0, 1fr);
+  grid-template-columns: clamp(150px, 12vw, 174px) minmax(0, 1fr);
   align-items: start;
   column-gap: 18px;
   overflow-wrap: anywhere;
@@ -234,10 +234,11 @@ input[type=checkbox] { accent-color: var(--accent); }
 #filters-panel .chips button {
   min-height: 34px;
   width: 100%;
-  padding: 4px 8px;
+  padding: 4px 6px;
   border: 1px solid var(--rule);
   text-align: left;
-  font-size: .92rem;
+  font-size: .88rem;
+  white-space: nowrap;
   font-weight: 500;
   line-height: 1.18;
 }
