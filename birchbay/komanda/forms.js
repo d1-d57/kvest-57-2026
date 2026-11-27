@@ -19,6 +19,7 @@ const fields = [
 const element = (selector) => document.querySelector(selector);
 const live = Boolean(globalThis.google?.script?.run);
 const preview = !live && (location.protocol === "file:" || ["localhost", "127.0.0.1"].includes(location.hostname));
+const intake = element('meta[name="station-intake"]').content;
 const previewKey = "festival-stations-submissions-v1";
 let stations = globalThis.stationSeed ?? [];
 
@@ -86,6 +87,12 @@ selectAll.addEventListener("change", () => {
   render();
 });
 
+const stateLabels = { open: "Идея", interested: "Есть отклики", confirmed: "Ведущий подтверждён" };
+
+function stationState(station) {
+  return station.stage || (station.confirmed ? "confirmed" : station.people ? "interested" : "open");
+}
+
 function stationDetails(station) {
   const detail = node("article", "", "card-body");
   const overview = node("div", "", "card-overview");
@@ -93,13 +100,11 @@ function stationDetails(station) {
   overview.append(node("p", summary, "card-summary"));
   if (live && station.confirmed) {
     overview.append(node("p", `Ведущий: ${station.confirmed}`, "card-lead"));
-  } else {
-    overview.append(node("p", "Ведущий пока не выбран", "card-lead"));
   }
   if (live && station.people) {
     overview.append(node("p", `Откликнулись: ${station.people}`, "card-people"));
   }
-  const meta = [station.location, station.status || "Идея"].filter(Boolean);
+  const meta = [station.location, stateLabels[stationState(station)]].filter(Boolean);
   overview.append(node("p", meta.join(" · "), "card-meta"));
   detail.append(overview);
 
@@ -177,8 +182,16 @@ function card(station) {
   const toggle = node("button", "", "station-toggle");
   toggle.type = "button";
   toggle.setAttribute("aria-controls", detail.id);
-  toggle.setAttribute("aria-label", title);
+  const stage = stationState(station);
+  toggle.setAttribute("aria-label", stage === "open" ? title : `${title} · ${stateLabels[stage]}`);
   toggle.append(node("span", title, "station-title"));
+  if (stage !== "open") {
+    const mark = node("span", "", "station-state");
+    mark.dataset.state = stage;
+    mark.title = stateLabels[stage];
+    mark.setAttribute("aria-hidden", "true");
+    toggle.append(mark);
+  }
   function update() {
     const open = expanded.has(station.id);
     detail.hidden = !open;
@@ -212,7 +225,7 @@ function render() {
   const count = element("#catalog-status");
   count.textContent = fullCatalog && stations.length ? "" : `Найдено ${matches.length}`;
   element("#master-pick").hidden = !stations.length;
-  element("#select-all-label").textContent = `Все ${stations.length}`;
+  element("#select-all-label").textContent = `Все станции · ${stations.length}`;
   selectAll.setAttribute("aria-label", `Выбрать все станции (${stations.length})`);
   count.setAttribute("aria-label", `Найдено станций: ${matches.length}`);
   element("#reset-catalog").hidden = matches.length > 0 || !(filters.size || topicFilters.size || words.length);
@@ -355,7 +368,7 @@ const pending = new Map();
 let mode = "pick";
 let origin;
 let saving = false;
-if (!live && !preview) ideaSubmit.textContent = "Открыть черновик в Telegram";
+if (!live && !preview && !intake) ideaSubmit.textContent = "Открыть черновик в Telegram";
 
 function updateIdeaNumbers() {
   const drafts = [...ideaList.children];
@@ -389,6 +402,7 @@ function clearStatus() {
   ideaStatus.textContent = "";
   draftFallback.hidden = true;
   draftFallback.open = false;
+  element("#submit-in-google").hidden = true;
 }
 
 function openSubmission(kind, button) {
@@ -517,7 +531,7 @@ ideaForm.addEventListener("submit", async event => {
     return;
   }
   const data = { stationIds, name, ideas };
-  if (!live && !preview) {
+  if (!live && !preview && !intake) {
     prepareTelegram(data);
     return;
   }
@@ -554,19 +568,89 @@ ideaForm.addEventListener("submit", async event => {
   controls.forEach(field => { field.disabled = true; });
   ideaStatus.textContent = "Отправляем…";
   try {
-    const result = await googleCall("saveApplication", { ...data, requestId });
-    stations = result.stations;
+    if (live) {
+      const result = await googleCall("saveApplication", { ...data, requestId });
+      stations = result.stations;
+    } else {
+      await saveToIntake({ ...data, requestId, installationId: getInstallationId() });
+      refreshPublicStatuses();
+    }
     resetSubmission(stationIds);
     pending.delete(fingerprint);
     proposal.close();
     announceSubmission("Записано в таблицу. Можно отправить ещё.");
   } catch (error) {
+    if (intake && !live) element("#submit-in-google").hidden = false;
     ideaStatus.textContent = error.message || "Не удалось отправить. Попробуйте ещё раз.";
   } finally {
     saving = false;
     controls.forEach(field => { field.disabled = false; });
   }
 });
+
+let installationId = "";
+let activePayload;
+
+function getInstallationId() {
+  if (installationId) return installationId;
+  try {
+    installationId = localStorage.getItem("festival-installation") || crypto.randomUUID();
+    localStorage.setItem("festival-installation", installationId);
+  } catch {
+    installationId ||= crypto.randomUUID();
+  }
+  return installationId;
+}
+
+async function saveToIntake(payload) {
+  activePayload = payload;
+  const url = new URL(intake);
+  url.searchParams.set("response", "json");
+  let result;
+  try {
+    const response = await fetch(url, {
+      method: "POST", body: JSON.stringify(payload), headers: { "Content-Type": "text/plain" },
+      redirect: "follow", credentials: "omit", signal: AbortSignal.timeout(12000)
+    });
+    if (!response.ok) throw new Error();
+    result = await response.json();
+  } catch {
+    throw new Error("Не удалось подтвердить запись. Попробуйте ещё раз или отправьте через Google.");
+  }
+  if (result.ok !== true) throw new Error("Таблица не приняла заявку. Попробуйте ещё раз.");
+}
+
+element("#submit-in-google").addEventListener("click", () => {
+  const form = node("form");
+  form.method = "post";
+  form.action = intake;
+  form.target = "_blank";
+  const data = node("input");
+  data.type = "hidden";
+  data.name = "payload";
+  data.value = JSON.stringify(activePayload);
+  form.append(data);
+  document.body.append(form);
+  form.submit();
+  form.remove();
+});
+
+async function refreshPublicStatuses() {
+  if (!intake || live) return;
+  try {
+    const url = new URL(intake);
+    url.searchParams.set("view", "catalog");
+    const response = await fetch(url, { credentials: "omit", cache: "no-store", signal: AbortSignal.timeout(8000) });
+    if (!response.ok) return;
+    const result = await response.json();
+    const stages = new Map(result.stations.filter(row => Object.hasOwn(stateLabels, row.status))
+      .map(row => [row.id, row.status]));
+    stations = stations.map(station => ({ ...station, stage: stages.get(station.id) }));
+    render();
+  } catch {
+    return;
+  }
+}
 
 function announceSubmission(message) {
   const feedback = element("#submission-feedback");
@@ -597,4 +681,5 @@ if (live) {
   }
   render();
   openLinkedStation();
+  refreshPublicStatuses();
 }

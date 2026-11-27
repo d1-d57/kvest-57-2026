@@ -5,18 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#2e5a54">
   <meta name="referrer" content="no-referrer">
+  <meta name="station-intake" content="">
   <meta name="description" content="Идеи станций фестиваля 13 декабря в 57-й школе.">
   <title>13 декабря · Станции</title>
   <link rel="stylesheet" href="fonts.css">
-  <link rel="stylesheet" href="style.css?v=c59312889bc9">
+  <link rel="stylesheet" href="style.css?v=e3d077f9c9fa">
   <script src="stations.js" defer></script>
-  <script src="forms.js?v=bfbfa9e7b1ae" defer></script>
+  <script src="forms.js?v=15b55cd1cc5a" defer></script>
 </head>
 <body>
   <main id="idei">
     <header class="intro">
       <h1>Станции фестиваля <span class="festival-date">13 декабря</span></h1>
-      <p>Собираем программу вместе. Отметьте станции, которые вам хочется провести, или предложите свою. Я вам напишу, и мы вместе докрутим занятие.</p>
+      <p>Здесь идеи для программы 13 декабря. Отметьте, что вам хочется провести, или предложите свою станцию. Я вам напишу, и мы вместе докрутим занятие.</p>
     </header>
     <aside class="controls" aria-label="Поиск и фильтры">
       <button class="primary" id="proposal-open" type="button" hidden><span aria-hidden="true">+</span> Предложить станцию</button>
@@ -57,6 +58,10 @@
 
     <section id="catalog" hidden aria-label="Станции">
       <div class="catalog-result">
+        <div id="selection" hidden>
+          <span id="selection-count"></span>
+          <button class="primary" type="button" id="selection-submit">Продолжить</button>
+        </div>
         <button type="button" id="reset-catalog" class="quiet" hidden>Сбросить</button>
         <p id="catalog-status" role="status"></p>
         <label class="master-pick" id="master-pick" hidden>
@@ -67,10 +72,6 @@
       <ul id="cards"></ul>
     </section>
 
-    <div id="selection" hidden>
-      <span id="selection-count"></span>
-      <button class="primary" type="button" id="selection-submit">Отправить</button>
-    </div>
     <p id="submission-feedback" role="status" hidden></p>
 
     <dialog id="submission" aria-labelledby="submission-title">
@@ -94,6 +95,7 @@
           <button type="submit" class="primary" id="idea-submit">Отправить</button>
         </div>
         <p id="idea-status" role="status"></p>
+        <button type="button" id="submit-in-google" class="quiet" hidden>Повторить через Google</button>
         <details id="draft-fallback" hidden>
           <summary id="draft-fallback-label">Telegram не открылся?</summary>
           <label for="draft-text">Текст для Telegram</label>
