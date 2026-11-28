@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <base href="../komanda/">
+  <link rel="canonical" href="https://d1-d57.github.io/kvest-57-2026/birchbay/stations/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2e5a54">
+  <meta name="referrer" content="no-referrer">
+  <meta name="station-intake" content="https://script.google.com/macros/s/AKfycbw49U29C0n7UKEf7NtuffVq9CTlBx4p-_o24cw6ZX-XE3QUnwlOiRwOC79J6sU-CXtx/exec">
+  <meta name="description" content="Идеи станций фестиваля 13 декабря в 57-й школе.">
+  <title>13 декабря · Станции</title>
+  <link rel="stylesheet" href="fonts.css">
+  <link rel="stylesheet" href="style.css?v=20261128-flat">
+  <script src="stations.js?v=20261128-order" defer></script>
+  <script src="forms.js?v=20261128-copy" defer></script>
+</head>
+<body>
+  <main id="idei">
+    <header class="intro">
+      <div class="header-row">
+        <h1>Идеи для станций · <a class="festival-link" href="../" title="Страница фестиваля"><span class="festival-date">13 декабря</span></a></h1>
+        <div class="top-controls">
+          <button class="primary icon-button" id="proposal-open" type="button" aria-label="Добавить станцию" title="Добавить станцию" hidden>
+            <span class="proposal-plus" aria-hidden="true">+</span>
+          </button>
+          <label class="master-pick" id="master-pick" title="Выбрать все станции" hidden>
+            <input id="select-all" type="checkbox" aria-label="Выбрать все станции">
+          </label>
+          <button class="primary icon-button icon-hint" type="button" id="selection-submit" aria-label="Открыть отклик" hidden disabled>
+            <span id="selection-count"></span><span aria-hidden="true">→</span>
+            <span class="icon-tooltip" aria-hidden="true">Открыть отклик</span>
+          </button>
+        </div>
+      </div>
+      <p>Полистайте карточки и посмотрите, какими бывают математические станции и что на них делают дети. Может быть, одно из заданий подскажет вам идею для своего занятия.</p>
+      <p>Если хотите провести станцию из списка, отметьте её. Из карточки можно взять одно задание или несколько. Свою идею тоже можно предложить через форму.</p>
+    </header>
+    <aside class="controls" aria-label="Фильтры станций">
+      <details class="header-menu" id="header-menu">
+        <summary class="icon-button icon-hint" aria-label="Меню">
+          <span class="menu-glyph" aria-hidden="true"></span>
+          <span class="icon-tooltip" aria-hidden="true">Меню</span>
+        </summary>
+        <div class="menu-items">
+          <button type="button" class="icon-button icon-hint" id="menu-search-toggle" aria-label="Поиск" aria-controls="menu-search" aria-expanded="false">
+            <span class="icon-search" aria-hidden="true"></span>
+            <span class="icon-tooltip" aria-hidden="true">Поиск</span>
+          </button>
+          <a id="sheet-link" class="icon-button icon-hint" aria-label="Google-таблица" target="_blank" rel="noopener noreferrer" hidden>
+            <span class="icon-sheet" aria-hidden="true"></span>
+            <span class="icon-tooltip" aria-hidden="true">Google-таблица</span>
+          </a>
+          <a id="direct" class="icon-button icon-hint" aria-label="Вопросы в Telegram" href="https://t.me/d1_d57" target="_blank" rel="noopener noreferrer">
+            <span class="icon-plane" aria-hidden="true"></span>
+            <span class="icon-tooltip" aria-hidden="true">Вопросы в Telegram</span>
+          </a>
+          <div id="menu-search" hidden>
+            <input type="search" id="query" aria-label="Поиск по станциям" placeholder="Поиск по станциям">
+          </div>
+        </div>
+      </details>
+      <button type="button" id="toggle-filters" class="icon-button icon-hint" aria-label="Фильтры" aria-expanded="false" aria-controls="filters-panel">
+        <span class="filter-glyph" aria-hidden="true"></span>
+        <span class="icon-tooltip" aria-hidden="true">Фильтры</span>
+      </button>
+      <div id="filters-panel">
+        <fieldset class="format-group" aria-label="Форматы занятий">
+          <div id="filters" class="chips"></div>
+        </fieldset>
+        <fieldset class="topic-group" aria-label="Темы занятий">
+          <div id="topic-filters" class="chips"></div>
+        </fieldset>
+      </div>
+    </aside>
+
+    <section id="catalog" hidden aria-label="Станции">
+      <div class="catalog-result">
+        <button type="button" id="reset-catalog" class="quiet" hidden>Сбросить</button>
+        <p id="catalog-status" role="status"></p>
+      </div>
+      <ul id="cards"></ul>
+    </section>
+
+    <p id="submission-feedback" role="status" hidden></p>
+
+    <dialog id="station-dialog" aria-labelledby="station-dialog-title">
+      <header class="dialog-header">
+        <h2 id="station-dialog-title"></h2>
+        <label class="master-pick" id="station-pick" title="Отметить станцию">
+          <input id="station-dialog-pick" type="checkbox" aria-label="Отметить станцию">
+        </label>
+      </header>
+      <div id="station-dialog-content"></div>
+    </dialog>
+
+    <dialog id="submission" aria-labelledby="submission-title">
+      <header class="dialog-header">
+        <h2 id="submission-title"></h2>
+        <button id="close-submission" class="icon-button dialog-close" type="button" aria-label="Закрыть">×</button>
+      </header>
+      <form id="submission-form">
+        <div id="application-summary" hidden>
+          <ul id="application-selection"></ul>
+        </div>
+        <div id="proposal-fields" hidden>
+          <p class="proposal-invite">Расскажите, что вы уже проводили или что, по-вашему, хорошо впишется в фестиваль.</p>
+          <div id="idea-list"></div>
+          <button type="button" id="add-idea" class="quiet">+ Ещё станция</button>
+        </div>
+        <label class="name-field" for="participant">Имя и фамилия
+          <input id="participant" placeholder="Иван Петров" maxlength="80" autocomplete="name" required>
+        </label>
+        <div class="dialog-actions">
+          <button type="submit" class="primary" id="idea-submit">Отправить</button>
+        </div>
+        <p id="idea-status" role="status"></p>
+        <button type="button" id="submit-in-google" class="quiet" hidden>Повторить через Google</button>
+      </form>
+    </dialog>
+
+    <template id="idea-template">
+      <fieldset class="idea-draft">
+        <legend></legend>
+        <button class="quiet remove-idea" type="button" hidden>Убрать</button>
+        <label class="idea-action">Что будут делать школьники?
+          <textarea name="action" rows="3" maxlength="700"></textarea>
+        </label>
+        <details class="extra">
+          <summary>Детали</summary>
+          <label>Название<input name="title" maxlength="90"></label>
+          <label>Место в городе<input name="location" maxlength="120"></label>
+          <fieldset><legend>Форматы</legend><div data-formats class="chips"></div></fieldset>
+          <fieldset><legend>Темы</legend><div data-topics class="chips"></div></fieldset>
+          <label>Ход станции<input name="mode" maxlength="240"></label>
+          <label>Мест одновременно<input name="capacity" maxlength="220"></label>
+          <label>Роли<input name="team" maxlength="220"></label>
+          <label>Материалы<input name="materials" maxlength="280"></label>
+          <label>Что уточнить<input name="probe" maxlength="240"></label>
+          <label>Задания <small>по одному на строку</small><textarea name="tasks" rows="3" maxlength="700"></textarea></label>
+          <label>Ответ<textarea name="check" rows="2" maxlength="650"></textarea></label>
+          <label>Заготовки<textarea name="taskPrep" rows="2" maxlength="650"></textarea></label>
+          <label>Источники<textarea name="sources" rows="2" maxlength="650"></textarea></label>
+        </details>
+      </fieldset>
+    </template>
+  </main>
+</body>
+</html>
