@@ -314,7 +314,8 @@ function openLinkedStation() {
   const fragment = location.hash.slice(1);
   const match = /^(station-|tasks-)(.+)$/.exec(fragment);
   if (!match) return;
-  const station = catalogStations().find(entry => entry.id === match[2]);
+  const id = match[2] === "paper-fractals" ? "snow" : match[2];
+  const station = catalogStations().find(entry => entry.id === id);
   if (station) openStation(station);
 }
 
