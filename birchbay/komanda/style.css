@@ -549,3 +549,7 @@ main { --control-size: 44px; }
   main { --control-size: 42px; }
   .header-row .top-controls { gap: 4px; }
 }
+
+.catalog-group { grid-column: 1 / -1; padding: 16px 0 7px; }
+.catalog-group h2 { margin: 0; color: var(--muted); font-size: .93rem; font-weight: 600; }
+.intro p + p { margin-top: 8px; }

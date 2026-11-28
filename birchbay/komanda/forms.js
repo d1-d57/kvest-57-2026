@@ -192,7 +192,77 @@ function render() {
       && words.every(word => terms.some(term => word.length < 4 ? term === word : term.startsWith(word)));
   });
   fullCatalog = !filters.size && !topicFilters.size && !words.length;
-  cards.replaceChildren(...matches.map(card));
+  if (fullCatalog) {
+    const remaining = new Map(matches.map(station => [station.id, station]));
+    const sections = [
+      [
+        "Игры и маршруты",
+        [
+          "set",
+          "nim",
+          "robot-floor",
+          "wise",
+          "ferry"
+        ]
+      ],
+      [
+        "Коды, язык и головоломки",
+        [
+          "codes",
+          "post",
+          "linguistics",
+          "grid"
+        ]
+      ],
+      [
+        "Измерения, случай и выбор",
+        [
+          "balance",
+          "coins",
+          "chance",
+          "fair-share",
+          "short-networks"
+        ]
+      ],
+      [
+        "Конструкции и формы",
+        [
+          "chickpea",
+          "knots",
+          "toys",
+          "fold"
+        ]
+      ],
+      [
+        "Узоры и иллюзии",
+        [
+          "impossible",
+          "snow",
+          "paper-fractals",
+          "tilings",
+          "necklaces",
+          "glass"
+        ]
+      ]
+    ];
+    const rows = [];
+    for (const [title, ids] of sections) {
+      const entries = ids.map(id => remaining.get(id)).filter(Boolean);
+      if (!entries.length) continue;
+      const heading = node("li", "", "catalog-group");
+      heading.append(node("h2", title));
+      rows.push(heading, ...entries.map(card));
+      for (const station of entries) remaining.delete(station.id);
+    }
+    if (remaining.size) {
+      const heading = node("li", "", "catalog-group");
+      heading.append(node("h2", "Другие предложения"));
+      rows.push(heading, ...Array.from(remaining.values(), card));
+    }
+    cards.replaceChildren(...rows);
+  } else {
+    cards.replaceChildren(...matches.map(card));
+  }
   updateCatalogFill();
   const count = element("#catalog-status");
   count.textContent = matches.length ? "" : "Ничего не найдено";
